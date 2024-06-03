@@ -126,7 +126,7 @@ const createQuarterCircle = (
 
 const boundries = [
   {
-    top:1010,
+    top:150,
     left: -450,
     width: 900,
     height: 1,
