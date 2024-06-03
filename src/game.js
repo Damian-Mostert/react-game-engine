@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import Engine from "./lib/engine";
+import Engine from "./lib/engine/components";
 import characters from "./lib/resources/characters";
 import backgrounds from "./lib/resources/backgrounds";
 import textures from "./lib/resources/textures";
@@ -139,7 +139,7 @@ const boundries = [
   // Vertical slope, reverse false
   ...createSlope(80, 0, 40, 40, false, "vertical", "Dirt"),
   // Vertical slope, reverse true
-  ...createSlope(80, 40, 40, 40, true, "vertical", "Dirt"),
+  
   // Quarter circle, horizontal, reverse false
   ...createQuarterCircle(120, -40, 40, false, "horizontal", "Dirt"),
   // Quarter circle, vertical, reverse false

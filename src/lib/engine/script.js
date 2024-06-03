@@ -1,13 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Joystick } from "react-joystick-component";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000");
 
 
-function useGame({ boundries, character, characters, direction }) {
+export default function useGame({ boundries, character, characters }) {
   const [players, setPlayers] = useState({});
   const [myId, setMyId] = useState("");
   const [isJumping, setIsJumping] = useState(false);
@@ -19,7 +18,7 @@ function useGame({ boundries, character, characters, direction }) {
   const blockSize = 20; // Define block size as 20px
 
   // Maximum horizontal velocity
-  const maxVelocityX = 10; // Adjust as needed
+  const maxVelocityX = 30; // Adjust as needed
 
 const applyHorizontalMovement = (direction) => {
   // Calculate new horizontal velocity
@@ -242,155 +241,3 @@ const applyHorizontalMovement = (direction) => {
 }
 
 
-function Boundary({
-  top,
-  left,
-  width,
-  height,
-  texture,
-  align,
-  textures,
-  blocksize,
-}) {
-  return (
-    <div
-      style={{
-        transform: align == "right" ? "scaleX(-1)" : "",
-        position: "absolute",
-        width: `${width * blocksize}px`,
-        height: `${height * blocksize}px`,
-        top: `${top * blocksize}px`,
-        left: `${left * blocksize}px`,
-        backgroundImage: `url(${textures[texture]})`,
-        backgroundSize: `${blocksize}px ${blocksize}px`,
-        backgroundRepeat: "repeat",
-      }}
-    />
-  );
-}
-
-export default function Engine({
-  backgrounds,
-  characters,
-  textures,
-  character,
-  boundries,
-  background,
-}) {
-  const [direction, setDirection] = useState(null);
-  const game = useGame({ boundries, character, characters, direction });
-  
-  const handleStart = (data) => {
-    setDirection(data.direction);
-  };
-  const handleMove = (data) => {
-    console.log(data);
-    setDirection(data.direction);
-  };
-  const handleStop = () => {
-    setDirection(null);
-  };
-
-  return (
-    <div
-      id="container"
-      style={{
-        width: "100%",
-        height: "100%",
-        maxWidth: "100%",
-        maxHeight: "100%",
-        overflow: "hidden",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        transition: "all 0.1s",
-        backgroundSize: "contain",
-        backgroundImage: `url(${backgrounds[background]})`,
-        backgroundPositionY: game.boundries.top * -1 + "px",
-        backgroundPositionX: game.boundries.left * -1 + "px",
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "0px",
-          minWidth: "0px",
-        }}
-      >
-        <div
-          style={{
-            transition: "left 0.1s, top 0.1s",
-            position: "absolute",
-            width: "0px",
-            height: "0px",
-            top: (game.boundries.top - 80) * -1 + "px",
-            left: (game.boundries.left + 40) * -1 + "px",
-          }}
-        >
-          {boundries.map((boundary, index) => {
-            return (
-              <Boundary
-                {...boundary}
-                blocksize={20}
-                textures={textures}
-                key={index}
-              />
-            );
-          })}
-          {game?.players &&
-            Object.keys(game.players).map((key) => {
-              const player = game.players[key];
-              return (
-                <div
-                  key={key}
-                  style={{
-                    transition: "left 0.1s, top 0.1s",
-                    position: "absolute",
-                    width: "0px",
-                    height: "0px",
-                    bottom: player.top * -1 + "px",
-                    left: player.left + "px",
-                  }}
-                >
-                  <div
-                    className="character"
-                    style={{
-                      width: player.character?.width + "px",
-                      height: player.character?.height + "px",
-                      display: "flex",
-                      backgroundSize: "contain",
-                      backgroundColor:"#cae962",
-                      backgroundImage: `url(${player.character?.image})`,
-                      transform: player.direction === 3 ? "scaleX(-1)" : "",
-                    }}
-                  />
-                </div>
-              );
-            })}
-        </div>
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "0rem",
-          right: "0rem",
-          scale: "0.5",
-        }}
-      >
-        <Joystick
-          stickSize={50}
-          size={100}
-          sticky={true}
-          baseColor="#222"
-          stickColor="#444"
-          start={handleStart}
-          move={handleMove}
-          stop={handleStop}
-        ></Joystick>
-      </div>
-    </div>
-  );
-}
