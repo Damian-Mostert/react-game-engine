@@ -8,36 +8,45 @@ const socket = io("http://localhost:4000");
 export default function useGame({ boundries, character, characters }) {
 	const [players, setPlayers] = useState({});
 	const [myId, setMyId] = useState("");
-	const [isJumping, setIsJumping] = useState(true);
+	const [isJumping, setIsJumping] = useState(false);
 	const [velocityY, setVelocityY] = useState(0);
 	const [velocityX, setVelocityX] = useState(0);
 	const characterWidth = characters[character].width;
 	const characterHeight = characters[character].height;
-	const [lastKeyPress, setLastKeyPress] = useState("");
+	const [lastKeyPress, setLastKeyPress] = useState("d");
 	const blockSize = 20;
 
-	const maxVelocityX = 30;
-	const maxVelocityY = 20; // Adjusted max downward velocity
+	const maxVelocityX = 20;
+	const maxVelocityY = 10; // Adjusted max downward velocity
 
-const applyHorizontalMovement = (direction) => {
-	const newVelocityX = direction === "left" ? -maxVelocityX : maxVelocityX;
-	let newBoundaries = { ...Boundries };
-	newBoundaries.left += newVelocityX;
-
-	let { ok, adjustment } = checkBoundries(newBoundaries, direction);
-
-	if (!ok) {
-		// Adjust the position to stop exactly at the boundary
-		newBoundaries.left += adjustment.left;
-		setBoundries(newBoundaries);
-		setVelocityX(0); // Stop horizontal movement when hitting a boundary
-		return; // Exit the function since the movement is blocked
-	}
-
-	// If no collision, continue moving horizontally
-	setBoundries(newBoundaries);
-	setVelocityX(newVelocityX);
-};
+	const applyHorizontalMovement = (direction) => {
+		let newVelocityX = velocityX;
+		if (direction === "left" && newVelocityX > -maxVelocityX) {
+			newVelocityX -= 1; // Increase or decrease the value to adjust the speed
+		} else if (direction === "right" && newVelocityX < maxVelocityX) {
+			newVelocityX += 1; // Increase or decrease the value to adjust the speed
+		}
+		setVelocityX(newVelocityX);
+	};
+	
+	const keyPressListener = (ev) => {
+		setLastKeyPress(ev.key);
+		switch (ev.key.toLowerCase()) {
+			case "w":
+			case " ":
+				jump();
+				break;
+			case "a":
+				applyHorizontalMovement("left");
+				break;
+			case "d":
+				applyHorizontalMovement("right");
+				break;
+			default:
+				break;
+		}
+	};
+	
 
 
 	useEffect(() => {
@@ -66,23 +75,10 @@ const applyHorizontalMovement = (direction) => {
 			const boundBottom = boundTop + __bound.height * blockSize;
 			const boundRight = boundLeft + __bound.width * blockSize;
 
+
 			switch (direction) {
-				case "up":
-					if (
-						bounds.top < boundBottom &&
-						bounds.top + characterHeight > boundTop &&
-						bounds.left < boundRight &&
-						bounds.left + characterWidth > boundLeft
-					) {
-						if (__bound.pass) {
-							if (__bound.onEnter) __bound.onEnter();
-						} else {
-							ok = false;
-							adjustment.top = boundBottom - bounds.top;
-						}
-					}
-					break;
-				case "down":
+				case "vertical":
+				if(!isJumping){
 					if (
 						bounds.top + characterHeight > boundTop &&
 						bounds.top < boundBottom &&
@@ -92,7 +88,28 @@ const applyHorizontalMovement = (direction) => {
 						ok = false;
 						adjustment.top = boundTop - (bounds.top + characterHeight);
 					}
-					break;
+				}else{
+					if (
+						bounds.top + characterHeight > boundTop &&
+						bounds.top < boundBottom &&
+						bounds.left < boundRight &&
+						bounds.left + characterWidth > boundLeft
+					) {
+						ok = false;
+						adjustment.top = boundTop - (bounds.top + characterHeight);
+					}
+					if (
+						bounds.top + velocityY < boundBottom && // Check if character's top position with velocityY is below the bottom of the boundary
+						bounds.top + characterHeight + velocityY > boundTop && // Check if character's bottom position with velocityY is above the top of the boundary
+						bounds.left < boundRight && // Check if character's left position is to the left of the right side of the boundary
+						bounds.left + characterWidth > boundLeft // Check if character's right position is to the right of the left side of the boundary
+					) {
+						setIsJumping(false);
+						ok = false;
+						adjustment.top = 0;
+					}
+				}
+				break;
 				case "left":
 					if (
 						bounds.left < boundRight &&
@@ -123,6 +140,7 @@ const applyHorizontalMovement = (direction) => {
 		return { ok, adjustment };
 	};
 
+
 	const [Boundries, setBoundriesState] = useState({
 		top: 0,
 		left: 0,
@@ -141,17 +159,18 @@ const applyHorizontalMovement = (direction) => {
 		let newBoundaries = { ...Boundries };
 		newBoundaries.top += newVelocityY;
 
-		const { ok, adjustment } = checkBoundries(newBoundaries, "down");
+		const { ok, adjustment } = checkBoundries(newBoundaries, "vertical");
 
 		if (!ok) {
 			newBoundaries.top += adjustment.top;
 			newVelocityY = 0;
-			setIsJumping(false);
 		}
 
 		setBoundries(newBoundaries);
 		setVelocityY(newVelocityY);
 	};
+
+
 	useEffect(()=>{
 		if(!isJumping){
 			let newBoundaries = Boundries;
@@ -168,35 +187,13 @@ const applyHorizontalMovement = (direction) => {
 	}, [Boundries, isJumping, velocityY]);
 
 		const jump = (blocks = 5) => {
-			const jumpBounds = { ...Boundries, top: Boundries.top - blocks * blockSize };
-      const b = checkBoundries(jumpBounds, "up")
 			if (isJumping) return;
 
 			setIsJumping(true);
 
-			let jumpVelocity =  -blocks * blockSize * 0.15; // Adjust jump strength
+			let jumpVelocity = -blocks * blockSize * 0.15; // Adjust jump strength
 			setVelocityY(jumpVelocity);
-};
-
-
-
-	const keyPressListener = (ev) => {
-		setLastKeyPress(ev.key);
-		switch (ev.key.toLowerCase()) {
-			case "w":
-			case " ":
-				jump();
-				break;
-			case "a":
-				applyHorizontalMovement("left");
-				break;
-			case "d":
-				applyHorizontalMovement("right");
-				break;
-			default:
-				break;
-		}
-	};
+		};
 
 	useEffect(() => {
 		Boundries.character = characters[character];
