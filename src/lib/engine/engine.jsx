@@ -34,6 +34,7 @@ export default function Engine({
 	character,
 	boundaries,
 }) {
+	
 	const game = useGame({ boundaries, character, characters });
 
 	return (

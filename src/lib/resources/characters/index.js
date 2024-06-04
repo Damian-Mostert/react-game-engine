@@ -6,7 +6,7 @@ import Bravo from "./cat.webp"
 export default {
   Kid: {
     image: Kid,
-    width: 40,
+    width: 37,
     height: 60,
   },
   "Spongebob Squerpants": {

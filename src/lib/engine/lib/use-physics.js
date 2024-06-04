@@ -2,200 +2,114 @@
 
 import { useEffect, useState } from "react";
 
-// Game configuration
 const blockSize = 20;
-const maxVelocityX = 20;
-const maxVelocityY = 20;
-const gravityForce = 2; // Force of gravity
-
-// Initial position configuration
+const maxVelocityOption = 20;
+const gravityForce = 2;
 const initialPosition = { top: 0, left: 0 };
 
-export default function usePhysics({
-	boundaries,
-	keys,
-	character
-}) {
+export default function usePhysics({ boundaries, keys, character }) {
 
-const { width: characterWidth, height: characterHeight } = character;
+    const { width: characterWidth, height: characterHeight } = character;
 
-	const [position, setPositionState] = useState(initialPosition);
+    const [maxVelocity,setMaxVelocity] = useState(maxVelocityOption);
 
-	const setPosition = (pos) =>{
-		if(position.top !== pos.top || position.left !== pos.left)
-			setPositionState(pos);
-	}
+    const [position, setPosition] = useState(initialPosition);
 
-	const [velocityX, setVelocityX] = useState(0);
-	const [velocityY, setVelocityY] = useState(0);
-	const [isJumping, setIsJumping] = useState(false);
+    const [velocity, setVelocity] = useState({ x: 0, y: 0 });
 
-	const checkBoundaries = (bounds, direction) => {
-		let ok = true;
-		let adjustment = { top: 0, left: 0 };
+    const [isJumping, setIsJumping] = useState(false);
 
+    const checkBoundaries = (bounds, direction) => {
+        let adjustment = { top: 0, left: 0 };
+        let ok = true;
 
-		boundaries.forEach((__bound) => {
-			//if(!ok)return;
-			const boundTop = __bound.top * blockSize;
-			const boundLeft = __bound.left * blockSize;
-			const boundBottom = boundTop + __bound.height * blockSize;
-			const boundRight = boundLeft + __bound.width * blockSize;
+        boundaries.forEach((__bound) => {
+            const boundTop = __bound.top * blockSize;
+            const boundLeft = __bound.left * blockSize;
+            const boundBottom = boundTop + __bound.height * blockSize;
+            const boundRight = boundLeft + __bound.width * blockSize;
 
-			switch (direction) {
-				case "vertical":
-					if (!isJumping) {
-						if (
-							bounds.top + characterHeight > boundTop &&
-							bounds.top < boundBottom &&
-							bounds.left < boundRight &&
-							bounds.left + characterWidth > boundLeft
-						) {
-							ok = false;
-							adjustment.top = boundTop - (bounds.top + characterHeight);
-						}
-					} else {
-						if (
-							bounds.top + characterHeight > boundTop &&
-							bounds.top < boundBottom &&
-							bounds.left < boundRight &&
-							bounds.left + characterWidth > boundLeft
-						) {
-							ok = false;
-							adjustment.top = boundTop - (bounds.top + characterHeight);
-						}
-						if (
-							bounds.top + velocityY < boundBottom &&
-							bounds.top + characterHeight + velocityY > boundTop &&
-							bounds.left < boundRight &&
-							bounds.left + characterWidth > boundLeft
-						) {
-							setIsJumping(false);
-							ok = false;
-							adjustment.top = 0;
-						}
-					}
-					break;
-				case "left":
-					if (
-						bounds.left < boundRight &&
-						bounds.left + characterWidth > boundLeft &&
-						bounds.top < boundBottom &&
-						bounds.top + characterHeight > boundTop
-					) {
-						ok = false;
-						adjustment.left = boundRight - bounds.left;
-					}
-					break;
-				case "right":
-					if (
-						bounds.left + characterWidth > boundLeft &&
-						bounds.left <= boundRight &&
-						bounds.top < boundBottom &&
-						bounds.top + characterHeight > boundTop
-					) {
-						ok = false;
-						adjustment.left = boundLeft - (bounds.left + characterWidth);
-					}
-					break;
-				default:
-					break;
-			}
-		});
+            switch (direction) {
+                case "vertical":
+                    if ((bounds.top + velocity.y < boundBottom && bounds.top + characterHeight + velocity.y > boundTop) &&
+                        bounds.top + characterHeight > boundTop &&
+                        bounds.top < boundBottom &&
+                        bounds.left < boundRight &&
+                        bounds.left + characterWidth > boundLeft) {
+                        ok = false;
+                        adjustment.top = boundTop - (bounds.top + characterHeight);
+                        if (!isJumping) setIsJumping(true);
+                    }
+                    break;
+                case "horizontal":
+                    if ((direction === "left" || velocity.x < 0) &&
+                        bounds.left < boundRight &&
+                        bounds.left + characterWidth > boundLeft &&
+                        bounds.top < boundBottom &&
+                        bounds.top + characterHeight > boundTop) {
+                        ok = false;
+                        adjustment.left = (direction === "left") ? boundRight - bounds.left : boundLeft - (bounds.left + characterWidth);
+                        setVelocity(prev => ({ ...prev, x: 0 }));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
 
-		return { ok, adjustment };
-	};
+        return { ok, adjustment };
+    };
 
-	const upForce = () => {
-		if (!isJumping) {
-			setVelocityY(-maxVelocityY);
-			setIsJumping(true);
-		}
-	};
+    const applyForce = (direction, force) => {
+        setVelocity(prev => ({
+            ...prev,
+            [direction]: Math.min(Math.max(prev[direction] + force, -maxVelocity), maxVelocity)
+        }));
+    };
 
-	const downForce = () => {
-		setVelocityY(prev => Math.min(prev + gravityForce, maxVelocityY));
-	};
+    useEffect(() => {
+        if ((keys.w || keys[' '])) applyForce('y', -maxVelocity); // Up
+        if (keys.a) applyForce('x', -2); // Left
+        if (keys.d) applyForce('x', 2); // Right
+        if (keys.s) {
+            applyForce('y', gravityForce); // Down
+            setMaxVelocity(maxVelocityOption * 4);
+        }
+        if(!keys.s){
+            setMaxVelocity(maxVelocityOption);
+        }
+    }, [keys]);
 
-	const leftForce = () => {
-		setVelocityX(prev => Math.max(prev - 2, -maxVelocityX));
-	};
+    useEffect(() => {
+        const applyForces = setInterval(() => {
+            if (!keys.d && velocity.x > 0) applyForce('x', -2); // Slow down right movement
+            if (!keys.a && velocity.x < 0) applyForce('x', 2); // Slow down left movement
+            applyForce('y', gravityForce); // Apply gravity
+        }, 1000 / 60);
 
-	const rightForce = () => {
-		setVelocityX(prev => Math.min(prev + 2, maxVelocityX));
-	};
+        const moveCharacter = setInterval(() => {
+            let newPosition = {
+                top: position.top + velocity.y,
+                left: position.left + velocity.x
+            };
 
-	useEffect(() => {
-		if (keys.w || keys[' ']) {
-			upForce();
-		}
-		if (keys.a) {
-			leftForce();
-		}
-		if (keys.d) {
-			rightForce();
-		}
-		if (keys.s) {
-			downForce();
-		}
-	}, [keys,isJumping]);
+            const { ok: verticalOk, adjustment: verticalAdjustment } = checkBoundaries(newPosition, "vertical");
+            if (!verticalOk) {
+                newPosition.top += verticalAdjustment.top;
+                setVelocity(prev => ({ ...prev, y: 0 }));
+            }
 
-	useEffect(() => {
-		const applyForces = setInterval(() => {
-			downForce();
-			if(!keys.d && velocityX > 0){
-				leftForce();
-			}
-			if(!keys.a && velocityX < 0){
-				rightForce();
-			}
-		}, 1000 / 60);
+            const { ok: horizontalOk, adjustment: horizontalAdjustment } = checkBoundaries(newPosition, "horizontal");
+            if (!horizontalOk) newPosition.left += horizontalAdjustment.left;
 
-		const moveCharacter = setInterval(() => {
-			let newPosition = {
-				top: position.top + velocityY,
-				left: position.left + velocityX
-			};
+            setPosition(newPosition);
+        }, 1000 / 60);
 
-			// Check vertical boundaries
-			let { ok: verticalOk, adjustment: verticalAdjustment } = checkBoundaries(
-				{ top: newPosition.top, left: newPosition.left },
-				"vertical"
-			);
-			if (!verticalOk) {
-				newPosition.top += verticalAdjustment.top;
-				setVelocityY(0);
-			}
+        return () => {
+            clearInterval(applyForces);
+            clearInterval(moveCharacter);
+        };
+    }, [position, velocity, keys]);
 
-			// Check horizontal boundaries (left)
-			let { ok: leftOk, adjustment: leftAdjustment } = checkBoundaries(
-				{ top: newPosition.top, left: newPosition.left },
-				"left"
-			);
-			if (!leftOk) {
-				newPosition.left += leftAdjustment.left;
-				setVelocityX(0);
-			}
-
-			// Check horizontal boundaries (right)
-			let { ok: rightOk, adjustment: rightAdjustment } = checkBoundaries(
-				{ top: newPosition.top, left: newPosition.left },
-				"right"
-			);
-			if (!rightOk) {
-				newPosition.left += rightAdjustment.left;
-				setVelocityX(0);
-			}
-
-			// Apply new position
-			setPosition(newPosition);
-		}, 1000 / 60);
-
-		return () => {
-			clearInterval(applyForces);
-			clearInterval(moveCharacter);
-		};
-	}, [position, velocityX, velocityY,keys]);
-
-	return position;
+    return position;
 }
