@@ -12,7 +12,23 @@ export function Boundary({
   align,
   textures,
   blocksize,
+  closeBoundarie,
 }) {
+  if (closeBoundarie) {
+    return (
+      <div
+        style={{
+          transform: align == "right" ? "scaleX(-1)" : "",
+          position: "absolute",
+          width: `${width * blocksize}px`,
+          height: `${height * blocksize}px`,
+          top: `${top * blocksize}px`,
+          left: `${left * blocksize}px`,
+          background:"red"
+        }}
+      />
+    );
+  }
   return (
     <div
       style={{
@@ -25,6 +41,7 @@ export function Boundary({
         backgroundImage: `url(${textures[texture]})`,
         backgroundSize: `${blocksize}px ${blocksize}px`,
         backgroundRepeat: "repeat",
+        //background:closeBoundarie?"red": null
       }}
     />
   );
@@ -52,6 +69,17 @@ export default function Engine({
             return (
               <Boundary
                 {...boundary}
+                blocksize={20}
+                textures={textures}
+                key={index}
+              />
+            );
+          })}
+          {game.closeBoundaries.map((boundary, index) => {
+            return (
+              <Boundary
+                {...boundary}
+                closeBoundarie={true}
                 blocksize={20}
                 textures={textures}
                 key={index}

@@ -123,7 +123,7 @@ const createQuarterCircle = (
 
 const boundaries = [
   {
-    top:150,
+    top: 150,
     left: -450,
     width: 900,
     height: 1,
@@ -131,13 +131,23 @@ const boundaries = [
   },
   // Horizontal slope, reverse false
 
-  ...createSlope(80, 0, 40, 40, false, "vertical", "Dirt"),
+  ...createSlope(80, 0, 40, 40, false, "vertical", "Grass"),
+  ...createSlope(80, 0, 100, 40, true, "vertical", "Grass"),
   // Vertical slope, reverse true
-  
+
   // Quarter circle, horizontal, reverse false
-  ...createQuarterCircle(120, -40, 40, false, "horizontal", "Dirt"),
+  ...createQuarterCircle(40, -40, 40, false, "horizontal", "Dirt"),
+
   // Quarter circle, vertical, reverse false
-  ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"),
+  ...createQuarterCircle(60, -40, 40, true, "vertical", "Dirt"),
+
+  ...createSlope(-80, 0, 40, 40, false, "vertical", "Grass"),
+  // Vertical slope, reverse true
+
+  // Quarter circle, horizontal, reverse false
+  ...createQuarterCircle(-120, 40, -40, false, "horizontal", "Dirt"),
+  // Quarter circle, vertical, reverse false
+  ...createQuarterCircle(-120, -40, 40, true, "vertical", "Dirt"),
 ];
 
 

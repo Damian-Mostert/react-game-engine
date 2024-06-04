@@ -24,7 +24,7 @@ export default function useGame({ boundaries = [], character = "", characters = 
 	//when physics change tell server;
 	useEffect(()=>{
 		emit("server",{
-			...physics,
+			...physics.position,
 			keys,
 			character:characters[character]
 		})
@@ -35,6 +35,7 @@ export default function useGame({ boundaries = [], character = "", characters = 
 		players:Object.fromEntries(
 			Object.entries(players).filter(([key, player]) => player.id !== id)
 		),
-		boundaries: physics,
+		boundaries: physics.position,
+		closeBoundaries: physics.closeBoundaries,
 	};
 }
