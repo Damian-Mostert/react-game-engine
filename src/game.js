@@ -132,7 +132,7 @@ const boundaries = [
     height: 1,
     texture: "Dirt",
   },
-/*   // Horizontal slope, reverse false
+  // Horizontal slope, reverse false
   ...createSlope(40, 0, 40, 40, false, "horizontal", "Dirt"),
   // Horizontal slope, reverse true
   ...createSlope(40, 40, 40, 40, true, "horizontal", "Dirt"),
@@ -143,7 +143,7 @@ const boundaries = [
   // Quarter circle, horizontal, reverse false
   ...createQuarterCircle(120, -40, 40, false, "horizontal", "Dirt"),
   // Quarter circle, vertical, reverse false
-  ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"), */
+  ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"),
 ];
 
 
