@@ -24,7 +24,7 @@ export function Boundary({
           height: `${height * blocksize}px`,
           top: `${top * blocksize}px`,
           left: `${left * blocksize}px`,
-          background:"red"
+          background:"#ffffff20"
         }}
       />
     );
@@ -69,7 +69,7 @@ export default function Engine({
             return (
               <Boundary
                 {...boundary}
-                blocksize={20}
+                blocksize={30}
                 textures={textures}
                 key={index}
               />
@@ -80,7 +80,7 @@ export default function Engine({
               <Boundary
                 {...boundary}
                 closeBoundarie={true}
-                blocksize={20}
+                blocksize={30}
                 textures={textures}
                 key={index}
               />

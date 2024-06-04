@@ -126,7 +126,7 @@ const boundaries = [
     top: 150,
     left: -450,
     width: 900,
-    height: 1,
+    height: 100,
     texture: "Dirt",
   },
   // Horizontal slope, reverse false

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  @apply m-0 text-center bg-slate-600 text-cyan-400;
+  @apply m-0 text-center bg-black text-cyan-400;
 }
 button{
   width: 80%;

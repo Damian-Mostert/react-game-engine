@@ -9,7 +9,7 @@ export default {
     width: 30,
     height: 47,
   },
-  /* "Spongebob Squerpants": {
+  "Spongebob Squerpants": {
     image: Spomge,
     width: 55,
     height: 75,
@@ -23,5 +23,5 @@ export default {
     image: Bravo,
     width: 60,
     height:77.5,
-  }, */
+  },
 };

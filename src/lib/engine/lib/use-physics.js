@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const blockSize = 20;
+const blockSize = 30;
 const maxVelocity = 20;
 const gravityForce = 2;
 const initialPosition = { top: 0, left: 0 };
