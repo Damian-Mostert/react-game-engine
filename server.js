@@ -11,19 +11,23 @@ var players = {};
 setInterval(()=>console.log(players),1500)
 
 io.on("connect", (client) => {
-  client.emit("id", client.id);
   players[client.id] = { top: 0, left: 0 };
-  io.emit("players", players);
+
+  io.emit("client", players);
+
   client.on("disconnect", () => {
     delete players[client.id];
     io.emit("players", players);
     io.emit("disconnected", client.id);
   });
 
+
   client.on("server", (data) => {
+    data.id = client.id;
     players[client.id] = data;
-    io.emit("players", players);
+    io.emit("client", players);
   });
+
 });
 
 io.listen(4000);

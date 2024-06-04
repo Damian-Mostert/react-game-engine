@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import Engine from "./lib/engine/components";
+import Engine from "./lib/engine/engine";
 import characters from "./lib/resources/characters";
 import backgrounds from "./lib/resources/backgrounds";
 import textures from "./lib/resources/textures";
@@ -19,7 +19,7 @@ export default function Game() {
             characters={characters}
             character={character}
             textures={textures}
-            boundries={boundries}
+            boundaries={boundaries}
             background={"Night"}
           />
         </div>
@@ -124,7 +124,7 @@ const createQuarterCircle = (
   return segments;
 };
 
-const boundries = [
+const boundaries = [
   {
     top:150,
     left: -450,
@@ -146,6 +146,4 @@ const boundries = [
   ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"),
 ];
 
-
-console.log(boundries);
 
