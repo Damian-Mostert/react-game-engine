@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import useKeys from "./use-keys";
 import useSocket from "./use-socket";
 import usePhysics from "./use-physics";
+import useFramerate from "./use-framerate";
 
 export default function useGame({ boundaries = [], character = "", characters = {} }) {
+	//create a frame rate state to trigger rendering;
+	const framerate = useFramerate(25);
 	//get control keys;
 	const keys = useKeys();
 	//get socket;
@@ -16,6 +19,7 @@ export default function useGame({ boundaries = [], character = "", characters = 
 		boundaries,
 		keys,
 		character:characters?.[character],
+		framerate
 	});
 	//when physics change tell server;
 	useEffect(()=>{

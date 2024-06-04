@@ -1,13 +1,13 @@
 import Kid from "./kid.webp";
 import Spomge from "./Spoge.webp"
 import Patric from "./pngwing.com.png"
-import Bravo from "./cat.webp"
+import Bravo from "./jhonny.webp"
 
 export default {
-  Kid: {
+  "Plankie": {
     image: Kid,
-    width: 37,
-    height: 60,
+    width: 30,
+    height: 47,
   },
   "Spongebob Squerpants": {
     image: Spomge,

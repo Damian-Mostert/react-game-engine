@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import Engine from "./lib/engine/engine";
 import characters from "./lib/resources/characters";
-import backgrounds from "./lib/resources/backgrounds";
 import textures from "./lib/resources/textures";
 import CharacterSelect from "./character-select";
 
@@ -15,12 +14,10 @@ export default function Game() {
         <div style={{ display: "flex", width: "100%", height: "100%" }}>
           <div />
           <Engine
-            backgrounds={backgrounds}
             characters={characters}
             character={character}
             textures={textures}
             boundaries={boundaries}
-            background={"Night"}
           />
         </div>
       )}
@@ -133,10 +130,7 @@ const boundaries = [
     texture: "Dirt",
   },
   // Horizontal slope, reverse false
-  ...createSlope(40, 0, 40, 40, false, "horizontal", "Dirt"),
-  // Horizontal slope, reverse true
-  ...createSlope(40, 40, 40, 40, true, "horizontal", "Dirt"),
-  // Vertical slope, reverse false
+
   ...createSlope(80, 0, 40, 40, false, "vertical", "Dirt"),
   // Vertical slope, reverse true
   
