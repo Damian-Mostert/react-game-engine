@@ -16,8 +16,8 @@ export default function useSwipe() {
     const touch = ev.touches[0];
     setTouchEnd({ x: touch.clientX, y: touch.clientY })
     setTouchDiff({
-      x: touch.clientX - touchStart.x,
-      y: touch.clientY - touchStart.y,
+      x: touch.clientX + touchStart.x,
+      y: touch.clientY + touchStart.y,
     });
   };
 
