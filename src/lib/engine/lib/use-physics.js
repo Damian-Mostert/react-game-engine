@@ -178,7 +178,7 @@ export default function usePhysics({
     if (swipe.x < 80) {
       applyForce("x", 2); // Left
     }
-    if ( swipe.y > 80) {
+    if ( swipe.y < 80) {
       applyForce("y", -maxVelocity * 2); // Up
     }
   };
