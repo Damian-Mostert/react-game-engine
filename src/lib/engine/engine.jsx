@@ -120,16 +120,26 @@ export default function Engine({
             style={{
               width: characters[character]?.width + "px",
               height: characters[character]?.height + "px",
-              transform: game.keys?.a ? "scaleX(-1)" : "",
+              transform:
+                game.keys?.a || game.swipe?.x < -70 ? "scaleX(-1)" : "",
             }}
           >
-            {(()=>{
+            {(() => {
               var action = null;
-              if(game.keys?.a || game.keys?.d)action = "run"
-              else if(game.keys.w || game.keys[" "])action = 'jump'
+              if (
+                game.keys?.a ||
+                game.keys?.d ||
+                game.swipe?.x < -70 ||
+                game.swipe?.x > 70
+              )
+                action = "run";
+              else if (game.keys?.w || game.keys?.[" "] || game.swipe?.y < -70)
+                action = "jump";
 
-              return characters[character][action ? action : "idle"](characters[character]?.width,characters[character]?.height)
-
+              return characters[character][action ? action : "idle"](
+                characters[character]?.width,
+                characters[character]?.height
+              );
             })()}
           </div>
         </div>

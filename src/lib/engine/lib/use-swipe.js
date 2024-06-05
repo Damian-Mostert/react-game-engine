@@ -22,6 +22,7 @@ export default function useSwipe() {
 
   const handleTouchEnd = () => {
     setTouchEnd({ x: 0, y: 0 });
+    setTouchDiff({ x: 0, y: 0 });
   };
 
   useEffect(() => {

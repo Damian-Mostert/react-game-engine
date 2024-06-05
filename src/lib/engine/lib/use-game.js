@@ -36,6 +36,7 @@ export default function useGame({ boundaries = [], character = "", characters = 
 	},[physics,keys]);
 	//return players and boundaries;
 	return {
+		swipe,
 		keys,
 		players:Object.fromEntries(
 			Object.entries(players).filter(([key, player]) => player.id !== id)
