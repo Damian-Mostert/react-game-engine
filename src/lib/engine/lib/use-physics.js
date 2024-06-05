@@ -9,7 +9,13 @@ const initialPosition = { top: 0, left: 0 };
 const initialVelocity = { x: 0, y: 0 };
 const checkDistance = 3;
 
-export default function usePhysics({ boundaries, keys, swipe, character, framerate }) {
+export default function usePhysics({
+  boundaries,
+  keys,
+  swipe,
+  character,
+  framerate,
+}) {
   const [position, setPosition] = useState(initialPosition);
   const [velocity, setVelocity] = useState(initialVelocity);
   const [closeBoundaries, setCloseBoundaries] = useState([]);
@@ -165,29 +171,27 @@ export default function usePhysics({ boundaries, keys, swipe, character, framera
     if (keys.d) applyForce("x", 2); // Right
   };
 
-    const onSwipeChange = () => {
-      switch (swipe) {
-        case "down":
-          applyForce("y", -maxVelocity * 2); // Up
-          break;
-        case "left":
-          applyForce("x", 2); // Left
-          break;
-        case "right":
-          applyForce("x", -2); // Right
-          break;
-      }
-    };
+  const onSwipeChange = () => {
+    if (swipe.x < 0) {
+      applyForce("x", -2); // Right
+    }
+    if (swipe.x > 0) {
+      applyForce("x", 2); // Left
+    }
+    if (swipe.x > 0) {
+      applyForce("y", -maxVelocity * 2); // Up
+    }
+  };
 
   useEffect(() => {
     console.info("keys", keys);
     onKeysChange();
   }, [keys]);
 
-    useEffect(() => {
-      console.info("swipe", swipe);
-      onSwipeChange();
-    }, [swipe]);
+  useEffect(() => {
+    console.info("swipe", swipe);
+    onSwipeChange();
+  }, [swipe]);
 
   useEffect(() => {
     render();
@@ -207,6 +211,6 @@ export default function usePhysics({ boundaries, keys, swipe, character, framera
 
   return {
     position,
-    closeBoundaries
+    closeBoundaries,
   };
 }

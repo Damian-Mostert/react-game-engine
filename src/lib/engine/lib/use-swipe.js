@@ -14,26 +14,10 @@ export default function useSwipe() {
   const handleTouchMove = (ev) => {
     const touch = ev.touches[0];
     setTouchEnd({ x: touch.clientX, y: touch.clientY });
-    handleTouchEnd()
   };
 
   const handleTouchEnd = () => {
-    const deltaX = touchEnd.x - touchStart.x;
-    const deltaY = touchEnd.y - touchStart.y;
-
-    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      if (deltaX > 50) {
-        setSwipeDirection("right");
-      } else if (deltaX < -50) {
-        setSwipeDirection("left");
-      }
-    } else {
-      if (deltaY > 50) {
-        setSwipeDirection("down");
-      } else if (deltaY < -50) {
-        setSwipeDirection("up");
-      }
-    }
+setTouchEnd({ x: 0, y: 0 });
   };
 
   useEffect(() => {
@@ -48,5 +32,5 @@ export default function useSwipe() {
     };
   }, [touchStart, touchEnd]); // Only run the effect when touchStart or touchEnd change
 
-  return swipeDirection;
+  return touchEnd;
 }
