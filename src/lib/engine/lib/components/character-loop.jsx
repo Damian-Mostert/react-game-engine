@@ -11,14 +11,14 @@ export default function CharacterLoop({
     const [imageIndex,setImageIndex] = useState(0);
 
     useEffect(()=>{
-        if(imageIndex === images.length - 1){
-            setImageIndex(0);
-        }else{
-            setImageIndex((OLD)=>OLD+1)
-        }
-    },[framerate]);
+        setImageIndex((OLD)=>OLD >= images.length -1 ? 0  : OLD+ 1)
+    },[framerate,width,height]);
+
+    useEffect(()=>{
+        console.log(images[imageIndex])
+    },[imageIndex]);
 
     return <>
-        <img src={images[imageIndex]} style={{width,height,objectFit:"contain",objectPosition:"10px 10px"}}/>
+        <img src={images[imageIndex]} style={{width,height,objectFit:"contain"}}/>
     </>
 }

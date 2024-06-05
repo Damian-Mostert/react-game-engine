@@ -75,7 +75,7 @@ export default function Engine({
               />
             );
           })}
-          {game.closeBoundaries.map((boundary, index) => {
+          {/* {game.closeBoundaries.map((boundary, index) => {
             return (
               <Boundary
                 {...boundary}
@@ -85,7 +85,7 @@ export default function Engine({
                 key={index}
               />
             );
-          })}
+          })} */}
           {game?.players &&
             Object.keys(game.players).map((key) => {
               const player = game.players[key];
@@ -124,12 +124,11 @@ export default function Engine({
             }}
           >
             {(()=>{
-              var action = "idle";
+              var action = null;
               if(game.keys?.a || game.keys?.d)action = "run"
               else if(game.keys.w || game.keys[" "])action = 'jump'
-              else action = "idle"
 
-              return characters[character][action](characters[character]?.width,characters[character]?.height)
+              return characters[character][action ? action : "idle"](characters[character]?.width,characters[character]?.height)
 
             })()}
           </div>
