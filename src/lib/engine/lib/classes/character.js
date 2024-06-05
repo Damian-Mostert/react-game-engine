@@ -10,6 +10,7 @@ export default class Character{
         this.slide = slide
         this.hurt = hurt
         this.dead = dead
+        
 	}
 
 }
