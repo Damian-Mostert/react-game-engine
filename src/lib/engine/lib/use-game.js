@@ -9,7 +9,7 @@ import useFramerate from "./use-framerate";
 
 export default function useGame({ boundaries = [], character = "", characters = {} }) {
 	//create a frame rate state to trigger rendering;
-	const framerate = useFramerate(25);
+	const framerate = useFramerate(30);
 	//get control keys;
 	const keys = useKeys();
 	//get socket;

@@ -24,7 +24,7 @@ export function Boundary({
           height: `${height * blocksize}px`,
           top: `${top * blocksize}px`,
           left: `${left * blocksize}px`,
-          background:"#ffffff20"
+          background:"#a60e0050"
         }}
       />
     );
@@ -120,10 +120,19 @@ export default function Engine({
             style={{
               width: characters[character]?.width + "px",
               height: characters[character]?.height + "px",
-              backgroundImage: `url(${characters[character]?.image})`,
               transform: game.keys?.a ? "scaleX(-1)" : "",
             }}
-          />
+          >
+            {(()=>{
+              var action = "idle";
+              if(game.keys?.a || game.keys?.d)action = "run"
+              else if(game.keys.w || game.keys[" "])action = 'jump'
+              else action = "idle"
+
+              return characters[character][action](characters[character]?.width,characters[character]?.height)
+
+            })()}
+          </div>
         </div>
       </div>
     </div>
