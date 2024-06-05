@@ -172,10 +172,10 @@ export default function usePhysics({
   };
 
   const onSwipeChange = () => {
-    if (swipe.x < 800) {
+    if (swipe.x > 800) {
       applyForce("x", -2); // Right
     }else
-    if (swipe.x > -800) {
+    if (swipe.x < -800) {
       applyForce("x", 2); // Left
     }
     if ( swipe.y > 500) {
