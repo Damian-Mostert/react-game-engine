@@ -175,7 +175,7 @@ export default function usePhysics({
     if (swipe.y > 800) {
       applyForce("x", -2); // Right
     }
-    if (swipe.y < 800) {
+    if (swipe.y > -800) {
       applyForce("x", 2); // Left
     }
     if ( swipe.x < 800) {
