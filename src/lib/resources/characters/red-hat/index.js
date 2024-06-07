@@ -5,11 +5,12 @@ import CharacterLoop from "../../../engine/lib/components/character-loop";
 
 export default new Character({
   width: 40,
-  height: 60,
+  height: 65,
   idle(width, height) {
     return (
       <CharacterLoop
-        container={{ width, height ,objectPosition:"-27px 7px"}}
+        img={{width:"150px",height:"80px",left:"0px",top:"-6px",objectPosition:"-36px"}}
+        container={{ width, height}}
         images={[
           "/red-hat/Idle (1).png",
           "/red-hat/Idle (2).png",
@@ -28,7 +29,14 @@ export default new Character({
   jump(width, height) {
     return (
       <CharacterLoop
-        container={{ width, height, objectPosition: "-27px 7px" }}
+        img={{
+          width: "150px",
+          height: "80px",
+          left: "0px",
+          top: "-6px",
+          objectPosition: "-36px",
+        }}
+        container={{ width, height }}
         images={[
           "/red-hat/Jump (1).png",
           "/red-hat/Jump (2).png",
@@ -49,7 +57,14 @@ export default new Character({
   run(width, height) {
     return (
       <CharacterLoop
-        container={{ width, height, objectPosition: "-27px 7px" }}
+        img={{
+          width: "150px",
+          height: "80px",
+          left: "0px",
+          top: "-6px",
+          objectPosition: "-36px",
+        }}
+        container={{ width, height }}
         images={[
           "/red-hat/Run (1).png",
           "/red-hat/Run (2).png",
@@ -66,6 +81,13 @@ export default new Character({
   slide(width, height) {
     return (
       <CharacterLoop
+        img={{
+          width: "150px",
+          height: "80px",
+          left: "0px",
+          top: "-6px",
+          objectPosition: "-36px",
+        }}
         container={{ width, height }}
         images={[
           "/red-hat/Slide (1).png",
@@ -80,6 +102,13 @@ export default new Character({
   hurt(width, height) {
     return (
       <CharacterLoop
+        img={{
+          width: "150px",
+          height: "80px",
+          left: "0px",
+          top: "-6px",
+          objectPosition: "-36px",
+        }}
         container={{ width, height }}
         images={[
           "/red-hat/Hurt (1).png",
@@ -97,6 +126,13 @@ export default new Character({
   dead(width, height) {
     return (
       <CharacterLoop
+        img={{
+          width: "150px",
+          height: "80px",
+          left: "0px",
+          top: "-6px",
+          objectPosition: "-36px",
+        }}
         container={{ width, height }}
         images={[
           "/red-hat/Dead (1).png",

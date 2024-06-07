@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useFramerate from "../use-framerate";
 
-export default function CharacterLoop({ images, container }) {
+export default function CharacterLoop({ images, container, img }) {
   const framerate = useFramerate(6);
 
   const [imageIndex, setImageIndex] = useState(0);
@@ -22,9 +22,11 @@ export default function CharacterLoop({ images, container }) {
   }, [framerate]);
 
   return (
-    <img
-      src={images[imageIndex]}
-      style={{ ...container, objectFit: "cover" }}
-    />
+    <div style={{position:"relative",...container}}>
+        <img
+          src={images[imageIndex]}
+          style={{ ...img, position:"absolute", objectFit: "cover" }}
+        />
+    </div>
   );
 }
