@@ -1,19 +1,30 @@
 import { useEffect, useState } from "react";
-import useFramerate from "../use-framerate"
+import useFramerate from "../use-framerate";
 
-export default function CharacterLoop({
-    images,
-    container,
-}){
-    const framerate = useFramerate(6);
+export default function CharacterLoop({ images, container }) {
+  const framerate = useFramerate(6);
 
-    const [imageIndex,setImageIndex] = useState(6);
+  const [imageIndex, setImageIndex] = useState(0);
 
-    useEffect(()=>{
-        setImageIndex((OLD)=>OLD >= images.length -1 ? 0  : OLD+ 1)
-    },[framerate]);
+  // Preload images and cache them
+  useEffect(() => {
+    images.forEach((imageUrl) => {
+      const img = new Image();
+      img.src = imageUrl; // This loads the image and caches it
+    });
+  }, [images]); // Only runs once when the component mounts or when `images` changes
 
+  // Update the image index based on the framerate
+  useEffect(() => {
+    setImageIndex((oldIndex) =>
+        oldIndex >= images.length - 1 ? 0 : oldIndex + 1
+    );
+  }, [framerate]);
 
-    return <img src={images[imageIndex]} style={{...container,objectFit:"cover"}}/>
+  return (
+    <img
+      src={images[imageIndex]}
+      style={{ ...container, objectFit: "cover" }}
+    />
+  );
 }
-//hehe

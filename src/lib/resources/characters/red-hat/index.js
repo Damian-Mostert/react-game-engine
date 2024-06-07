@@ -9,7 +9,7 @@ export default new Character({
   idle(width, height) {
     return (
       <CharacterLoop
-        container={{ width, height }}
+        container={{ width, height ,objectPosition:"-27px 7px"}}
         images={[
           "/red-hat/Idle (1).png",
           "/red-hat/Idle (2).png",
@@ -28,7 +28,7 @@ export default new Character({
   jump(width, height) {
     return (
       <CharacterLoop
-        container={{ width, height }}
+        container={{ width, height, objectPosition: "-27px 7px" }}
         images={[
           "/red-hat/Jump (1).png",
           "/red-hat/Jump (2).png",
@@ -49,7 +49,7 @@ export default new Character({
   run(width, height) {
     return (
       <CharacterLoop
-        container={{ width, height }}
+        container={{ width, height, objectPosition: "-27px 7px" }}
         images={[
           "/red-hat/Run (1).png",
           "/red-hat/Run (2).png",
