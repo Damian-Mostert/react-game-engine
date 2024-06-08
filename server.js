@@ -1,4 +1,12 @@
+const http = require("http");
+
 const { Server } = require("socket.io");
+
+const express = require("express");
+const app = express();
+
+const server = http.createServer(app);
+
 
 const io = new Server({
   cors: {
@@ -30,6 +38,7 @@ io.on("connect", (client) => {
 
 });
 
-io.listen(4000);
 
-console.log("server is running");
+server.listen(3000, () => console.log("Server ready on port 3000."));
+
+module.exports = server;

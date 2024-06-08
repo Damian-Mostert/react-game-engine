@@ -20,3 +20,6 @@ main{
 .character{
   background-position: bottom center;
 }
+img{
+  border: none;
+}

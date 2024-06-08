@@ -23,10 +23,10 @@ export default function CharacterLoop({ images, container, img }) {
 
   return (
     <div style={{position:"relative",...container}}>
-        <img
+       {images[imageIndex] ? <img
           src={images[imageIndex]}
           style={{ ...img, position:"absolute", objectFit: "cover" }}
-        />
+        />:<></>} 
     </div>
   );
 }

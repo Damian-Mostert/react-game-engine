@@ -11,18 +11,7 @@ export default new Character({
       <CharacterLoop
         img={{width:"150px",height:"80px",left:"0px",top:"-6px",objectPosition:"-36px"}}
         container={{ width, height}}
-        images={[
-          "/red-hat/Idle (1).png",
-          "/red-hat/Idle (2).png",
-          "/red-hat/Idle (3).png",
-          "/red-hat/Idle (4).png",
-          "/red-hat/Idle (5).png",
-          "/red-hat/Idle (6).png",
-          "/red-hat/Idle (7).png",
-          "/red-hat/Idle (8).png",
-          "/red-hat/Idle (9).png",
-          "/red-hat/Idle (10).png",
-        ]}
+        images={Array.from({length:10}).map((_,i)=>(`/sprites/red-hat/Idle (${i+1}).png`))}
       />
     );
   },
@@ -37,20 +26,9 @@ export default new Character({
           objectPosition: "-36px",
         }}
         container={{ width, height }}
-        images={[
-          "/red-hat/Jump (1).png",
-          "/red-hat/Jump (2).png",
-          "/red-hat/Jump (3).png",
-          "/red-hat/Jump (4).png",
-          "/red-hat/Jump (5).png",
-          "/red-hat/Jump (6).png",
-          "/red-hat/Jump (7).png",
-          "/red-hat/Jump (8).png",
-          "/red-hat/Jump (9).png",
-          "/red-hat/Jump (10).png",
-          "/red-hat/Jump (11).png",
-          "/red-hat/Jump (12).png",
-        ]}
+        images={Array.from({ length: 12 }).map(
+          (_, i) => `/sprites/red-hat/Jump (${i + 1}).png`
+        )}
       />
     );
   },
@@ -65,16 +43,9 @@ export default new Character({
           objectPosition: "-36px",
         }}
         container={{ width, height }}
-        images={[
-          "/red-hat/Run (1).png",
-          "/red-hat/Run (2).png",
-          "/red-hat/Run (3).png",
-          "/red-hat/Run (4).png",
-          "/red-hat/Run (5).png",
-          "/red-hat/Run (6).png",
-          "/red-hat/Run (7).png",
-          "/red-hat/Run (8).png",
-        ]}
+        images={Array.from({ length: 8 }).map(
+          (_, i) => `/sprites/red-hat/Run (${i + 1}).png`
+        )}
       />
     );
   },
