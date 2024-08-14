@@ -21,6 +21,20 @@ const getAction = (keys,swipe) => {
         return "slide"
     }
 
+    if (swipe.x > 70) {
+        return "run";
+      }else
+      if (swipe.x < -70) {
+        return "run-left"
+      }
+      if ( swipe.y < -70) {
+        return "jump"
+      }
+
+      if ( swipe.y < 70) {
+        return "slide"
+      }
+
     return "idle";
 };
 
