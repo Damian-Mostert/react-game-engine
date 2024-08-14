@@ -1,4 +1,4 @@
-const getAction = (keys,swipe) => {
+const getAction = (keys,swipe,velocity) => {
     if(keys.w && keys.a){
         return "jump-left"
     }
@@ -21,19 +21,27 @@ const getAction = (keys,swipe) => {
         return "slide"
     }
 
-    if (swipe.x > 70) {
+    if (swipe.x&& swipe.x > 70) {
         return "run";
       }else
-      if (swipe.x < -70) {
+      if (swipe.y &&  swipe.y < -70 &&  swipe.y > -70) {
+        return "jump-left"
+      }
+      if (swipe.x && swipe.x < -70 && swipe.y &&  swipe.y > -70) {
+        return "slide-left"
+      }
+      if (swipe.x && swipe.x < -70) {
         return "run-left"
       }
-      if ( swipe.y < -70) {
+
+      if (swipe.y &&  swipe.y < -70) {
         return "jump"
       }
 
-      if ( swipe.y > -70) {
+      if (swipe.y &&  swipe.y > -70) {
         return "slide"
       }
+      
 
     return "idle";
 };
