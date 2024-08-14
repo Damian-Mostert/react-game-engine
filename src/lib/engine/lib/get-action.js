@@ -31,7 +31,7 @@ const getAction = (keys,swipe) => {
         return "jump"
       }
 
-      if ( swipe.y < 70) {
+      if ( swipe.y > -70) {
         return "slide"
       }
 
