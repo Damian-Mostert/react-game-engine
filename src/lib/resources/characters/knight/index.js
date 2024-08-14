@@ -1,7 +1,7 @@
 "use client";
 
 export default{
-      name:"santa",
+      name:"knight",
       width: 40,
       height: 65,
       container:{
@@ -11,11 +11,11 @@ export default{
         minWidth:40
       },
       box:{
-        width:"20ad0px",
+        width:"150px",
         height:"80px",
         left:"0px",
         top:"-6px",
-        objectPosition:"-26px",
+        objectPosition:"-10px",
         objectFit:"cover",
       },
       actions:[
@@ -26,7 +26,7 @@ export default{
         },
         {
             callback:"hurt",
-            slug:"Hurt",
+            slug:"Dead",
             frames:8
         },
         {
@@ -37,17 +37,17 @@ export default{
         {
             callback:"jump",
             slug:"Jump",
-            frames:12
+            frames:10
         },
         {
             callback:"run",
             slug:"Run",
-            frames:8
+            frames:10
         },
         {
             callback:"slide",
-            slug:"Slide",
-            frames:5
+            slug:"Walk",
+            frames:10
         }
       ]
 }

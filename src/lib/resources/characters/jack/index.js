@@ -1,7 +1,7 @@
 "use client";
 
 export default{
-      name:"santa",
+      name:"jack",
       width: 40,
       height: 65,
       container:{
@@ -11,11 +11,11 @@ export default{
         minWidth:40
       },
       box:{
-        width:"20ad0px",
+        width:"150px",
         height:"80px",
         left:"0px",
-        top:"-6px",
-        objectPosition:"-26px",
+        top:"-10px",
+        objectPosition:"-8px",
         objectFit:"cover",
       },
       actions:[
