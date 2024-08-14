@@ -1,7 +1,8 @@
 export default function DefaultLayout({title,data,setData}){
     return (
-      <div className="h-screen w-screen bg-black flex">
-        <div className="m-auto h-min w-full px-64">
+      <div className="h-screen w-screen flex justify-center items-center">
+        <div className="h-min w-full max-w-[1000px] flex">
+          <div className="w-full p-4">
           <h1 className="text-3xl pb-8 uppercase">{title}</h1>
           {Object.keys(data).map((data_key, key) => {
             return (
@@ -10,6 +11,7 @@ export default function DefaultLayout({title,data,setData}){
               </button>
             );
           })}
+          </div>
         </div>
       </div>
     );

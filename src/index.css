@@ -2,8 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'arcade';
+  src: url('./lib/fonts/arcade.TTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   @apply m-0 text-center bg-black text-cyan-400;
+  font-family: 'arcade', monospace;
 }
 button{
   width: 80%;

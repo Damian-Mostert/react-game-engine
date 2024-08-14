@@ -1,4 +1,5 @@
-const getAction = (keys = {}, swipe = {}, velocity = {}) => {
+
+const handleInput = (keys = {}, swipe = {}, velocity = {}, attributes= {},lastKeys={}) => {
     if (keys.w && keys.a) {
         return "jump-left";
     }
@@ -9,6 +10,7 @@ const getAction = (keys = {}, swipe = {}, velocity = {}) => {
         return "slide";
     }
     if (keys.w) {
+        if(lastKeys.a)return"jump-left"
         return "jump";
     }
     if (keys.a) {
@@ -20,40 +22,15 @@ const getAction = (keys = {}, swipe = {}, velocity = {}) => {
     if (keys.s) {
         return "slide";
     }
-
-    if (swipe.x && swipe.x > 70) {
-        return "run";
-    }
-    if (swipe.y && swipe.y < -70) {
-        return "jump-left";
-    }
-    if (swipe.x && swipe.x < -70) {
-        return "run-left";
-    }
-    if (swipe.y && swipe.y > 70) {
-        return "slide";
-    }
-
-    if (velocity.x > 0 && velocity.y === 0) {
-        return "run";
-    }
-    if (velocity.x < 0 && velocity.y === 0) {
-        return "run-left";
-    }
-    if (velocity.y < 0 && velocity.x === 0) {
-        return "jump";
-    }
-    if (velocity.y > 0 && velocity.x === 0) {
-        return "slide";
-    }
-    if (velocity.x < 0 && velocity.y < 0) {
-        return "jump-left";
-    }
-    if (velocity.x < 0 && velocity.y > 0) {
-        return "slide-left";
-    }
-
+    if(lastKeys.a)return"idle-left"
     return "idle";
 };
+const getAction = (keys,swipe,velocity,attributes,lastKeys)=>{
+    const result = handleInput(keys,swipe,velocity,attributes,lastKeys);
+    return {
+        result,
+        left:result.endsWith("-left"),
+    }
+}
 
 export default getAction;

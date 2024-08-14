@@ -84,7 +84,8 @@ export default function Engine({
                 key={index}
               />
             );
-          })}            {game.closeBoundaries.map((boundary, index) => {
+          })} 
+          {/* {game.closeBoundaries.map((boundary, index) => {
             return (
               <Boundary
                 {...boundary}
@@ -94,7 +95,7 @@ export default function Engine({
                 key={index}
               />
             );
-          })} 
+          })}  */}
         </div>
         <div
           className={styles.object}
@@ -107,6 +108,9 @@ export default function Engine({
               height: characters[character]?.height + "px",
             }}
           >
+            <div className="absolute bottom-full w-max text-white text-[0.8rem]">
+            {character}
+            </div>
             {game.sprite}
           </div>
         </div>

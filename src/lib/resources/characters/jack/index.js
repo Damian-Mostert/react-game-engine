@@ -19,8 +19,9 @@ export default{
         objectFit:"cover",
       },
       attributes:{
-        weight:100,
+        weight:2,
         health:100,
+        speed:2,
         attack:10,
         jump:true,
         run:true,

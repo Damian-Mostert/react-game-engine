@@ -12,7 +12,6 @@ const checkDistance = 3;
 export default function usePhysics({
   boundaries,
   keys,
-  swipe,
   character,
   framerate,
 }) {
@@ -167,31 +166,15 @@ export default function usePhysics({
 
   const onKeysChange = () => {
     if (keys.w || keys[" "]) applyForce("y", -maxVelocity * 2); // Up
+    if (keys.s || keys[" "]) {applyForce("y", maxVelocity * 2);applyForce("x", (maxVelocity * 2) * (velocity.x > 0 ? 1 : -1))}; // Up
     if (keys.a) applyForce("x", -2); // Left
     if (keys.d) applyForce("x", 2); // Right
-  };
-
-  const onSwipeChange = () => {
-    if (swipe.x > 70) {
-      applyForce("x", 2); // Right
-    }else
-    if (swipe.x < -70) {
-      applyForce("x", -2); // Left
-    }
-    if ( swipe.y < -70) {
-      applyForce("y", -maxVelocity * 2); // Up
-    }
   };
 
   useEffect(() => {
     console.info("keys", keys);
     onKeysChange();
   }, [keys]);
-
-  useEffect(() => {
-    console.info("swipe", swipe);
-    onSwipeChange();
-  }, [swipe]);
 
   useEffect(() => {
     render();

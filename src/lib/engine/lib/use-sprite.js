@@ -1,6 +1,6 @@
 import CharacterLoop from "../components/character-loop";
 
-export default function useSprite(character,action){
+export default function useSprite(character,action,left){
     const fullImages = {};
     for(let action of character.actions){
         const images = [];
@@ -18,7 +18,7 @@ export default function useSprite(character,action){
         img={character.box}
         container={character.container}
         images={images}
-        left={action.endsWith("-left")}
+        left={left}
       />
     </>
     

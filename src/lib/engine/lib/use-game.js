@@ -8,6 +8,7 @@ import useSprite from "./use-sprite";
 import getAction from "./get-action";
 
 import config from "../config/framerates";
+import { useEffect, useState } from "react";
 const {game:Framerate} = config;
 
 
@@ -15,9 +16,7 @@ export default function useGame({ boundaries = [],character = "", characters = {
 	//create a frame rate state to trigger rendering;
 	const framerate = useFramerate(Framerate);
 	//get control keys;
-	const keys = useKeys();
-
-	const swipe = useSwipe();
+	const {keys,lastKeys} = useKeys();
 
 	const physics = usePhysics({
 		boundaries,
@@ -27,7 +26,9 @@ export default function useGame({ boundaries = [],character = "", characters = {
 		framerate
 	});
 
-	const sprite = useSprite(characters[character],getAction(keys,swipe),physics.velocity);
+	const action = getAction(keys,swipe,physics.velocity,character.attributes,lastKeys);
+
+	const sprite = useSprite(characters[character],action.result,action.left);
 
 	return {
 		sprite,
