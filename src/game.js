@@ -11,20 +11,24 @@ import PauseMenu from "./lib/menus/puase";
 export default function Game() {
   const [character, setCharacter] = useState(null);
   const [level,setLevel] = useState(null);
+  const [paused,setPaused] = useState(false);
 
-  
   return (
     <main>
       {level && <>      
         {character && (
           <div style={{ display: "flex", width: "100%", height: "100%" }}>
             <Engine
+              paused={paused}
               characters={characters}
               character={character}
               textures={textures}
               boundaries={levels[level]}
               />
-            <PauseMenu/>
+            {paused && <PauseMenu setPaused={setPaused} setCharacter={setCharacter} setLevel={setLevel}/>}
+            {!paused &&  <div className="fixed top-4 right-4 text-white p-4 bg-red-500 rounded-full flex justify-center items-center cursor-pointer" onClick={()=>setPaused(true)}>
+             <span className="absolute">||</span>
+            </div>}
           </div>
       )}
       {!character && (

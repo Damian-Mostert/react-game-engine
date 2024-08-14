@@ -19,16 +19,17 @@ export default{
         objectFit:"cover",
       },
       attributes:{
-        speed:2,
-        weight:2,
+        speed:0.5,
+        weight:0.5,
         health:100,
         attack:10,
-        jump:true,
-        run:true,
+        jump:false,
+        run:false,
         walk:true,
-        slide:true,
+        slide:false,
         attack:true,
-        jumpAttack:true,
+        jumpAttack:false,
+        maxVelocity:10,
       },
       actions:[
         {
@@ -47,12 +48,13 @@ export default{
             frames:10
         },
         {
-            callback:"jump",
+            callback:"attack",
             slug:"Attack",
             frames:8
         },
+        
         {
-            callback:"run",
+            callback:"walk",
             slug:"Walk",
             frames:10
         },

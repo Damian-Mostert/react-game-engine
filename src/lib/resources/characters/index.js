@@ -13,5 +13,5 @@ export default {
   "Zombie Male":zombieMale,
   "Zombie Female":zombieFemale,
   "Jack":jack,
-  "Knight":knight
+  "Aether":knight
 };

@@ -5,28 +5,29 @@ export default{
       width: 40,
       height: 65,
       container:{
-        width: 40,
-        height: 65,
-        minHeight:65,
-        minWidth:40
+        width: 48,
+        height: 70,
+        minHeight:70,
+        minWidth:46
       },
       box:{
-        width:"150px",
+        width:"100%",
         height:"80px",
         left:"0px",
-        top:"-6px",
+        top:"-9px",
         objectPosition:"-10px",
         objectFit:"cover",
       },
       attributes:{
-        speed:2,
+        speed:1,
         weight:2,
+        maxVelocity:40,
         health:100,
-        attack:10,
+        ap:10,
         jump:true,
-        run:true,
+        run:false,
         walk:true,
-        slide:true,
+        slide:false,
         attack:true,
         jumpAttack:true,
       },
@@ -36,6 +37,11 @@ export default{
             slug:"Dead",
             frames:10
         },
+        {
+          callback:"attack",
+          slug:"Attack",
+          frames:10
+      },
         {
             callback:"hurt",
             slug:"Dead",
@@ -52,12 +58,7 @@ export default{
             frames:10
         },
         {
-            callback:"run",
-            slug:"Run",
-            frames:10
-        },
-        {
-            callback:"slide",
+            callback:"walk",
             slug:"Walk",
             frames:10
         }

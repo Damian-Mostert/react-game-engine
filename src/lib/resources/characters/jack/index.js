@@ -22,7 +22,7 @@ export default{
         weight:2,
         health:100,
         speed:2,
-        attack:10,
+        ap:10,
         jump:true,
         run:true,
         walk:true,

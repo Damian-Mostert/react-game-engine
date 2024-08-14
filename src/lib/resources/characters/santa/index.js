@@ -20,15 +20,16 @@ export default{
       },
       attributes:{
         speed:2,
-        weight:2,
+        weight:3,
         health:100,
-        attack:10,
+        ap:10,
         jump:true,
         run:true,
         walk:true,
         slide:true,
-        attack:true,
-        jumpAttack:true,
+        attack:false,
+        jumpAttack:false,
+        maxVelocity:40,
       },
       actions:[
         {

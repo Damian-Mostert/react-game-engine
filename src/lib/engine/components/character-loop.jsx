@@ -3,9 +3,9 @@ import useFramerate from "../lib/use-framerate";
 import config from "../config/framerates";
 const {sprites:Framerate} = config;
 
-export default function CharacterLoop({ images = [], container = {}, img = {}, left = false }) {
+export default function CharacterLoop({ images = [], container = {}, img = {}, left = false,paused }) {
 
-  const framerate = useFramerate(Framerate);
+  const framerate = useFramerate(Framerate,paused);
 
   const [imageIndex, setImageIndex] = useState(0);
 

@@ -52,8 +52,9 @@ export default function Engine({
   textures,
   character,
   boundaries,
+  paused
 }) {
-  const game = useGame({ boundaries, character, characters });
+  const game = useGame({ boundaries, character, characters, paused });
 
   return (
     <div className={styles.container}>

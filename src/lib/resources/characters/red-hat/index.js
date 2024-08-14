@@ -29,6 +29,7 @@ export default{
         slide:true,
         attack:true,
         jumpAttack:true,
+        maxVelocity:20,
       },
       actions:[
         {

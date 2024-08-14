@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 
-const blockSize = 30;
-const maxVelocity = 20;
-const gravityForce = 2;
-const initialPosition = { top: 0, left: 0 };
-const initialVelocity = { x: 0, y: 0 };
-const checkDistance = 3;
+import config from "../config/physics";
+
+const {
+  blockSize,
+  gravityForce,
+  initialPosition,
+  initialVelocity,
+  checkDistance,
+  airDensity,
+} = config;
 
 export default function usePhysics({
   boundaries,
@@ -15,6 +19,8 @@ export default function usePhysics({
   character,
   framerate,
 }) {
+  const attributes = character?.attributes ? character.attributes : {};
+  const maxVelocity = attributes.maxVelocity;
   const [position, setPosition] = useState(initialPosition);
   const [velocity, setVelocity] = useState(initialVelocity);
   const [closeBoundaries, setCloseBoundaries] = useState([]);
@@ -123,8 +129,8 @@ export default function usePhysics({
   };
 
   const render = () => {
-    if (!keys.d && velocity.x > 0) applyForce("x", -2); // Slow down right movement
-    if (!keys.a && velocity.x < 0) applyForce("x", 2); // Slow down left movement
+    if (!keys.d && velocity.x > 0) applyForce("x", airDensity * -1); // Slow down right movement
+    if (!keys.a && velocity.x < 0) applyForce("x", airDensity); // Slow down left movement
 
     let newPosition = {
       top: position.top,
@@ -153,7 +159,7 @@ export default function usePhysics({
 
     // Apply gravity
     if (verticalCheck.ok && horizontalCheck.ok) {
-      applyForce("y", gravityForce);
+      applyForce("y", gravityForce + (attributes.weight));
     }
 
     if (
@@ -165,10 +171,17 @@ export default function usePhysics({
   };
 
   const onKeysChange = () => {
-    if (keys.w || keys[" "]) applyForce("y", -maxVelocity * 2); // Up
-    if (keys.s || keys[" "]) {applyForce("y", maxVelocity * 2);applyForce("x", (maxVelocity * 2) * (velocity.x > 0 ? 1 : -1))}; // Up
-    if (keys.a) applyForce("x", -2); // Left
-    if (keys.d) applyForce("x", 2); // Right
+    if(attributes.jump){
+      if (keys.w || keys[" "]) applyForce("y", -maxVelocity * airDensity); // Up
+      
+    }
+    if(attributes.slide){
+      if (keys.s || keys[" "]) {applyForce("y", maxVelocity * airDensity);applyForce("x", (maxVelocity * airDensity) * (velocity.x > 0 ? 1 : -1))}; // Up
+    }
+    if(attributes.run || attributes.walk){
+      if (keys.a) applyForce("x", attributes.speed * -1); // Left
+      if (keys.d) applyForce("x", attributes.speed); // Right
+    }
   };
 
   useEffect(() => {
