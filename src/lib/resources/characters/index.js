@@ -7,11 +7,11 @@ import zombieFemale from "./zombie-female";
 import zombieMale from "./zombie-male";
 
 export default {
-  "Red Hat":redHat,
-  "Santa":santa,
+  "Tom":redHat,
+  "Santa Clause":santa,
   "Ninja":ninja,
-  "Zombie Male":zombieMale,
-  "Zombie Female":zombieFemale,
-  "Jack":jack,
+  "Nathan":zombieMale,
+  "Addison":zombieFemale,
+  "Punkin man":jack,
   "Aether":knight
 };

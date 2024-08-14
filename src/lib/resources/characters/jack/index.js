@@ -2,20 +2,20 @@
 
 export default{
       name:"jack",
-      width: 40,
+      width: 45,
       height: 65,
       container:{
-        width: 100,
-        height: 100,
-        minHeight:100,
-        minWidth:100
+        width: 45,
+        height: 70,
+        minHeight:70,
+        minWidth:45
       },
       box:{
-        width:"55px",
+        width:"150px",
         height:"80px",
-        left:"0px",
-        top:"-10px",
-        objectPosition:"0px",
+        left:"-0px",
+        top:"-12px",
+        objectPosition:"-5px",
         objectFit:"cover",
       },
       attributes:{
