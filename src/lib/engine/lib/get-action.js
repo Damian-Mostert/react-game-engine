@@ -1,5 +1,5 @@
 
-const handleInput = (keys = {}, swipe = {}, velocity = {}, attributes= {},lastKeys={}) => {
+const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={}) => {
     if (keys.w && keys.a) {
         return "jump-left";
     }
@@ -25,8 +25,8 @@ const handleInput = (keys = {}, swipe = {}, velocity = {}, attributes= {},lastKe
     if(lastKeys.a)return"idle-left"
     return "idle";
 };
-const getAction = (keys,swipe,velocity,attributes,lastKeys)=>{
-    const result = handleInput(keys,swipe,velocity,attributes,lastKeys);
+const getAction = (keys,velocity,attributes,lastKeys)=>{
+    const result = handleInput(keys,velocity,attributes,lastKeys);
     return {
         result,
         left:result.endsWith("-left"),

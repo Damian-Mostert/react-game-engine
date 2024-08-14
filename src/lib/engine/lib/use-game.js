@@ -21,18 +21,16 @@ export default function useGame({ boundaries = [],character = "", characters = {
 	const physics = usePhysics({
 		boundaries,
 		keys,
-		swipe,
 		character:characters?.[character],
 		framerate
 	});
 
-	const action = getAction(keys,swipe,physics.velocity,character.attributes,lastKeys);
+	const action = getAction(keys,physics.velocity,character.attributes,lastKeys);
 
 	const sprite = useSprite(characters[character],action.result,action.left);
 
 	return {
 		sprite,
-		swipe,
 		keys,
 		boundaries: physics.position,
 		closeBoundaries: physics.closeBoundaries,
