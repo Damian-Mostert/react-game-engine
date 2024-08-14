@@ -19,8 +19,8 @@ export default{
         objectFit:"cover",
       },
       attributes:{
-        speed:1,
-        weight:2,
+        speed:0.5,
+        weight:0.5,
         health:100,
         attack:10,
         jump:false,
@@ -29,6 +29,7 @@ export default{
         slide:false,
         attack:true,
         jumpAttack:false,
+        maxVelocity:10,
       },
       actions:[
         {
