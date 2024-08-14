@@ -212,5 +212,6 @@ export default function usePhysics({
   return {
     position,
     closeBoundaries,
+    velocity,
   };
 }

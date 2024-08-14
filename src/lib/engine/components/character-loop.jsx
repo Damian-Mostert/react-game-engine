@@ -19,7 +19,6 @@ export default function CharacterLoop({ images = [], container = {}, img = {}, l
     <div style={{position:"relative",...container}}>
        {images[imageIndex] ? <img
           src={images[imageIndex]}
-          alt={"Image not Found"}
           style={{ ...img, position:"absolute",objectFit: "cover",transform:left ? "scaleX(-1)" : ""}}
         />:<>Error !</>} 
     </div>

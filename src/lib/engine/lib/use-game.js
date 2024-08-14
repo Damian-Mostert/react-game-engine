@@ -27,7 +27,7 @@ export default function useGame({ boundaries = [],character = "", characters = {
 		framerate
 	});
 
-	const sprite = useSprite(characters[character],getAction(keys,swipe));
+	const sprite = useSprite(characters[character],getAction(keys,swipe),physics.velocity);
 
 	return {
 		sprite,
