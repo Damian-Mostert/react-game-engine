@@ -9,8 +9,8 @@ export default function CharacterSelect({characters,setCharacter}){
     return <div className="h-screen w-screen flex justify-center items-center">
     <div className="h-min w-full max-w-[1000px] flex">
       <div className="w-full p-4">
-      <h1 className="text-3xl pb-8 uppercase">Character select</h1>
-      <div className="w-full flex flex-wrap justify-center">
+      <h1 className="text-3xl pb-8 uppercase text-red-700">Who do you want to be?</h1>
+      <div className="w-full flex flex-wrap justify-center" style={{maxHeight:600,overflow:"auto"}}>
       {Object.keys(data).map((data_key, key) => {
             const character=data[data_key]
             const fullImages = {};
