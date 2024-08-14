@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 export default function useSwipe() {
 
   const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
-   const [touchDiff, setTouchDiff] = useState({ x: 0, y: 0 });
+  const [touchDiff, setTouchDiff] = useState({ x: 0, y: 0 });
   const [touchEnd, setTouchEnd] = useState({ x: 0, y: 0 });
 
   const handleTouchStart = (ev) => {

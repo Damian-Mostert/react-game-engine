@@ -1,7 +1,8 @@
 "use client";
 
 import styles from "./engine.module.css";
-import useGame from "./lib/use-game";
+import useGame from "../lib/use-game";
+import useSprite from "../lib/use-sprite";
 
 export function Boundary({
   top,
@@ -41,7 +42,6 @@ export function Boundary({
         backgroundImage: `url(${textures[texture]})`,
         backgroundSize: `${blocksize}px ${blocksize}px`,
         backgroundRepeat: "repeat",
-        //background:closeBoundarie?"red": null
       }}
     />
   );
@@ -75,7 +75,16 @@ export default function Engine({
               />
             );
           })}
-          {/* {game.closeBoundaries.map((boundary, index) => {
+                    {boundaries.map((boundary, index) => {
+            return (
+              <Boundary
+                {...boundary}
+                blocksize={30}
+                textures={textures}
+                key={index}
+              />
+            );
+          })}            {game.closeBoundaries.map((boundary, index) => {
             return (
               <Boundary
                 {...boundary}
@@ -85,31 +94,7 @@ export default function Engine({
                 key={index}
               />
             );
-          })} */}
-          {game?.players &&
-            Object.keys(game.players).map((key) => {
-              const player = game.players[key];
-              return (
-                <div
-                  key={key}
-                  className={styles.object}
-                  style={{
-                    bottom: player.top * -1 + "px",
-                    left: player.left + "px",
-                  }}
-                >
-                  <div
-                    className={styles.character}
-                    style={{
-                      width: player.character?.width + "px",
-                      height: player.character?.height + "px",
-                      backgroundImage: `url(${player.character?.image})`,
-                      transform: player?.keys?.a ? "scaleX(-1)" : "",
-                    }}
-                  />
-                </div>
-              );
-            })}
+          })} 
         </div>
         <div
           className={styles.object}
@@ -120,27 +105,9 @@ export default function Engine({
             style={{
               width: characters[character]?.width + "px",
               height: characters[character]?.height + "px",
-              transform:
-                game.keys?.a || game.swipe?.x < -70 ? "scaleX(-1)" : "",
             }}
           >
-            {(() => {
-              var action = null;
-              if (
-                game.keys?.a ||
-                game.keys?.d ||
-                game.swipe?.x < -70 ||
-                game.swipe?.x > 70
-              )
-                action = "run";
-              else if (game.keys?.w || game.keys?.[" "] || game.swipe?.y < -70)
-                action = "jump";
-
-              return characters[character][action ? action : "idle"](
-                characters[character]?.width,
-                characters[character]?.height
-              );
-            })()}
+            {game.sprite}
           </div>
         </div>
       </div>
