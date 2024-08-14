@@ -5,10 +5,10 @@ export default{
       width: 40,
       height: 65,
       container:{
-        width: 40,
+        width: 50,
         height: 65,
         minHeight:65,
-        minWidth:40
+        minWidth:50
       },
       box:{
         width:"20ad0px",
@@ -17,6 +17,17 @@ export default{
         top:"-6px",
         objectPosition:"-26px",
         objectFit:"cover",
+      },
+      attributes:{
+        weight:100,
+        health:100,
+        attack:10,
+        jump:true,
+        run:true,
+        walk:true,
+        slide:true,
+        attack:true,
+        jumpAttack:true,
       },
       actions:[
         {

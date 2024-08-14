@@ -18,6 +18,17 @@ export default{
         objectPosition:"-10px",
         objectFit:"cover",
       },
+      attributes:{
+        weight:100,
+        health:100,
+        attack:10,
+        jump:true,
+        run:true,
+        walk:true,
+        slide:true,
+        attack:true,
+        jumpAttack:true,
+      },
       actions:[
         {
             callback:"dead",
