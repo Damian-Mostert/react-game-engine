@@ -5,6 +5,7 @@ import useGame from "../lib/use-game";
 import { useEffect, useRef, useState } from "react";
 import useStorage from "../lib/use-storage";
 
+
 export function Boundary({
 	top,
 	left,
@@ -93,13 +94,16 @@ useEffect(()=>{
     updateBoundary
   }
 },[storage]);
+
 useEffect(()=>{
   if(audio){
     let music = new Audio(audio);
-    music.volume = 0.5
+    music.volume = 0.2
     music.play();
   }
 },[audio]);
+
+
 
 useEffect(()=>{
   let t = setTimeout(()=>{
