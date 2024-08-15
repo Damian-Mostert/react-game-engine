@@ -2,8 +2,8 @@
 
 import styles from "./engine.module.css";
 import useGame from "../lib/use-game";
-import useSprite from "../lib/use-sprite";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import useStorage from "../lib/use-storage";
 
 export function Boundary({
 	top,
@@ -63,6 +63,8 @@ export default function Engine({
 	boundaries,
 	paused
 }) {
+  const [audio,setAudio] = useState();
+
 	const updateBoundary = (id,rules) =>{
     if(!rules)return;
 		setBounds(boundaries=>boundaries.map(__bound=>{
@@ -74,22 +76,31 @@ export default function Engine({
 			}
 		}));
 	}
+  const [storage,store] = useStorage(["coins"]);
   const [message,setMessage] = useState(null);
 	const [Bounds,setBounds] = useState(boundaries);
-  const [coins,setCoins] = useState(0);
 useEffect(()=>{
   window.gameDom = {
     updateBigMessage(message){
       setMessage(message);
     },
     addCoins(amount = 1){
-      setCoins((p)=>{
-        return p + amount
-      })
+      store("coins",storage.coins ? storage.coins + amount : amount)
+    },
+    playSound(audioFile){
+      setAudio(`/sounds/${audioFile}` == audio ?`/sounds/${audioFile}?play=${0}` : `/sounds/${audioFile}`);
     },
     updateBoundary
   }
-},[]);
+},[storage]);
+useEffect(()=>{
+  if(audio){
+    let music = new Audio(audio);
+    music.volume = 0.5
+    music.play();
+  }
+},[audio]);
+
 useEffect(()=>{
   let t = setTimeout(()=>{
     if(message)setMessage(null)
@@ -160,7 +171,7 @@ return ()=>{
           <div className="text-sm text-left pl-1 -mb-4">
             coins:
           </div>
-            {coins}
+            {storage.coins ? storage.coins : 0}
         </div>
 			</div>
 		);
