@@ -5,7 +5,8 @@ export const createSlope = (
     height,
     reverse,
     orientation,
-    texture
+    texture,
+    data = {}
   ) => {
     if (orientation === "horizontal") {
       if (reverse) {
@@ -16,6 +17,7 @@ export const createSlope = (
             width: 1,
             height: height - i,
             texture,
+            ...data
           };
         });
       }
@@ -26,6 +28,7 @@ export const createSlope = (
           width: 1,
           height: height - i,
           texture,
+          ...data
         };
       });
     } else if (orientation === "vertical") {
@@ -37,6 +40,7 @@ export const createSlope = (
             width: length - i,
             height: 1,
             texture,
+            ...data
           };
         });
       }
@@ -47,6 +51,7 @@ export const createSlope = (
           width: length - i,
           height: 1,
           texture,
+          ...data
         };
       });
     }
@@ -57,7 +62,8 @@ export const createQuarterCircle = (
     radius,
     reverse,
     orientation,
-    texture
+    texture,
+    data = {}
   ) => {
     const segments = [];
     const step = 1; // Step size for iteration
@@ -71,6 +77,7 @@ export const createQuarterCircle = (
           width: 1,
           height: Math.floor(height),
           texture,
+          ...data
         });
       }
     } else if (orientation === "vertical") {
@@ -82,10 +89,104 @@ export const createQuarterCircle = (
           width: Math.floor(width),
           height: 1,
           texture,
+          ...data
         });
       }
     }
   
     return segments;
 };
-  
+const vulgarMessages = [
+  "DAMN RIGHT, GET THAT MONEY!",
+  "FUCK YEAH, CASH!",
+  "HELL YEAH, COLLECT THAT SHIT!",
+  "YOU DESERVE THIS SHIT!",
+  "GRAB THAT FUCKING CASH!",
+  "MORE FUCKING COINS!",
+  "FUCKING RICH NOW!",
+  "STACK THAT FUCKING CASH!",
+  "BASK IN THE SHITLOAD OF COINS!",
+  "LOAD UP ON THAT SWEET CASH!",
+  "FUCKING SCORE BIG TIME!",
+  "GOLD MINE BITCH!",
+  "RACK UP THOSE FUCKING COINS!",
+  "CASH IN, MOTHERFUCKER!",
+  "CHA-CHING, MOTHERFUCKER!",
+  "MONEY FUCKING FALLING FROM THE SKY!",
+  "YOU’RE ROLLING IN THIS SHIT!",
+  "CASH RAIN, FUCKER!",
+  "COLLECT THAT BILLS, BITCH!",
+  "FILL YOUR FUCKING POCKETS!",
+  "YOU’RE BALLING NOW, BITCH!",
+  "CASH STACKS FOR DAYS, FUCKER!",
+  "GOLDEN FUCKING TROVE!",
+  "TIME TO GET FUCKING RICH!",
+  "FUCKING SCORE, YOU WINNER!",
+  "THIS IS YOUR SHITLOAD OF COINS!",
+  "FUCKING WINNING, BITCH!",
+  "MONEY MADNESS, LET’S GO!",
+  "YOU’RE SWIMMING IN COINS, BITCH!",
+  "FUCKING UNSTOPPABLE!",
+  "HIT THE JACKPOT, ASSHOLE!"
+];
+
+
+function getRandomMessage() {
+  return vulgarMessages[Math.floor(Math.random() * vulgarMessages.length)];
+}
+
+export function createCoins(startTop, startLeft, count, slopeXOffset = 1) {
+  const coins = [];
+
+  for (let i = 0; i < count; i++) {
+    coins.push({
+      top: startTop + i * 3, // Increased spacing for more visibility
+      left: startLeft + i * slopeXOffset,
+      width: 1,
+      height: 1,
+      texture: "Coin",
+      id: `VulgarCoin${i + 1}`,
+      passThrough: true,
+      inRange: (boundary) => {
+        window.gameDom.updateBigMessage(getRandomMessage());
+        window.gameDom.addCoins(100);
+        boundary.destroy = true;
+        window.gameDom.playSound("coin.mp3");
+        setTimeout(() => {
+          window.gameDom.updateBoundary(`VulgarCoin${i + 1}`, { ...boundary, destroy: false });
+        }, 3000);
+        return boundary;
+      },
+    });
+  }
+
+  return coins;
+}
+
+export function createLineOfCoins(startTop, startLeft, count, spacing = 3, direction = 'vertical') {
+  const coins = [];
+
+  for (let i = 0; i < count; i++) {
+    coins.push({
+      top: direction === 'vertical' ? startTop + i * spacing : startTop,
+      left: direction === 'horizontal' ? startLeft + i * spacing : startLeft,
+      width: 1,
+      height: 1,
+      texture: "Coin",
+      id: `VulgarCoin${direction === 'vertical' ? `Vertical${i + 1}` : `Horizontal${i + 1}`}`,
+      passThrough: true,
+      inRange: (boundary) => {
+        window.gameDom.playSound("coin.mp3");
+        window.gameDom.updateBigMessage(getRandomMessage());
+        window.gameDom.addCoins(100);
+        boundary.destroy = true;
+        setTimeout(() => {
+          window.gameDom.updateBoundary(`VulgarCoin${direction === 'vertical' ? `Vertical${i + 1}` : `Horizontal${i + 1}`}`, { ...boundary, destroy: false });
+        }, 3000);
+        return boundary;
+      },
+    });
+  }
+
+  return coins;
+}
