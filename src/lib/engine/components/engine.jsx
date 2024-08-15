@@ -89,7 +89,15 @@ useEffect(()=>{
     },
     updateBoundary
   }
-},[])
+},[]);
+useEffect(()=>{
+  let t = setTimeout(()=>{
+    if(message)setMessage(null)
+  },3000);
+return ()=>{
+  clearTimeout(t);
+}
+},[message])
 
 		const game = useGame({ boundaries:Bounds, character, characters, paused ,updateBoundary});
 
@@ -137,18 +145,22 @@ useEffect(()=>{
 								height: characters[character]?.height + "px",
 							}}
 						>
-							<div className="absolute bottom-full w-max text-white text-[0.8rem]">
+							<div className={styles.characterTitle}>
 							{character}
 							</div>
 							{game.sprite}
 						</div>
 					</div>
 				</div>
-        <div className={styles.bigMessage}>
+        {message && <div className={styles.bigMessage}>
               {message}
-        </div>
+        </div>}
+        
         <div className={styles.coins}>
-              {coins}
+          <div className="text-sm text-left pl-1 -mb-4">
+            coins:
+          </div>
+            {coins}
         </div>
 			</div>
 		);

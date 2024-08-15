@@ -1,4 +1,5 @@
 .container{
+	perspective: 1000px;
 	width: 100%;
 	height: 100%;
 	max-width: 100%;
@@ -43,7 +44,10 @@
 }
 
 .bigMessage {
-    font-size: 3rem;
+	background-color: #ffffff;
+	border-radius: 2rem;
+	padding: 1rem;
+	font-size: 3rem;
     position: absolute;
     top: 2rem;
     left: 5%;
@@ -57,11 +61,48 @@
 .coins {
     font-size: 3rem;
     position: absolute;
+	background-color: black;
+	border:2px solid gold;
+	border-radius: 1rem;
+	padding: 1rem;
     top: 2rem;
     left: 1%;
     text-align: center;
     width: 10%;
 	margin: auto;
+	height: 70px;
+	padding-top: 0.2rem;
     animation: bounce 2s infinite;
 	@apply text-orange-300;
 }
+
+@media screen and (max-width:1000px) {
+	.bigMessage {
+		background-color: #ffffff;
+		padding: 0.5rem;
+		font-size: 1.5rem;
+		border-radius: 2rem;
+		position: fixed;
+		top:75%;
+		left: 5%;
+		text-align: center;
+		width: 90%;
+		height: max-content;
+	}		
+}
+
+.characterTitle{
+	@apply absolute bottom-full w-full text-nowrap text-center text-white text-[0.8rem];
+	transform-style: preserve-3d; /* Preserves 3D transformations for children */
+  	animation: rotate3D 5s infinite linear; /* Applies the animation */
+	z-index: 10;
+}
+
+@keyframes rotate3D {
+	0% {
+	  transform: rotateX(0deg);
+	}
+	100% {
+	  transform: rotateX(360deg);
+	}
+  }

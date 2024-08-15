@@ -1,4 +1,41 @@
-import { createSlope,createQuarterCircle } from "./tools/builders";
+import { createSlope, createQuarterCircle } from "./tools/builders";
+
+function createVulgarCoins(startTop, startLeft, count, slopeXOffset = 1) {
+  const vulgarMessages = [
+    "DAMN RIGHT, GET THAT MONEY!",
+    "FUCK YEAH, CASH!",
+    "HELL YEAH, COLLECT THAT SHIT!",
+    "YOU DESERVE THIS SHIT!",
+    "GRAB THAT FUCKING CASH!",
+    "MORE FUCKING COINS!",
+    "FUCKING RICH NOW!"
+  ];
+
+  const coins = [];
+
+  for (let i = 0; i < count; i++) {
+    coins.push({
+      top: startTop + i,
+      left: startLeft + i * slopeXOffset,
+      width: 1,
+      height: 1,
+      texture: "Coin",
+      id: `VulgarCoin${i + 1}`,
+      passThrough: true,
+      inRange: (boundary) => {
+        window.gameDom.updateBigMessage(vulgarMessages[i % vulgarMessages.length]);
+        window.gameDom.addCoins(100);
+        boundary.destroy = true;
+        setTimeout(() => {
+          window.gameDom.updateBoundary(`VulgarCoin${i + 1}`, { ...boundary, destroy: false });
+        }, 3000);
+        return boundary;
+      },
+    });
+  }
+
+  return coins;
+}
 
 const boundaries = [
   {
@@ -7,120 +44,28 @@ const boundaries = [
     width: 900,
     height: 150,
     texture: "CobbleStone",
-    passThrough:true,
-
+    passThrough: true,
   },
   {
-      top: 150,
-      left: -450,
-      width: 900,
-      height: 1,
-      texture: "Dirt",
-      id:"Floor",
-      inRange(boundary,dom){
-        boundary.texture = "Grass";
-        return boundary;
-      },
-      outRange(boundary,dom){
-        boundary.texture = "Dirt";
-        return boundary;
-      },
-      
+    top: 150,
+    left: -450,
+    width: 900,
+    height: 1,
+    texture: "Dirt",
+    id: "Floor",
+    inRange(boundary, dom) {
+      boundary.texture = "Grass";
+      return boundary;
     },
-    {
-      top: 41,
-      left:0,
-      width: 1,
-      height: 1,
-      id:"Message",
-      id:"Floor",
-      inRange(boundary){
-        window.gameDom.updateBigMessage("Hi there");
-        boundary.message = "start"
-        return boundary; 
-      },
-      outRange(boundary){
-        boundary.message = null
-        return boundary;  
-      },
+    outRange(boundary, dom) {
+      boundary.texture = "Dirt";
+      return boundary;
+    },
+  },
+  ...createVulgarCoins(54, 15, 25), // Creates 7 coins down the slope starting from top 54 and left 15
+  ...createSlope(80, 0, 40, 40, false, "vertical", "Grass"),
+  ...createQuarterCircle(120, -40, 40, false, "horizontal", "Dirt"),
+  ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"),
+];
 
-      
-    },
-    {
-      top: 48,
-      left: 9,
-      width: 1,
-      height: 1,
-      texture: "Coin",
-      id:"Message2",
-      passThrough:true,
-      inRange:(boundary)=>{
-          window.gameDom.updateBigMessage("Welcome to the gam, heres some money");
-          window.gameDom.addCoins(100)
-          boundary.destroy = true;
-          setTimeout(()=>{
-            window.gameDom.updateBoundary("Message2",{...boundary,destroy:false})
-          },3000)
-          return boundary; 
-        },
-      /* outRangeBlocks:()=>({
-        range:100,
-        action:(boundary)=>{
-          boundary.texture = "Dirt";
-          return boundary;  
-        }}), */
-    },
-    {
-      top: 49,
-      left: 10,
-      width: 1,
-      height: 1,
-      texture: "Coin",
-      id:"Message3",
-      passThrough:true,
-      inRange:(boundary)=>{
-          window.gameDom.updateBigMessage("COINS !!!");
-          window.gameDom.addCoins(100)
-          boundary.destroy = true;
-          setTimeout(()=>{
-            window.gameDom.updateBoundary("Message3",{...boundary,destroy:false})
-          },3000)
-          return boundary; 
-        },
-      /* outRangeBlocks:()=>({
-        range:100,
-        action:(boundary)=>{
-          boundary.texture = "Dirt";
-          return boundary;  
-        }}), */
-    },
-    {
-      top: 50,
-      left: 11,
-      width: 1,
-      height: 1,
-      texture: "Coin",
-      id:"Message4",
-      passThrough:true,
-      inRange:(boundary)=>{
-          window.gameDom.updateBigMessage("FUCK YEAH MHAN!!!");
-          window.gameDom.addCoins(100)
-          boundary.destroy = true;
-          setTimeout(()=>{
-            window.gameDom.updateBoundary("Message4",{...boundary,destroy:false})
-          },3000)
-          return boundary; 
-        },
-      /* outRangeBlocks:()=>({
-        range:100,
-        action:(boundary)=>{
-          boundary.texture = "Dirt";
-          return boundary;  
-        }}), */
-    },
-    ...createSlope(80, 0, 40, 40, false, "vertical", "Grass"),
-    ...createQuarterCircle(120, -40, 40, false, "horizontal", "Dirt"),
-    ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"),
-  ];
-  
-  export default boundaries;
+export default boundaries;
