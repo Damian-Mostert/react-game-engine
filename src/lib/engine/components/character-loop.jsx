@@ -20,7 +20,7 @@ export default function CharacterLoop({ images = [], container = {}, img = {}, l
        {images[imageIndex] ? <img
           src={images[imageIndex]}
           style={{ ...img, position:"absolute",objectFit: "cover",transform:left ? "scaleX(-1)" : ""}}
-        />:<>Error !</>} 
+        />:<></>} 
     </div>
   );
 }

@@ -1,10 +1,12 @@
 
 const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={},isJumping) => {
-    if(keys.e){
-        if(lastKeys.a){
-            return "attack-left";
-        }else{
-            return "attack"
+    if(attributes.attack){
+        if(keys.e){
+            if(lastKeys.a){
+                return "attack-left";
+            }else{
+                return "attack"
+            }
         }
     }
     if(attributes.jump){

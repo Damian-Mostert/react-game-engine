@@ -30,3 +30,11 @@
 	display: flex;
 	background-size: contain
 }
+.bigMessage{
+	font-size: 3rem;
+	position: absolute;
+	top:0px;
+	left: 0px;
+	text-align: center;
+	width: 100%;
+}

@@ -67,6 +67,14 @@ export default function usePhysics({
       const boundLeft = __bound.left * blockSize;
       const boundBottom = boundTop + __bound.height * blockSize;
       const boundRight = boundLeft + __bound.width * blockSize;
+
+      const checkRange = (range) =>
+        (newPosition.top-(range)) < (boundBottom ) &&
+        (newPosition.top +(range)) + character.height > (boundTop) &&
+        (newPosition.left - (range)) < (boundRight) &&
+        (newPosition.left + (range) ) + character.width > (boundLeft)
+      
+
       const isInRange =
         newPosition.top < boundBottom &&
         newPosition.top + character.height > boundTop &&
@@ -79,11 +87,34 @@ export default function usePhysics({
         (newPosition.left - 10) < boundRight &&
         (newPosition.left + 10) + character.width > boundLeft);
 
+        const insideRange = !(
+          (newPosition.top -1) < boundBottom &&
+          (newPosition.top + 1) + character.height > boundTop &&
+          (newPosition.left - 1) < boundRight &&
+          (newPosition.left + 1) + character.width > boundLeft);
 
+    if(insideRange && typeof __bound.insideRange == "function"){
+      updateBoundary(__bound.id,__bound.insideRange(__bound));
+    }
     if (isInRange && typeof __bound.inRange === "function") {
         updateBoundary(__bound.id,__bound.inRange(__bound));
     }else if(isNotInRange && typeof __bound.outRange == "function"){
         updateBoundary(__bound.id,__bound.outRange(__bound));
+    }
+
+    if (__bound.inRangeBlocks) {
+      let {
+        range,
+        action
+      } = __bound.inRangeBlocks(__bound);
+      if(checkRange(range))updateBoundary(__bound.id,action(__bound));
+    }
+    if(__bound.outRangeBlocks){
+      let {
+        range,
+        action
+      } = __bound.outRangeBlocks(__bound);
+        if(!checkRange(range))updateBoundary(__bound.id,action(__bound));
     }
     if (__bound.passThrough) return;
 
@@ -212,7 +243,7 @@ export default function usePhysics({
         applyForce("y", maxVelocity * airDensity); // Down
         applyForce(
           "x",
-          maxVelocity * airDensity * (velocity.x > 0 ? 1 : -1)
+          maxVelocity * airDensity * (velocity.x < 0 ? -1 : 1)
         ); // Slide Left/Right
       }
     }
