@@ -68,7 +68,7 @@
     top: 2rem;
     left: 1%;
     text-align: center;
-    width: 10%;
+	min-width: max-content;
 	margin: auto;
 	height: 70px;
 	padding-top: 0.2rem;
