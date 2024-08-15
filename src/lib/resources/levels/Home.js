@@ -6,7 +6,7 @@ const boundaries = [
     left: -450,
     width: 900,
     height: 150,
-    texture: "Dirt",
+    texture: "CobbleStone",
     passThrough:true,
 
   },
@@ -29,6 +29,9 @@ const boundaries = [
         return boundary;
       }
     },
+    ...createSlope(80, 0, 40, 40, false, "vertical", "Dirt"),
+    ...createQuarterCircle(120, -40, 40, false, "horizontal", "Dirt"),
+    ...createQuarterCircle(120, -40, 40, true, "vertical", "Dirt"),
   ];
   
   export default boundaries;
