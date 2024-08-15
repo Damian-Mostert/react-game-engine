@@ -5,22 +5,19 @@ export default{
       width: 40,
       height: 80,
       container:{
-        width: 40,
         height: 80,
-        minHeight:80,
         minWidth:40
       },
       box:{
-        width:45,
         minWidth:45,
-        height:"80px",
         left:"0px",
+        scale:"0.9",
         top:"0px",
         objectPosition:"0px",
         objectFit:"cover",
       },
       attributes:{
-        speed:4,
+        speed:1,
         weight:2,
         maxVelocity:40,
         health:100,
@@ -30,7 +27,7 @@ export default{
         walk:false,
         slide:true,
         attack:false,
-        jumpAttack:false,
+        jumpAttack:true,
       },
       actions:[
         {
@@ -51,17 +48,48 @@ export default{
         {
             callback:"jump",
             slug:"Jump",
-            frames:12
+            frames:10
         },
         {
             callback:"run",
             slug:"Run",
-            frames:8
+            frames:8,
+            override:{
+              container:{
+                width: 50,
+                height: 70,
+                minHeight:70,
+                minWidth:55,
+              },
+              box:{
+                width:"150px",
+                height:"80px",
+                left:"-0px",
+                top:"-12px",
+                objectPosition:"0px",
+              },
+            }
         },
         {
             callback:"slide",
             slug:"Slide",
-            frames:5
+            frames:10,
+            override:{
+              container:{
+                width: 45,
+                height: 70,
+                minHeight:70,
+                minWidth:45
+              },
+              box:{
+                minWidth:72,
+                scale:"0.8",
+                height:"80px",
+                left:"-0px",
+                top:"-6px",
+                objectFit:"contain",
+              },
+            }
         }
       ]
 }

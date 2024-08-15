@@ -5,18 +5,15 @@ export default{
       width: 40,
       height: 65,
       container:{
-        width: 40,
-        height: 70,
-        minHeight:70,
-        minWidth:40
+        minHeight:79,
+        minWidth:50
       },
       box:{
-        width:"150px",
-        height:"80px",
-        left:"0px",
+        width:"100%",
+        height:"100%",
+        left:"-4px",
         top:"-12px",
-        objectPosition:"-10px",
-        objectFit:"cover",
+        objectPosition:"-4px",
       },
       attributes:{
         speed:0.5,

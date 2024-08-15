@@ -11,12 +11,27 @@ export default function useSprite(character,action,left){
         }
         fullImages[action.callback] = images;
     }
-    const act = (action.endsWith("-left") ? action.split("-left")[0]: action)
+    const act = (action.endsWith("-left") ? action.split("-left")[0]: action);
     const images = fullImages[act];
+
+    let container = character.container;
+    let box = character.box;
+
+    character.actions.map(action=>{
+        if(action.callback == act){
+            if(action.override){
+                if(action.override.container)
+                    container = action.override.container
+                if(action.override.box)
+                    box = action.override.box
+            }
+        }
+    });
+
     return <>
     <CharacterLoop
-        img={character.box}
-        container={character.container}
+        img={box}
+        container={container}
         images={images}
         left={left}
       />

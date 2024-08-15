@@ -2,16 +2,14 @@
 
 export default{
       name:"jack",
-      width: 45,
+      width: 55,
       height: 65,
       container:{
-        width: 45,
-        height: 70,
         minHeight:70,
-        minWidth:45
+        minWidth:50,
       },
       box:{
-        width:"150px",
+        minWidth:50,
         height:"80px",
         left:"-0px",
         top:"-12px",
@@ -25,8 +23,8 @@ export default{
         health:100,
         ap:10,
         jump:true,
-        run:false,
-        walk:true,
+        run:true,
+        walk:false,
         slide:true,
         attack:false,
         jumpAttack:true,
@@ -50,17 +48,48 @@ export default{
         {
             callback:"jump",
             slug:"Jump",
-            frames:12
+            frames:10
         },
         {
             callback:"run",
             slug:"Run",
-            frames:8
+            frames:8,
+            override:{
+              container:{
+                width: 50,
+                height: 70,
+                minHeight:70,
+                minWidth:55,
+              },
+              box:{
+                width:"150px",
+                height:"80px",
+                left:"-0px",
+                top:"-12px",
+                objectPosition:"0px",
+              },
+            }
         },
         {
             callback:"slide",
             slug:"Slide",
-            frames:5
+            frames:10,
+            override:{
+              container:{
+                width: 45,
+                height: 70,
+                minHeight:70,
+                minWidth:45
+              },
+              box:{
+                minWidth:72,
+                scale:"0.8",
+                height:"80px",
+                left:"-0px",
+                top:"-6px",
+                objectFit:"contain",
+              },
+            }
         }
       ]
 }

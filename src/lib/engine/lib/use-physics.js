@@ -38,6 +38,7 @@ export default function usePhysics({
 
   const filterCloseBoundaries = () => {
     const newCloseBoundaries = boundaries.filter((__bound) => {
+      if(!__bound)return false;
       const boundTop = __bound.top * blockSize;
       const boundLeft = __bound.left * blockSize;
       const boundBottom = boundTop + __bound.height * blockSize;
@@ -63,16 +64,18 @@ export default function usePhysics({
     let ok = true;
 
     closeBoundaries.forEach((__bound) => {
+      if(!__bound)return;
+      if(__bound.destroy)return;
       const boundTop = __bound.top * blockSize;
       const boundLeft = __bound.left * blockSize;
       const boundBottom = boundTop + __bound.height * blockSize;
       const boundRight = boundLeft + __bound.width * blockSize;
 
       const checkRange = (range) =>
-        (newPosition.top-(range)) < (boundBottom ) &&
+        (newPosition.top -(range)) < (boundBottom ) &&
         (newPosition.top +(range)) + character.height > (boundTop) &&
         (newPosition.left - (range)) < (boundRight) &&
-        (newPosition.left + (range) ) + character.width > (boundLeft)
+        (newPosition.left - (range) ) + character.width > (boundLeft)
       
 
       const isInRange =

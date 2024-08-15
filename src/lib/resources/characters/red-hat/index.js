@@ -60,7 +60,25 @@ export default{
         {
             callback:"slide",
             slug:"Slide",
-            frames:5
+            frames:5,
+            override:{
+              width: 40,
+              height: 65,
+              container:{
+                width: 40,
+                height: 65,
+                minHeight:65,
+                minWidth:40
+              },
+              box:{
+                width:"150px",
+                height:"80px",
+                left:"0px",
+                top:"-6px",
+                objectPosition:"-36px",
+                objectFit:"cover",
+              },
+            }
         }
       ]
 }

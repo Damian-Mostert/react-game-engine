@@ -3,12 +3,10 @@
 import useKeys from "./use-keys";
 import usePhysics from "./use-physics";
 import useFramerate from "./use-framerate";
-import useSwipe from "./use-swipe";
 import useSprite from "./use-sprite";
 import getAction from "./get-action";
 
 import config from "../config/framerates";
-import { useEffect, useState } from "react";
 const {game:Framerate} = config;
 
 

@@ -30,11 +30,38 @@
 	display: flex;
 	background-size: contain
 }
-.bigMessage{
-	font-size: 3rem;
-	position: absolute;
-	top:0px;
-	left: 0px;
-	text-align: center;
-	width: 100%;
+@keyframes bounce {
+    0% {
+        scale: 1;
+    }
+	50%{
+		scale: 0.9;
+	}
+    100% {
+		scale: 1;
+    }
+}
+
+.bigMessage {
+    font-size: 3rem;
+    position: absolute;
+    top: 2rem;
+    left: 5%;
+    text-align: center;
+    width: 90%;
+	margin: auto;
+    animation: bounce 2s infinite;
+}
+
+
+.coins {
+    font-size: 3rem;
+    position: absolute;
+    top: 2rem;
+    left: 1%;
+    text-align: center;
+    width: 10%;
+	margin: auto;
+    animation: bounce 2s infinite;
+	@apply text-orange-300;
 }

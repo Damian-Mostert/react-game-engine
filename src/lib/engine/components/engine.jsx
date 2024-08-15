@@ -65,7 +65,8 @@ export default function Engine({
 }) {
 	const updateBoundary = (id,rules) =>{
     if(!rules)return;
-		setBounds(boundaries.map(__bound=>{
+		setBounds(boundaries=>boundaries.map(__bound=>{
+      if(!__bound)return __bound;
 			if(__bound.id == id){
 				return rules
 			}else{
@@ -75,12 +76,18 @@ export default function Engine({
 	}
   const [message,setMessage] = useState(null);
 	const [Bounds,setBounds] = useState(boundaries);
-
+  const [coins,setCoins] = useState(0);
 useEffect(()=>{
   window.gameDom = {
     updateBigMessage(message){
       setMessage(message);
-    }
+    },
+    addCoins(amount = 1){
+      setCoins((p)=>{
+        return p + amount
+      })
+    },
+    updateBoundary
   }
 },[])
 
@@ -97,6 +104,7 @@ useEffect(()=>{
 						}}
 					>
 						{Bounds.map((boundary, index) => {
+              if(boundary.destroy)return<></>
 							return (
 								<Boundary
 									{...boundary}
@@ -138,6 +146,9 @@ useEffect(()=>{
 				</div>
         <div className={styles.bigMessage}>
               {message}
+        </div>
+        <div className={styles.coins}>
+              {coins}
         </div>
 			</div>
 		);
