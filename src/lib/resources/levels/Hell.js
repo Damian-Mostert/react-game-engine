@@ -7,6 +7,10 @@ const boundaries = [
 		width: 900,
 		height: 1,
 		texture: "Dirt",
+		//passThrough:true,
+		inRange(){
+			console.log("Hit the floor")
+		}
 	},
 ];
 

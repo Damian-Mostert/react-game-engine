@@ -3,6 +3,7 @@
 import styles from "./engine.module.css";
 import useGame from "../lib/use-game";
 import useSprite from "../lib/use-sprite";
+import { useState } from "react";
 
 export function Boundary({
   top,
@@ -54,7 +55,20 @@ export default function Engine({
   boundaries,
   paused
 }) {
-  const game = useGame({ boundaries, character, characters, paused });
+	const updateBoundary = (id,rules) =>{
+    console.log(id,rules)
+		setBounds(boundaries.map(__bound=>{
+			if(__bound.id == id){
+				return rules
+			}else{
+				return __bound;
+			}
+		}));
+	}
+
+	const [Bounds,setBounds] = useState(boundaries);
+
+  const game = useGame({ boundaries:Bounds, character, characters, paused ,updateBoundary});
 
   return (
     <div className={styles.container}>
@@ -66,7 +80,7 @@ export default function Engine({
             left: (game.boundaries.left + 40) * -1 + "px",
           }}
         >
-          {boundaries.map((boundary, index) => {
+          {Bounds.map((boundary, index) => {
             return (
               <Boundary
                 {...boundary}
@@ -76,16 +90,6 @@ export default function Engine({
               />
             );
           })}
-                    {boundaries.map((boundary, index) => {
-            return (
-              <Boundary
-                {...boundary}
-                blocksize={30}
-                textures={textures}
-                key={index}
-              />
-            );
-          })} 
           {/* {game.closeBoundaries.map((boundary, index) => {
             return (
               <Boundary

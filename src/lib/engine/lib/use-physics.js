@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import config from "../config/physics";
 
 const {
@@ -18,12 +17,14 @@ export default function usePhysics({
   keys,
   character,
   framerate,
+  updateBoundary
 }) {
   const attributes = character?.attributes ? character.attributes : {};
   const maxVelocity = attributes.maxVelocity;
   const [position, setPosition] = useState(initialPosition);
   const [velocity, setVelocity] = useState(initialVelocity);
   const [closeBoundaries, setCloseBoundaries] = useState([]);
+  const [isJumping, setIsJumping] = useState(false);
 
   const applyForce = (direction, force) => {
     setVelocity((prev) => ({
@@ -55,6 +56,8 @@ export default function usePhysics({
     setCloseBoundaries(newCloseBoundaries);
   };
 
+
+
   const checkBoundaries = (newPosition, direction, newVelocity) => {
     let adjustment = { top: 0, left: 0 };
     let ok = true;
@@ -64,6 +67,25 @@ export default function usePhysics({
       const boundLeft = __bound.left * blockSize;
       const boundBottom = boundTop + __bound.height * blockSize;
       const boundRight = boundLeft + __bound.width * blockSize;
+      const isInRange =
+        newPosition.top < boundBottom &&
+        newPosition.top + character.height > boundTop &&
+        newPosition.left < boundRight &&
+        newPosition.left + character.width > boundLeft;
+      
+      const isNotInRange = !(
+        (newPosition.top -10) < boundBottom &&
+        (newPosition.top + 10) + character.height > boundTop &&
+        (newPosition.left - 10) < boundRight &&
+        (newPosition.left + 10) + character.width > boundLeft);
+
+
+    if (isInRange && typeof __bound.inRange === "function") {
+        updateBoundary(__bound.id,__bound.inRange(__bound));
+    }else if(isNotInRange && typeof __bound.outRange == "function"){
+        updateBoundary(__bound.id,__bound.outRange(__bound));
+    }
+    if (__bound.passThrough) return;
 
       switch (direction) {
         case "vertical":
@@ -142,7 +164,12 @@ export default function usePhysics({
     const verticalCheck = checkBoundaries(newPosition, "vertical", velocity);
     if (!verticalCheck.ok) {
       newPosition.top += verticalCheck.adjustment.top;
-      setVelocity({ ...velocity, y: 0 });
+      setVelocity((prev) => ({ ...prev, y: 0 }));
+
+      // Reset jumping state if the character lands
+      if (velocity.y >= 0) {
+        setIsJumping(false);
+      }
     }
 
     // Handle horizontal movement
@@ -154,12 +181,12 @@ export default function usePhysics({
     );
     if (!horizontalCheck.ok) {
       newPosition.left += horizontalCheck.adjustment.left;
-      setVelocity({ ...velocity, x: 0 });
+      setVelocity((prev) => ({ ...prev, x: 0 }));
     }
 
     // Apply gravity
     if (verticalCheck.ok && horizontalCheck.ok) {
-      applyForce("y", gravityForce + (attributes.weight));
+      applyForce("y", gravityForce + attributes.weight);
     }
 
     if (
@@ -171,21 +198,31 @@ export default function usePhysics({
   };
 
   const onKeysChange = () => {
-    if(attributes.jump){
+    if (attributes.jump && !isJumping) {
+      if (keys.w || keys[" "]) {
+        setIsJumping(true); // Set jumping state to true
+        applyForce("y", -maxVelocity); // Jump Up
+      }
+    } else if (attributes.fly) {
       if (keys.w || keys[" "]) applyForce("y", -maxVelocity * airDensity); // Up
-      
     }
-    if(attributes.slide){
-      if (keys.s || keys[" "]) {applyForce("y", maxVelocity * airDensity);applyForce("x", (maxVelocity * airDensity) * (velocity.x > 0 ? 1 : -1))}; // Up
+
+    if (attributes.slide) {
+      if (keys.s || keys[" "]) {
+        applyForce("y", maxVelocity * airDensity); // Down
+        applyForce(
+          "x",
+          maxVelocity * airDensity * (velocity.x > 0 ? 1 : -1)
+        ); // Slide Left/Right
+      }
     }
-    if(attributes.run || attributes.walk){
+    if (attributes.run || attributes.walk) {
       if (keys.a) applyForce("x", attributes.speed * -1); // Left
       if (keys.d) applyForce("x", attributes.speed); // Right
     }
   };
 
   useEffect(() => {
-    console.info("keys", keys);
     onKeysChange();
   }, [keys]);
 
@@ -197,17 +234,10 @@ export default function usePhysics({
     filterCloseBoundaries();
   }, [position]);
 
-  useEffect(() => {
-    console.info("game-pos", position);
-  }, [position]);
-
-  useEffect(() => {
-    console.info("close-boundaries", closeBoundaries);
-  }, [closeBoundaries]);
-
   return {
     position,
     closeBoundaries,
     velocity,
+    isJumping,
   };
 }

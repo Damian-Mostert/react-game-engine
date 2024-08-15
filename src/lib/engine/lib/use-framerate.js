@@ -10,7 +10,6 @@ export default function useFramerate(fps,paused) {
     const i = setInterval(() => {
       setState(state++);
     }, 1000 / fps);
-
     return ()=>{clearInterval(i)};
   }, [paused]);
 

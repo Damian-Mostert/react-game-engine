@@ -1,5 +1,5 @@
 
-const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={}) => {
+const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={},isJumping) => {
     if(keys.e){
         if(lastKeys.a){
             return "attack-left";
@@ -8,6 +8,9 @@ const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={}) => {
         }
     }
     if(attributes.jump){
+        if (isJumping) {
+            return "jump-left";
+        }
         if (keys.w && keys.a) {
             return "jump-left";
         }
@@ -21,6 +24,10 @@ const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={}) => {
         }
     }
     if(attributes.jump){
+        if (isJumping) {
+            if(lastKeys.a)return"jump-left"
+            return "jump";
+        }
         if (keys.w) {
             if(lastKeys.a)return"jump-left"
             return "jump";
@@ -53,7 +60,6 @@ const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={}) => {
 };
 const getAction = (keys,velocity,attributes,lastKeys)=>{
     const result = handleInput(keys,velocity,attributes,lastKeys);
-    console.info(result)
     return {
         result,
         left:result.endsWith("-left"),

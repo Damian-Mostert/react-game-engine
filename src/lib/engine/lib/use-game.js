@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 const {game:Framerate} = config;
 
 
-export default function useGame({ boundaries = [],character = "", characters = {}, paused = false }) {
+export default function useGame({ boundaries = [],character = "", characters = {}, paused = false ,updateBoundary}) {
 	//create a frame rate state to trigger rendering;
 	const framerate = useFramerate(Framerate,paused);
 	//get control keys;
@@ -22,10 +22,11 @@ export default function useGame({ boundaries = [],character = "", characters = {
 		boundaries,
 		keys,
 		character:characters?.[character],
-		framerate
+		framerate,
+		updateBoundary
 	});
 
-	const action = getAction(keys,physics.velocity,characters[character].attributes,lastKeys);
+	const action = getAction(keys,physics.velocity,characters[character].attributes,lastKeys,physics.isJumping);
 
 	const sprite = useSprite(characters[character],action.result,action.left,paused);
 
