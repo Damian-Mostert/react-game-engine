@@ -19,7 +19,7 @@ const boundaries = [
 			left: -450,
 			width: 900,
 			height: 100,
-			texture: "Grass",
+			texture: "Lava",
 			id: "Floor",
 			inRange(data){
 				window.gameDom.removeHp(1)
