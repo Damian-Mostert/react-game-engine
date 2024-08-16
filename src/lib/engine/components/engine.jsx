@@ -50,8 +50,8 @@ export function Boundary({
 		>
 
 			{message && <div className="absolute bottom-full text-orange-2a00">
-	    	{message}
-  		</div>}
+				{message}
+				</div>}
 	</div>
 	</>
 	);
@@ -64,12 +64,25 @@ export default function Engine({
 	boundaries,
 	paused
 }) {
-  const [audio,setAudio] = useState();
+	const [audio,setAudio] = useState();
+
+	const [dead,setDead] = useState(false);
+	const [health,setHp] = useState(characters[character]?.attributes?.health);
+	const [maxHealth,setMaxHp] = useState(characters[character]?.attributes?.health);
+	useEffect(()=>{
+		if(characters[character]){
+			setHp(characters[character]?.attributes?.health);
+			setMaxHp(characters[character]?.attributes?.health);
+		}
+	},[character]);
+	useEffect(()=>{
+		if(health == 0)setDead(true);
+	},[health]);
 
 	const updateBoundary = (id,rules) =>{
-    if(!rules)return;
+		if(!rules)return;
 		setBounds(boundaries=>boundaries.map(__bound=>{
-      if(!__bound)return __bound;
+			if(!__bound)return __bound;
 			if(__bound.id == id){
 				return rules
 			}else{
@@ -77,106 +90,115 @@ export default function Engine({
 			}
 		}));
 	}
-  const [storage,store] = useStorage(["coins"]);
-  const [message,setMessage] = useState(null);
-	const [Bounds,setBounds] = useState(boundaries);
-useEffect(()=>{
-  window.gameDom = {
-    updateBigMessage(message){
-      setMessage(message);
-    },
-    addCoins(amount = 1){
-      store("coins",storage.coins ? storage.coins + amount : amount)
-    },
-    playSound(audioFile){
-      setAudio(`/sounds/${audioFile}` == audio ?`/sounds/${audioFile}?play=${0}` : `/sounds/${audioFile}`);
-    },
-    updateBoundary
-  }
-},[storage]);
+		const [storage,store] = useStorage(["coins"]);
 
-useEffect(()=>{
-  if(audio){
-    let music = new Audio(audio);
-    music.volume = 0.2
-    music.play();
-  }
-},[audio]);
+		const [message,setMessage] = useState(null);
+		const [Bounds,setBounds] = useState(boundaries);
+		useEffect(()=>{
+			window.gameDom = {
+				updateBigMessage(message){
+				setMessage(message);
+				},
+				addCoins(amount = 1){
+					store("coins",storage.coins ? storage.coins + amount : amount)
+				},
+				addHp(amount = 1){
+					setHp(health=>health+amount > maxHealth ? maxHealth : health+amount);
+				},
+				removeHp(amount = 1){
+					setHp(health=>health-amount < 0 ? 0 : health-amount);
+				},
+				playSound(audioFile){
+					setAudio(`/sounds/${audioFile}` == audio ?`/sounds/${audioFile}?play=${0}` : `/sounds/${audioFile}`);
+				},
+				updateBoundary
+			}
+		},[storage]);
+
+		useEffect(()=>{
+		if(audio){
+			let music = new Audio(audio);
+			music.volume = 0.2
+			music.play();
+			}
+		},[audio]);
 
 
 
-useEffect(()=>{
-  let t = setTimeout(()=>{
-    if(message)setMessage(null)
-  },3000);
-return ()=>{
-  clearTimeout(t);
+		useEffect(()=>{
+			let t = setTimeout(()=>{
+			if(message)setMessage(null)
+		},3000);
+		return ()=>{
+	clearTimeout(t);
 }
 },[message])
 
-		const game = useGame({ boundaries:Bounds, character, characters, paused ,updateBoundary});
+	const game = useGame({ boundaries:Bounds, character, characters, paused ,updateBoundary ,dead});
 
-		return (
-			<div className={styles.container}>
-				<div className={styles["container-sub"]}>
+	return (
+		<div className={styles.container}>
+			<div className={styles["container-sub"]}>
+				<div
+					className={styles.object}
+					style={{
+						top: (game.boundaries.top - 80) * -1 + "px",
+						left: (game.boundaries.left + 40) * -1 + "px",
+					}}
+				>
+					{Bounds.map((boundary, index) => {
+						if(boundary.destroy)return<></>
+						return (
+							<Boundary
+								{...boundary}
+								blocksize={30}
+								textures={textures}
+								key={index}
+							/>
+						);
+					})}
+					{/* {game.closeBoundaries.map((boundary, index) => {
+						return (
+							<Boundary
+								{...boundary}
+								closeBoundarie={true}
+								blocksize={30}
+								textures={textures}
+								key={index}
+							/>
+						);
+					})} */}
+				</div>
+				<div
+					className={styles.object}
+					style={{ position: "absolute", top: "80px", left: "-40px" }}
+				>
 					<div
-						className={styles.object}
+						className={styles.character}
 						style={{
-							top: (game.boundaries.top - 80) * -1 + "px",
-							left: (game.boundaries.left + 40) * -1 + "px",
+							width: characters[character]?.width + "px",
+							height: characters[character]?.height + "px",
 						}}
 					>
-						{Bounds.map((boundary, index) => {
-              if(boundary.destroy)return<></>
-							return (
-								<Boundary
-									{...boundary}
-									blocksize={30}
-									textures={textures}
-									key={index}
-								/>
-							);
-						})}
-						{/* {game.closeBoundaries.map((boundary, index) => {
-							return (
-								<Boundary
-									{...boundary}
-									closeBoundarie={true}
-									blocksize={30}
-									textures={textures}
-									key={index}
-								/>
-							);
-						})} */}
-					</div>
-					<div
-						className={styles.object}
-						style={{ position: "absolute", top: "80px", left: "-40px" }}
-					>
-						<div
-							className={styles.character}
-							style={{
-								width: characters[character]?.width + "px",
-								height: characters[character]?.height + "px",
-							}}
-						>
-							<div className={styles.characterTitle}>
-							{character}
-							</div>
-							{game.sprite}
+						<div className={styles.characterTitle}>
+						{character}
 						</div>
+						{game.sprite}
 					</div>
 				</div>
-        {message && <div className={styles.bigMessage}>
-              {message}
-        </div>}
-        
-        <div className={styles.coins}>
-          <div className="text-sm text-left pl-1 -mb-4">
-            coins:
-          </div>
-            {storage.coins ? storage.coins : 0}
-        </div>
 			</div>
-		);
+				{message && <div className={styles.bigMessage}>
+					{message}
+				</div>}
+
+				<div className={styles.coins}>
+					<div className="text-sm text-left pl-1 -mb-4">
+						coins:
+					</div>{storage.coins ? storage.coins : 0}
+				</div>
+				{characters[character] && <div className={styles.healthBar}>
+					<div className={styles.healthProgress} style={{ width: `${(health / maxHealth) * 100}%` }} />
+				</div>}
+	</div>
+	);
 }

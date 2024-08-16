@@ -20,7 +20,11 @@ const boundaries = [
 			width: 900,
 			height: 100,
 			texture: "Grass",
-			id: "Floor"
+			id: "Floor",
+			inRange(data){
+				window.gameDom.removeHp(1)
+				return data;
+			}
 		},
 
 		// Fun elements

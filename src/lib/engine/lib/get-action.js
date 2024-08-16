@@ -1,6 +1,8 @@
 
 
-const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={},isJumping) => {
+const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={},isJumping,dead) => {
+    if(dead)return "dead";
+
     if(attributes.attack){
         if(keys.e){
             if(lastKeys.a){
@@ -61,8 +63,8 @@ const handleInput = (keys = {}, velocity = {}, attributes= {},lastKeys={},isJump
     if(lastKeys.a)return"idle-left"
     return "idle";
 };
-const getAction = (keys,velocity,attributes,lastKeys)=>{
-    const result = handleInput(keys,velocity,attributes,lastKeys);
+const getAction = (keys,velocity,attributes,lastKeys,isJumping,dead)=>{
+    const result = handleInput(keys,velocity,attributes,lastKeys,isJumping,dead);
     return {
         result,
         left:result.endsWith("-left"),

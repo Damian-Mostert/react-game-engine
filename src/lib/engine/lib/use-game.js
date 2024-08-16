@@ -10,9 +10,9 @@ import config from "../config/framerates";
 const {game:Framerate} = config;
 
 
-export default function useGame({ boundaries = [],character = "", characters = {}, paused = false ,updateBoundary}) {
+export default function useGame({ boundaries = [],character = "", characters = {}, paused = false ,updateBoundary,dead}) {
 	//create a frame rate state to trigger rendering;
-	const framerate = useFramerate(Framerate,paused);
+	const framerate = useFramerate(Framerate,paused ? paused :dead);
 	//get control keys;
 	const {keys,lastKeys} = useKeys();
 
@@ -21,12 +21,24 @@ export default function useGame({ boundaries = [],character = "", characters = {
 		keys,
 		character:characters?.[character],
 		framerate,
-		updateBoundary
+		updateBoundary,
+		dead
 	});
 
-	const action = getAction(keys,physics.velocity,characters[character].attributes,lastKeys,physics.isJumping);
+	const action = getAction(
+		keys,
+		physics.velocity,
+		characters[character].attributes,
+		lastKeys,
+		physics.isJumping,
+		dead);
 
-	const sprite = useSprite(characters[character],action.result,action.left,paused);
+	const sprite = useSprite(
+		characters[character],
+		action.result,
+		action.left,
+		paused,
+		dead);
 
 	return {
 		sprite,

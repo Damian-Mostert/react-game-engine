@@ -16,19 +16,29 @@ export default function Game() {
 	const [level,setLevel] = useState(null);
 	const [paused,setPaused] = useState(false);
 	const [started,setStarted] = useState(false);
-	var mkAudio = (audio) =>{
+	
+	const mkAudio = (audio) => {
 		let music = new Audio(audio);
-		music.volume = 0.5
+		music.volume = 0.5;
 		music.play();
+	
+		// When the current track ends, select and play a new track
+		music.addEventListener('ended', () => {
+			mkAudio(musicTracks[getRandomInt(musicTracks.length)]);
+		});
+	
 		return music;
-		}
-			function getRandomInt(max) {
-				return Math.floor(Math.random() * max);
-			}
-		useEffect(()=>{
-			if(!started)return;
-			mkAudio(musicTracks[getRandomInt(musicTracks.length)])
-		},[started]);
+	}
+	
+	function getRandomInt(max) {
+		return Math.floor(Math.random() * max);
+	}
+	
+	useEffect(() => {
+		if (!started) return;
+		mkAudio(musicTracks[getRandomInt(musicTracks.length)]);
+	}, [started]);
+	
 
 
 	return (
