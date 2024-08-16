@@ -9,30 +9,32 @@ import LevelSelect from "./lib/menus/levels";
 import PauseMenu from "./lib/menus/puase";
 
 import musicTracks from "./lib/engine/config/music";
+import Start from "./lib/menus/start";
 
 export default function Game() {
-  const [character, setCharacter] = useState(null);
+	const [character, setCharacter] = useState(null);
 	const [level,setLevel] = useState(null);
 	const [paused,setPaused] = useState(false);
-  
+	const [started,setStarted] = useState(false);
 	var mkAudio = (audio) =>{
 		let music = new Audio(audio);
 		music.volume = 0.5
 		music.play();
 		return music;
 		}
-    function getRandomInt(max) {
-      return Math.floor(Math.random() * max);
-    }
-  useEffect(()=>{
-    if(!level)return;
-    mkAudio(musicTracks[getRandomInt(musicTracks.length)])
-  },[level]);
+			function getRandomInt(max) {
+				return Math.floor(Math.random() * max);
+			}
+		useEffect(()=>{
+			if(!started)return;
+			mkAudio(musicTracks[getRandomInt(musicTracks.length)])
+		},[started]);
 
 
 	return (
 		<main>
-			{level && <> 
+			{started && <>
+				{level && <> 
 				{character && (
 					<div style={{ display: "flex", width: "100%", height: "100%" }}>
 						<Engine
@@ -61,6 +63,11 @@ export default function Game() {
 	)}
 	</>}
 	{!level && <LevelSelect levels={levels} setLevel={setLevel} />}
+		
+	</>}
+		{!started && <>
+			<Start setStarted={setStarted} />
+		</>}
 	</main>
 	);
 }
