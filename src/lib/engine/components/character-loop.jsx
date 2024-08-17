@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import useFramerate from "../use-framerate";
-
 export default function CharacterLoop({
   images = [],
   container = {},

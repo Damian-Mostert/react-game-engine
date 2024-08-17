@@ -3,138 +3,16 @@ import useGame from "../use-game";
 import { useEffect, useState } from "react";
 import useStorage from "../use-storage";
 import useMusic from "../use-music";
-import useBot from "../use-bot";
 import useFramerate from "../use-framerate";
-import config from "../config/framerates";
+import config_fr from "../config/framerates";
+import config_physics from "../config/framerates";
 import Sprite from "./sprite";
-const {game:Framerate} = config;
+import Boundary from "./boundary";
+import Bot from "./bot";
 
-export function Boundary({
-	top,
-	left,
-	width,
-	height,
-	texture,
-	align,
-	textures,
-	blocksize,
-	message
-}) {
-	return (
-		<div
-			style={{
-				transform: align === "right" ? "scaleX(-1)" : "",
-				position: "absolute",
-				width: `${width * blocksize}px`,
-				height: `${height * blocksize}px`,
-				top: `${top * blocksize}px`,
-				left: `${left * blocksize}px`,
-				backgroundImage: `url(${textures[texture]})`,
-				backgroundSize: `${blocksize}px ${blocksize}px`,
-				backgroundRepeat: "repeat",
-			}}
-		>
-			{message && (
-				<div className="absolute bottom-full text-orange-2a00">
-					{message}
-				</div>
-			)}
-		</div>
-	);
-}
+const { game:Framerate } = config_fr;
+const { blocksize } = config_physics;
 
-export function Bot({id,actions,framerate,character,characters,paused,updateBoundary,Bounds,musicControls}){
-
-	const [message, setMessage] = useState("Fuck yeah");
-
-	useEffect(() => {
-		if (characters[character]) {
-			setHp(characters[character]?.attributes?.health);
-			setMaxHp(characters[character]?.attributes?.health);
-		}
-	}, [character]);
-
-	useEffect(() => {
-		const t = setTimeout(() => {
-			if (message) setMessage(null);
-		}, 3000);
-		return () => clearTimeout(t);
-	}, [message]);
-
-	const [dead, setDead] = useState(false);
-	const [health, setHp] = useState(characters[character]?.attributes?.health);
-	const [maxHealth, setMaxHp] = useState(characters[character]?.attributes?.health);
-	const [keys, setKeys] = useState({});
-	const [speed,setSpeed] = useState(1000);
-	useEffect(() => {
-		if (health === 0) setDead(true);
-	}, [health]);
-	const bot = useBot({
-		id,
-		actions:{
-		updateBoundary,
-		setDead,
-		setHp,
-		health,
-		setSpeed,
-		speed,
-		setMessage,
-		updateMessage(message) {
-			setMessage(message);
-		},
-		addHp(amount = 1) {
-			console.info(`bot ${id} +hp${amount}`)
-			setHp((health) => Math.min(health + amount, maxHealth));
-		},
-		removeHp(amount = 1) {
-			console.info(`bot ${id} -hp${amount}`)
-			setHp((health) => Math.min(health - amount, 0));
-		},
-		playSound(audioFile) {
-			musicControls.playTrack(`/sounds/${audioFile}`);
-		},
-	}, keys, boundaries: Bounds, character:"Santa Clause", characters, paused, updateBoundary, dead,framerate });
-
-	const [index,setIndex] = useState(0);
-
-	useEffect(()=>{
-		if(dead)return setKeys({});
-		var t = setTimeout(()=>{
-			setIndex(index=>{
-				if(actions[index+1]){
-					setKeys(actions[index+1]);
-					return index +1;
-				}else{
-					setKeys(0);
-					return 0;
-				}
-			})
-		},1000);
-		return ()=>{
-			clearTimeout(t);
-		}
-	},[keys,speed,dead]);
-
-	return <div
-		style={{
-			transition: "left 0.1s, top 0.1s",
-			position: "absolute",
-			width: "0px",
-			height: "0px",
-			bottom: bot.boundaries.top * -1 + "px",
-			left: bot.boundaries.left + "px",
-		}}
-			>
-		{message && (
-			<div className={styles.bigMessage}>
-				{message}
-			</div>
-			)}
-			<div className={styles.character}>
-				<Sprite character={characters[character]} action={bot.action}/>
-			</div>
-			</div>
-}
 
 export default function Engine({
 	characters,
@@ -216,35 +94,25 @@ export default function Engine({
 						left: `${(game.boundaries.left + 40) * -1}px`,
 					}}
 				>
-					{Bounds.map((boundary, index) => {
-						if (boundary.hide) return null;
-						return (
-							<Boundary
-								{...boundary}
-								blocksize={30}
-								textures={textures}
-								key={index}
-							/>
-						);
-					})}
-					{bots.map((bot,index)=>{
-						return <>
-							<Bot 
-								key={index}
-								id={index}
-								framerate={framerate}
-								character={bot.character}
-								characters={characters}
-								Bounds={Bounds}
-								paused={paused}
-								updateBoundary={updateBoundary}
-								actions={bot.actions}
-								musicControls={musicControls}
-							/>
-						</>
-					})}
+					{Bounds.filter(b=>!b.hide).map((boundary, index) => (<Boundary
+						{...boundary}
+						blocksize={blocksize}
+						textures={textures}
+						key={index}
+					/>))}
+					{bots.map((bot,index)=>(<Bot 
+						key={index}
+						id={index}
+						framerate={framerate}
+						character={bot.character}
+						characters={characters}
+						Bounds={Bounds}
+						paused={paused}
+						updateBoundary={updateBoundary}
+						actions={bot.actions}
+						musicControls={musicControls}
+					/>))}
 				</div>
-
 				<div
 					className={styles.object}
 					style={{ position: "absolute", top: "80px", left: "-40px" }}
@@ -265,7 +133,6 @@ export default function Engine({
 					</div>
 				</div>
 			</div>
-
 			<div className={styles.coins}>
 				<div className="text-sm text-left pl-1 -mb-4">coins:</div>
 				{storage.coins ? storage.coins : 0}
