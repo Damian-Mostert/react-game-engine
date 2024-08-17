@@ -6,7 +6,7 @@ export default function Boundary({
 	texture,
 	align,
 	textures,
-	blocksize,
+	blockSize,
 	message
 }) {
 	return (
@@ -14,12 +14,12 @@ export default function Boundary({
 			style={{
 				transform: align === "right" ? "scaleX(-1)" : "",
 				position: "absolute",
-				width: `${width * blocksize}px`,
-				height: `${height * blocksize}px`,
-				top: `${top * blocksize}px`,
-				left: `${left * blocksize}px`,
+				width: `${width * blockSize}px`,
+				height: `${height * blockSize}px`,
+				top: `${top * blockSize}px`,
+				left: `${left * blockSize}px`,
 				backgroundImage: `url(${textures[texture]})`,
-				backgroundSize: `${blocksize}px ${blocksize}px`,
+				backgroundSize: `${blockSize}px ${blockSize}px`,
 				backgroundRepeat: "repeat",
 			}}
 		>

@@ -81,6 +81,11 @@ export default function useKeys() {
         };
     }, []);
 
+    useEffect(()=>{
+        window.keys = keys;
+        window.lastKeys = lastKeys;
+    },[keys]);
+
     return { keys, lastKeys };
 }
 

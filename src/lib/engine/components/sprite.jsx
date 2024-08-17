@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function Sprite({ character, action }) {
+export default function Sprite({ framerate, character, action }) {
 	const [imagesToPlay, setImagesToPlay] = useState([]);
 	const [left, setLeft] = useState(false);
 	const [toDo, setToDo] = useState("idle");
@@ -41,15 +41,11 @@ export default function Sprite({ character, action }) {
 	}
 
 	useEffect(() => {
-		const intervalId = setInterval(() => {
 			setFrame((prevFrame) => {
 				if (loop) return prevFrame === imagesToPlay.length - 1 ? 0 : prevFrame + 1;
 				return prevFrame === imagesToPlay.length - 1 ? prevFrame : prevFrame + 1;
 			});
-		}, 100);
-
-		return () => clearInterval(intervalId);
-	}, [loop, imagesToPlay]);
+	}, [framerate,loop, imagesToPlay]);
 
 	return (
 		<CharacterLoop

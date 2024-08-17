@@ -1,11 +1,22 @@
 "use client";
-import styles from "./engine.module.css";
+import styles from "../styles/engine.module.css";
 
-import useBot from "../use-bot";
 import { useEffect, useState } from "react";
 import Sprite from "./sprite";
 
-export default function Bot({id,actions,framerate,character,characters,paused,updateBoundary,Bounds,musicControls}){
+import config_physics from "../../../assets/config/physics";
+import computePhysics from "../computations/compute-physics";
+
+const { 
+	blockSize,
+	gravityForce,
+	initialPosition,
+	initialVelocity,
+	checkDistance,
+	airDensity,
+ } = config_physics;
+
+export default function Bot({id,actions,framerate,character,characters,updateBoundary,boundaries}){
 
 	const [message, setMessage] = useState("Fuck yeah");
 	const [dead, setDead] = useState(false);
@@ -13,32 +24,54 @@ export default function Bot({id,actions,framerate,character,characters,paused,up
 	const [maxHealth, setMaxHp] = useState(characters[character]?.attributes?.health);
 	const [keys, setKeys] = useState({});
 	const [speed,setSpeed] = useState(1000);
-	
-    const bot = useBot({
-		id,
+
+	const [game,setGame] = useState(computePhysics({
+		action:"idle",
+		blockSize,
+		gravityForce,
+		initialPosition,
+		initialVelocity,
+		checkDistance,
+		airDensity,
+		boundaries,
+		character:characters[character],
+		updateBoundary, 
+		attributes:characters[character].attributes,
+		dead,
 		actions:{
-		updateBoundary,
-		setDead,
-		setHp,
-		health,
-		setSpeed,
-		speed,
-		setMessage,
-		updateMessage(message) {
-			setMessage(message);
+			updateBoundary,
+			setDead,
+			setHp,
+			health,
+			setSpeed,
+			speed,
+			setMessage,
+			updateMessage(message) {
+				setMessage(message);
+			},
+			addHp(amount = 1) {
+				console.info(`bot ${id} +hp${amount}`)
+				setHp((health) => Math.min(health + amount, maxHealth));
+			},
+			removeHp(amount = 1) {
+				console.info(`bot ${id} -hp${amount}`)
+				setHp((health) => Math.min(health - amount, 0));
+			},
 		},
-		addHp(amount = 1) {
-			console.info(`bot ${id} +hp${amount}`)
-			setHp((health) => Math.min(health + amount, maxHealth));
+		position:{
+			top:0,
+			left:0
 		},
-		removeHp(amount = 1) {
-			console.info(`bot ${id} -hp${amount}`)
-			setHp((health) => Math.min(health - amount, 0));
+		velocity:{
+			x:0,
+			y:0
 		},
-		playSound(audioFile) {
-			musicControls.playTrack(`/sounds/${audioFile}`);
-		},
-	}, keys, boundaries: Bounds, character:"Santa Clause", characters, paused, updateBoundary, dead,framerate });
+		keys:{},
+	}));
+
+	useEffect(()=>{
+		setGame(game=>computePhysics({...game,keys,dead,bot:game?.actions}));
+	},[framerate]);
 
 
 	useEffect(() => {
@@ -82,12 +115,11 @@ export default function Bot({id,actions,framerate,character,characters,paused,up
 
 	return <div
 		style={{
-			transition: "left 0.1s, top 0.1s",
 			position: "absolute",
 			width: "0px",
 			height: "0px",
-			bottom: bot.boundaries.top * -1 + "px",
-			left: bot.boundaries.left + "px",
+			bottom: game.position.top * -1 + "px",
+			left: game.position.left + "px",
 		}}
 			>
 		{message && (
@@ -96,7 +128,7 @@ export default function Bot({id,actions,framerate,character,characters,paused,up
 			</div>
 			)}
 		<div className={styles.character}>
-			<Sprite character={characters[character]} action={bot.action}/>
+			<Sprite framerate={framerate} character={characters[character]} action={game.action}/>
 		</div>
 	</div>
 }

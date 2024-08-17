@@ -22,6 +22,7 @@ export default{
         maxVelocity:40,
         health:100,
         ap:10,
+        strength:2,
         jump:true,
         run:true,
         walk:false,

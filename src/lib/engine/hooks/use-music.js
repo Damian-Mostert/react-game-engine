@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useMusic(tracks) {
+export default function useMusic(tracks=[]) {
   const [track, setTrack] = useState(null);
   const [started,setStarted] = useState(false);
   const [ended,setEnded] = useState(false);

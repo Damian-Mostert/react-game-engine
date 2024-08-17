@@ -1,18 +1,26 @@
-import styles from "./engine.module.css";
-import useGame from "../use-game";
+import styles from "./styles/engine.module.css";
+
 import { useEffect, useState } from "react";
-import useStorage from "../use-storage";
-import useMusic from "../use-music";
-import useFramerate from "../use-framerate";
-import config_fr from "../config/framerates";
-import config_physics from "../config/framerates";
-import Sprite from "./sprite";
-import Boundary from "./boundary";
-import Bot from "./bot";
+import useStorage from "./hooks/use-storage";
+import useMusic from "./hooks/use-music";
+import useFramerate from "./hooks/use-framerate";
+import config_fr from "../../assets/config/framerates";
+import config_physics from "../../assets/config/physics";
+import Sprite from "./components/sprite";
+import Boundary from "./components/boundary";
+import Bot from "./components/bot";
+import useKeys from "./hooks/use-keys";
+import computePhysics from "./computations/compute-physics";
 
 const { game:Framerate } = config_fr;
-const { blocksize } = config_physics;
-
+const { 
+	blockSize,
+	gravityForce,
+	initialPosition,
+	initialVelocity,
+	checkDistance,
+	airDensity,
+ } = config_physics;
 
 export default function Engine({
 	characters,
@@ -22,10 +30,25 @@ export default function Engine({
 	paused,
 	bots =[]
 }) {
+
 	const { controls: musicControls } = useMusic([]);
+
 	const [dead, setDead] = useState(false);
 	const [health, setHp] = useState(characters[character]?.attributes?.health);
 	const [maxHealth, setMaxHp] = useState(characters[character]?.attributes?.health);
+
+	const [storage, store] = useStorage(["coins"]);
+	const [message, setMessage] = useState(null);
+
+	const updateBoundary = (id, rules) => {
+		if (!rules) return;
+		/* setBounds((boundaries) =>
+			boundaries.map((__bound) =>
+				__bound?.id === id ? rules : __bound
+			)
+		); */
+	};
+
 
 	useEffect(() => {
 		if (characters[character]) {
@@ -38,18 +61,6 @@ export default function Engine({
 		if (health === 0) setDead(true);
 	}, [health]);
 
-	const updateBoundary = (id, rules) => {
-		if (!rules) return;
-		setBounds((boundaries) =>
-			boundaries.map((__bound) =>
-				__bound?.id === id ? rules : __bound
-			)
-		);
-	};
-
-	const [storage, store] = useStorage(["coins"]);
-	const [message, setMessage] = useState(null);
-	const [Bounds, setBounds] = useState(boundaries);
 
 	useEffect(() => {
 		window.gameDom = {
@@ -69,6 +80,9 @@ export default function Engine({
 			playSound(audioFile) {
 				musicControls.playTrack(`/sounds/${audioFile}`);
 			},
+			setDead,
+			setMessage,
+			setHp,
 			updateBoundary,
 		};
 	}, [storage]);
@@ -80,9 +94,39 @@ export default function Engine({
 		return () => clearTimeout(t);
 	}, [message]);
 
+	//MAIN ENGINE
+	
+	useKeys();
+
 	const framerate = useFramerate(Framerate, paused ? paused : dead);
 
-	const game = useGame({ boundaries: Bounds, character, characters, paused, updateBoundary, dead ,framerate});
+	const [game,setGame] = useState(computePhysics({
+		action:"idle",
+		blockSize,
+		gravityForce,
+		initialPosition,
+		initialVelocity,
+		checkDistance,
+		airDensity,
+		boundaries, 
+		character:characters[character],
+		updateBoundary, 
+		attributes:characters[character].attributes,
+		dead,
+		position:{
+			top:0,
+			left:0
+		},
+		velocity:{
+			x:0,
+			y:0
+		},
+		keys:{},
+	}));
+
+	useEffect(()=>{
+		setGame(game=>computePhysics({...game,keys:window.keys,dead}));
+	},[framerate]);
 
 	return (
 		<div className={styles.container}>
@@ -90,13 +134,13 @@ export default function Engine({
 				<div
 					className={styles.object}
 					style={{
-						top: `${(game.boundaries.top - 80) * -1}px`,
-						left: `${(game.boundaries.left + 40) * -1}px`,
+						top: `${(game.position.top - 80) * -1}px`,
+						left: `${(game.position.left + 40) * -1}px`,
 					}}
 				>
-					{Bounds.filter(b=>!b.hide).map((boundary, index) => (<Boundary
+					{game.boundaries.filter(b=>!b.hide).map((boundary, index) => (<Boundary
 						{...boundary}
-						blocksize={blocksize}
+						blockSize={blockSize}
 						textures={textures}
 						key={index}
 					/>))}
@@ -106,11 +150,10 @@ export default function Engine({
 						framerate={framerate}
 						character={bot.character}
 						characters={characters}
-						Bounds={Bounds}
 						paused={paused}
+						boundaries={boundaries}
 						updateBoundary={updateBoundary}
 						actions={bot.actions}
-						musicControls={musicControls}
 					/>))}
 				</div>
 				<div
@@ -129,7 +172,7 @@ export default function Engine({
 								{message}
 							</div>
 						)}
-						<Sprite character={characters[character]} action={game.action}/>
+						<Sprite framerate={framerate} character={characters[character]} action={game.action}/>
 					</div>
 				</div>
 			</div>

@@ -1,3 +1,3 @@
 export default {
-    game:20
+    game:30
 }
