@@ -83,10 +83,12 @@ export function Bot({id,actions,framerate,character,characters,paused,updateBoun
 			setMessage(message);
 		},
 		addHp(amount = 1) {
+			console.info(`bot ${id} +hp${amount}`)
 			setHp((health) => Math.min(health + amount, maxHealth));
 		},
 		removeHp(amount = 1) {
-			setHp((health) => Math.max(health - amount, 0));
+			console.info(`bot ${id} -hp${amount}`)
+			setHp((health) => Math.min(health - amount, 0));
 		},
 		playSound(audioFile) {
 			musicControls.playTrack(`/sounds/${audioFile}`);
@@ -96,6 +98,7 @@ export function Bot({id,actions,framerate,character,characters,paused,updateBoun
 	const [index,setIndex] = useState(0);
 
 	useEffect(()=>{
+		if(dead)return setKeys({});
 		var t = setTimeout(()=>{
 			setIndex(index=>{
 				if(actions[index+1]){
@@ -110,7 +113,7 @@ export function Bot({id,actions,framerate,character,characters,paused,updateBoun
 		return ()=>{
 			clearTimeout(t);
 		}
-	},[keys,speed]);
+	},[keys,speed,dead]);
 
 	return <div
 		style={{
