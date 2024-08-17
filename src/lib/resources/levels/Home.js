@@ -4,7 +4,7 @@ import { createSlope, createQuarterCircle, createCoins, createLineOfCoins} from 
 
 const boundaries = [
 	// Ground layer
-	/* {
+/* 	{
 		top: 0,
 		left: -450,
 		width: 900,

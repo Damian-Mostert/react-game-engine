@@ -10,37 +10,34 @@ import PauseMenu from "./lib/menus/puase";
 
 import musicTracks from "./lib/engine/config/music";
 import Start from "./lib/menus/start";
+import useMusic from "./lib/engine/use-music";
 
 export default function Game() {
 	const [character, setCharacter] = useState(null);
 	const [level,setLevel] = useState(null);
 	const [paused,setPaused] = useState(false);
 	const [started,setStarted] = useState(false);
-	
-	const mkAudio = (audio) => {
-		let music = new Audio(audio);
-		music.volume = 0.5;
-		music.play();
-	
-		// When the current track ends, select and play a new track
-		music.addEventListener('ended', () => {
-			mkAudio(musicTracks[getRandomInt(musicTracks.length)]);
-		});
-	
-		return music;
-	}
-	
-	function getRandomInt(max) {
-		return Math.floor(Math.random() * max);
-	}
-	
+
+	const {
+		track:musicTrack,
+		started:startedMusic,
+		ended:endedMusic,
+		playing:playingMusic,
+		controls:musicControls
+	} = useMusic(musicTracks);
+
+	useEffect(()=>{
+		console.log("Track: ",musicTrack);
+	},[musicTrack]);
+
+	useEffect(()=>{
+		if(endedMusic)musicControls.randomTrack();
+	},[endedMusic]);
+
 	useEffect(() => {
-		if (!started) return;
-		mkAudio(musicTracks[getRandomInt(musicTracks.length)]);
-	}, [started]);
+		if(started && !startedMusic)musicControls.randomTrack();
+	}, [started,startedMusic]);
 	
-
-
 	return (
 		<main>
 			{started && <>
@@ -73,7 +70,7 @@ export default function Game() {
 	)}
 	</>}
 	{!level && <LevelSelect levels={levels} setLevel={setLevel} />}
-		
+
 	</>}
 		{!started && <>
 			<Start setStarted={setStarted} />

@@ -4,5 +4,5 @@ export default {
 	airDensity: 2,
 	initialPosition : { top: 0, left: 0 },
 	initialVelocity : { x: 0, y: 0 },
-	checkDistance:10
+	checkDistance:5,
 }

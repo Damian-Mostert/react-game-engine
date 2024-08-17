@@ -19,49 +19,53 @@ export default{
         objectFit:"cover",
       },
       attributes:{
-        speed:0.5,
-        weight:5,
-        health:100,
+        speed:2.5,
+        weight:2,
+        health:10,
         ap:10,
-        jump:false,
-        fly:true,
+        jump:true,
         run:true,
         walk:true,
         slide:true,
         attack:false,
         jumpAttack:false,
-        maxVelocity:30,
+        maxVelocity:20,
       },
       actions:[
         {
-            callback:"dead",
-            slug:"Dead",
-            frames:10
-        },
-        {
-            callback:"hurt",
-            slug:"Hurt",
-            frames:8
-        },
-        {
-            callback:"idle",
-            slug:"Idle",
-            frames:10
-        },
-        {
-            callback:"jump",
-            slug:"Jump",
-            frames:12
-        },
-        {
-            callback:"run",
-            slug:"Run",
-            frames:8
-        },
-        {
-            callback:"slide",
-            slug:"Slide",
-            frames:5
-        }
+          callback:"dead",
+          slug:"Dead",
+          frames:10
+      },
+      {
+        callback:"fall",
+        slug:"Fall",
+        frames:4
+    },
+      {
+          callback:"hurt",
+          slug:"Hurt",
+          frames:8
+      },
+      {
+          callback:"idle",
+          slug:"Idle",
+          frames:10
+      },
+      {
+          callback:"jump",
+          slug:"Jump",
+          frames:12
+      },
+      {
+          callback:"run",
+          slug:"Run",
+          frames:8
+      },
+      {
+          callback:"slide",
+          slug:"Slide",
+          frames:5
+      }
       ]
 }

@@ -33,28 +33,43 @@
 }
 @keyframes bounce {
     0% {
-        scale: 1;
+		scale: 0.9;
     }
 	50%{
-		scale: 0.9;
+		scale:1
 	}
     100% {
-		scale: 1;
+		scale: 0.9
     }
 }
 
 .bigMessage {
-	background-color: #ffffff;
+	background-color: white;
 	border-radius: 2rem;
 	padding: 1rem;
-	font-size: 3rem;
+	font-size: 1rem;
     position: absolute;
-    top: 2rem;
-    left: 5%;
+    bottom:100%;
+	left: calc(100% + 40px);
     text-align: center;
-    width: 90%;
+    width: max-content;
+	max-width: 80vw;
 	margin: auto;
-    animation: bounce 2s infinite;
+	z-index: 999;
+}
+
+.bigMessage::after {
+	content: "";
+	position: absolute;
+	bottom: -20px; /* Position the pointer at the bottom */
+	left: 20px; /* Adjust to position the pointer at the bottom left */
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 20px solid 	white; /* Same color as the background */
+	transform: translateX(-18px) translateY(-8px) rotate(25deg);
+	z-index: -10;
 }
 
 
@@ -76,20 +91,6 @@
 	@apply text-orange-300;
 }
 
-@media screen and (max-width:1000px) {
-	.bigMessage {
-		background-color: #ffffff;
-		padding: 0.5rem;
-		font-size: 1.5rem;
-		border-radius: 2rem;
-		position: fixed;
-		top:75%;
-		left: 5%;
-		text-align: center;
-		width: 90%;
-		height: max-content;
-	}		
-}
 
 .characterTitle{
 	@apply absolute bottom-full w-full text-nowrap text-center text-white text-[0.8rem];
@@ -112,29 +113,27 @@
 	width: 90vw;
 	bottom:2rem;
 	left:5vw;
-	background-color: grey;
 	height: 1rem;
 	z-index: 10;
-	border-radius: 1rem;
-	&::before{
-		content: "Health";
+	background-image: linear-gradient(90deg,rgb(165, 0, 0),rgb(184, 117, 0),green);
+  }
+  .healthStats{
 		position: absolute;
 		bottom: 100%;
-		background-color: white;
-		color: black;
+		background-color: rgb(108, 108, 108);
+		color: rgb(255, 255, 255);
 		padding: 0rem 2rem;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
 		transform: translateX(-50%);
+		left: 50%;
 		border-top-left-radius: 2rem;
 		border-top-right-radius: 2rem;
 	
-	}
   }
   .healthProgress{
-	background-image: linear-gradient(90deg,red,yellow,green);
-	border-radius: 1rem;
+	background-color: rgb(68, 68, 68);
 	height: 100%;
 	position: absolute;
-	left:0px;
+	right:0px;
   }
