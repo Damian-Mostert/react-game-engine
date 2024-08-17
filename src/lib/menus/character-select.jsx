@@ -1,5 +1,4 @@
-import CharacterLoop from "../engine/components/character-loop";
-import useSprite from "../engine/use-sprite";
+import useSprite,{CharacterLoop} from "../engine/components/sprite";
 
 export default function CharacterSelect({characters,setCharacter}){
     const data = characters;

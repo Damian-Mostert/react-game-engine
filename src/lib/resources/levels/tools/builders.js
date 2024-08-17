@@ -147,10 +147,14 @@ export function createCoins(startTop, startLeft, count, slopeXOffset = 1) {
       texture: "Coin",
       id: `VulgarCoin${i + 1}`,
       passThrough: true,
-      inRange: (boundary) => {
-        window.gameDom.updateBigMessage(getRandomMessage());
-        window.gameDom.addCoins(100);
+      inRange: (boundary,bot) => {
+        if(!bot){
+          window.gameDom.playSound("coin.mp3");
+          window.gameDom.updateMessage(getRandomMessage());
+          window.gameDom.addCoins(100);
+        }
         boundary.destroy = true;
+        boundary.hide=true;
         window.gameDom.playSound("coin.mp3");
         setTimeout(() => {
           window.gameDom.updateBoundary(`VulgarCoin${i + 1}`, { ...boundary, destroy: false });
@@ -175,11 +179,14 @@ export function createLineOfCoins(startTop, startLeft, count, spacing = 3, direc
       texture: "Coin",
       id: `VulgarCoin${direction === 'vertical' ? `Vertical${i + 1}` : `Horizontal${i + 1}`}`,
       passThrough: true,
-      inRange: (boundary) => {
-        window.gameDom.playSound("coin.mp3");
-        window.gameDom.updateBigMessage(getRandomMessage());
-        window.gameDom.addCoins(100);
+      inRange: (boundary,bot) => {
+        if(!bot){
+          window.gameDom.playSound("coin.mp3");
+          window.gameDom.updateMessage(getRandomMessage());
+          window.gameDom.addCoins(100);
+        }
         boundary.destroy = true;
+        boundary.hide=true;
         setTimeout(() => {
           window.gameDom.updateBoundary(`VulgarCoin${direction === 'vertical' ? `Vertical${i + 1}` : `Horizontal${i + 1}`}`, { ...boundary, destroy: false });
         }, 3000);

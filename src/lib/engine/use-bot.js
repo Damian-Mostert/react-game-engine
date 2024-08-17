@@ -1,29 +1,19 @@
 "use client";
 
-import useKeys from "./use-keys";
 import usePhysics from "./use-physics";
-import useFramerate from "./use-framerate";
-import useSprite from "./use-sprite";
 
-
-
-
-export default function useBot({keys, boundaries = [],character = "", characters = {}, paused = false ,updateBoundary , dead ,framerate}) {
-
-
+export default function useBot({id,actions,keys, boundaries = [],character = "", characters = {}, paused = false ,updateBoundary , dead ,framerate}) {
 	const physics = usePhysics({
 		boundaries,
 		keys,
 		character:characters?.[character],
 		framerate,
 		updateBoundary,
-		dead
+		dead,
+        bot:{...actions,id}
 	});
 
-	const sprite = useSprite(characters[character],physics.action);
-
 	return {
-		sprite,
 		keys,
 		boundaries: physics.position,
 		closeBoundaries: physics.closeBoundaries,

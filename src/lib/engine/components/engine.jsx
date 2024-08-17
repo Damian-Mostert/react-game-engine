@@ -6,6 +6,7 @@ import useMusic from "../use-music";
 import useBot from "../use-bot";
 import useFramerate from "../use-framerate";
 import config from "../config/framerates";
+import Sprite from "./sprite";
 const {game:Framerate} = config;
 
 export function Boundary({
@@ -42,37 +43,103 @@ export function Boundary({
 	);
 }
 
-const keysMap = [
-	{
-		w:true,
-	},
-	{
-		w:true,
-	},
-	{
-		w:true,
-	},
-	{
-		a:true,
-	},
-	{
-		a:true,
-	},
-	{
-		d:true
-	},
-	{
-		d:true
-	}
+export function Bot({id,actions,framerate,character,characters,paused,updateBoundary,Bounds,musicControls}){
 
-]
+	const [message, setMessage] = useState("Fuck yeah");
+
+	useEffect(() => {
+		if (characters[character]) {
+			setHp(characters[character]?.attributes?.health);
+			setMaxHp(characters[character]?.attributes?.health);
+		}
+	}, [character]);
+
+	useEffect(() => {
+		const t = setTimeout(() => {
+			if (message) setMessage(null);
+		}, 3000);
+		return () => clearTimeout(t);
+	}, [message]);
+
+	const [dead, setDead] = useState(false);
+	const [health, setHp] = useState(characters[character]?.attributes?.health);
+	const [maxHealth, setMaxHp] = useState(characters[character]?.attributes?.health);
+	const [keys, setKeys] = useState({});
+	const [speed,setSpeed] = useState(1000);
+	useEffect(() => {
+		if (health === 0) setDead(true);
+	}, [health]);
+	const bot = useBot({
+		id,
+		actions:{
+		updateBoundary,
+		setDead,
+		setHp,
+		health,
+		setSpeed,
+		speed,
+		setMessage,
+		updateMessage(message) {
+			setMessage(message);
+		},
+		addHp(amount = 1) {
+			setHp((health) => Math.min(health + amount, maxHealth));
+		},
+		removeHp(amount = 1) {
+			setHp((health) => Math.max(health - amount, 0));
+		},
+		playSound(audioFile) {
+			musicControls.playTrack(`/sounds/${audioFile}`);
+		},
+	}, keys, boundaries: Bounds, character:"Santa Clause", characters, paused, updateBoundary, dead,framerate });
+
+	const [index,setIndex] = useState(0);
+
+	useEffect(()=>{
+		var t = setTimeout(()=>{
+			setIndex(index=>{
+				if(actions[index+1]){
+					setKeys(actions[index+1]);
+					return index +1;
+				}else{
+					setKeys(0);
+					return 0;
+				}
+			})
+		},1000);
+		return ()=>{
+			clearTimeout(t);
+		}
+	},[keys,speed]);
+
+	return <div
+		style={{
+			transition: "left 0.1s, top 0.1s",
+			position: "absolute",
+			width: "0px",
+			height: "0px",
+			bottom: bot.boundaries.top * -1 + "px",
+			left: bot.boundaries.left + "px",
+		}}
+			>
+		{message && (
+			<div className={styles.bigMessage}>
+				{message}
+			</div>
+			)}
+			<div className={styles.character}>
+				<Sprite character={characters[character]} action={bot.action}/>
+			</div>
+			</div>
+}
 
 export default function Engine({
 	characters,
 	textures,
 	character,
 	boundaries,
-	paused
+	paused,
+	bots =[]
 }) {
 	const { controls: musicControls } = useMusic([]);
 	const [dead, setDead] = useState(false);
@@ -106,7 +173,7 @@ export default function Engine({
 	useEffect(() => {
 		window.gameDom = {
 			...window.gameDom,
-			updateBigMessage(message) {
+			updateMessage(message) {
 				setMessage(message);
 			},
 			addCoins(amount = 1) {
@@ -128,31 +195,14 @@ export default function Engine({
 	useEffect(() => {
 		const t = setTimeout(() => {
 			if (message) setMessage(null);
-		}, 1000);
+		}, 3000);
 		return () => clearTimeout(t);
 	}, [message]);
 
-	const [keys, setKeys] = useState({});
-	const framerate = useFramerate(Framerate,paused ? paused :dead);
+	const framerate = useFramerate(Framerate, paused ? paused : dead);
+
 	const game = useGame({ boundaries: Bounds, character, characters, paused, updateBoundary, dead ,framerate});
-	const bot = useBot({ keys, boundaries: Bounds, character:"Santa Clause", characters, paused, updateBoundary, dead,framerate });
-	const [index,setIndex] = useState(0);
-	useEffect(()=>{
-		var t = setTimeout(()=>{
-			setIndex(index=>{
-				if(keysMap[index+1]){
-					setKeys(keysMap[index+1]);
-					return index +1;
-				}else{
-					setKeys(0);
-					return 0;
-				}
-			})
-		},1000);
-		return ()=>{
-			clearTimeout(t);
-		}
-	},[keys]);
+
 	return (
 		<div className={styles.container}>
 			<div className={styles["container-sub"]}>
@@ -164,7 +214,7 @@ export default function Engine({
 					}}
 				>
 					{Bounds.map((boundary, index) => {
-						if (boundary.destroy) return null;
+						if (boundary.hide) return null;
 						return (
 							<Boundary
 								{...boundary}
@@ -174,20 +224,22 @@ export default function Engine({
 							/>
 						);
 					})}
-				<div
-                  style={{
-                    transition: "left 0.1s, top 0.1s",
-                    position: "absolute",
-                    width: "0px",
-                    height: "0px",
-                    bottom: bot.boundaries.top * -1 + "px",
-                    left: bot.boundaries.left + "px",
-                  }}
-                >
-						<div className={styles.character}>
-							{bot.sprite}
-						</div>
-					</div>
+					{bots.map((bot,index)=>{
+						return <>
+							<Bot 
+								key={index}
+								id={index}
+								framerate={framerate}
+								character={bot.character}
+								characters={characters}
+								Bounds={Bounds}
+								paused={paused}
+								updateBoundary={updateBoundary}
+								actions={bot.actions}
+								musicControls={musicControls}
+							/>
+						</>
+					})}
 				</div>
 
 				<div
@@ -206,7 +258,7 @@ export default function Engine({
 								{message}
 							</div>
 						)}
-						{game.sprite}
+						<Sprite character={characters[character]} action={game.action}/>
 					</div>
 				</div>
 			</div>

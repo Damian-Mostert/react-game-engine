@@ -49,8 +49,9 @@ export default function Game() {
 							characters={characters}
 							character={character}
 							textures={textures}
-							boundaries={levels[level]}
-							/>
+							boundaries={levels[level].boundaries}
+							bots={levels[level].bots}
+						/>
 						{paused && <PauseMenu setPaused={setPaused} setCharacter={setCharacter} setLevel={setLevel}/>}
 						{!paused && <div className="fixed top-4 right-4 flex justify-center items-center cursor-pointer" onClick={()=>setPaused(true)}>
 						<svg height="70px" width="70px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.953 271.953" >

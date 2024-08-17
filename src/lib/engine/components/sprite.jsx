@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
-import CharacterLoop from "./components/character-loop";
-import config from "./config/framerates";
 
-const { sprites: Framerate } = config;
-
-export default function useSprite(character, action) {
+export default function Sprite({ character, action }) {
     const [imagesToPlay, setImagesToPlay] = useState([]);
     const [left, setLeft] = useState(false);
     const [toDo, setToDo] = useState("idle");
     const [loop, setLoop] = useState(true);
-    const [frame, setFrame] = useState(0); // Initial frame set to 0
-    const [rerender, setRerender] = useState(0);
+    const [frame, setFrame] = useState(0);
 
     useEffect(() => {
         const isLeft = action.endsWith("-left");
@@ -30,19 +25,8 @@ export default function useSprite(character, action) {
 
         setImagesToPlay(fullImages[toDoAction] || []);
 
-        switch (toDoAction) {
-            case "jump":
-            case "fall":
-            case "dead":
-            case "slide":
-                setLoop(false);
-                break;
-            default:
-                setLoop(true);
-                break;
-        }
-
-        setRerender(r => r + 1);
+        setLoop(!["jump", "fall", "dead", "slide"].includes(toDoAction));
+        setFrame(0); // Reset frame when action or imagesToPlay changes
     }, [action, character]);
 
     let { container, box } = character;
@@ -57,7 +41,6 @@ export default function useSprite(character, action) {
     }
 
     useEffect(() => {
-        setFrame(0);
         const intervalId = setInterval(() => {
             setFrame((prevFrame) => {
                 if (loop) return prevFrame === imagesToPlay.length - 1 ? 0 : prevFrame + 1;
@@ -66,7 +49,7 @@ export default function useSprite(character, action) {
         }, 100);
 
         return () => clearInterval(intervalId);
-    }, [rerender, loop, imagesToPlay, toDo]);
+    }, [loop, imagesToPlay]);
 
     return (
         <CharacterLoop
@@ -74,8 +57,26 @@ export default function useSprite(character, action) {
             container={container}
             images={imagesToPlay}
             left={left}
-            loop={loop}
             imageIndex={frame}
         />
+    );
+}
+
+export function CharacterLoop({ images = [], container = {}, img = {}, left = false, imageIndex = 1 }) {
+    return (
+        <div style={{ position: "relative", ...container }}>
+            {images[imageIndex] && (
+                <img
+                    src={images[imageIndex]}
+                    style={{
+                        ...img,
+                        position: "absolute",
+                        objectFit: "cover",
+                        transform: left ? "scaleX(-1)" : "",
+                    }}
+                    alt="sprite"
+                />
+            )}
+        </div>
     );
 }

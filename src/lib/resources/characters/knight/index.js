@@ -25,7 +25,7 @@ export default{
 		health:100,
 		ap:10,
 		jump:true,
-		run:false,
+		run:true,
 		walk:true,
 		slide:false,
 		attack:true,
@@ -41,11 +41,16 @@ export default{
 			callback:"attack",
 			slug:"Attack",
 			frames:10
-	  },
+		},
 		{
-			callback:"hurt",
-			slug:"Dead",
+			callback:"fall",
+			slug:"Fall",
 			frames:8
+		},
+		{
+			callback:"dead",
+			slug:"Dead",
+			frames:10
 		},
 		{
 			callback:"idle",
@@ -60,6 +65,11 @@ export default{
 		{
 			callback:"walk",
 			slug:"Walk",
+			frames:10
+		},
+		{
+			callback:"run",
+			slug:"Run",
 			frames:10
 		}
 	]

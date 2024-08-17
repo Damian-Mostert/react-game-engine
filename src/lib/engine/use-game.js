@@ -3,10 +3,10 @@
 import useKeys from "./use-keys";
 import usePhysics from "./use-physics";
 import useFramerate from "./use-framerate";
-import useSprite from "./use-sprite";
+import useSprite from "./components/sprite";
 
 import config from "./config/framerates";
-
+const {game:Framerate} = config;
 
 
 export default function useGame({ boundaries = [],character = "", characters = {}, paused = false ,updateBoundary , dead, framerate}) {
@@ -24,10 +24,7 @@ export default function useGame({ boundaries = [],character = "", characters = {
 		dead,
 	});
 
-	const sprite = useSprite(characters[character],physics.action);
-
 	return {
-		sprite,
 		keys,
 		boundaries: physics.position,
 		closeBoundaries: physics.closeBoundaries,
