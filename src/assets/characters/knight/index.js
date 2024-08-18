@@ -27,12 +27,63 @@ export default{
 		jump:true,
 		run:true,
 		walk:true,
-		slide:true,
-		attack:false,
-		jumpAttack:false,
+		slide:false,
+		attack:true,
+		jumpAttack:true,
 		maxVelocity:20,
 	},
 	actions:[
+		{
+			callback:"dead",
+			slug:"Dead",
+			frames:10,
+			override:{
+				container:{
+					width: 40,
+					height: 65,
+					minHeight:65,
+					minWidth:40
+				},
+				box:{
+					width:"150px",
+					height:"80px",
+					left:"0px",
+					top:"-6px",
+					minWidth:70,
+					objectPosition:"-6px",
+					objectFit:"cover",
+				},
+			}
+		},
+		{
+			callback:"attack",
+			slug:"Attack",
+			frames:10
+		},
+		{
+			callback:"fall",
+			slug:"Fall",
+			frames:8,
+			override:{
+				width: 40,
+				height: 65,
+				container:{
+					width: 40,
+					height: 65,
+					minHeight:65,
+					minWidth:40
+				},
+				box:{
+					width:"150px",
+					height:"80px",
+					left:"0px",
+					top:"-6px",
+						minWidth:55,
+					objectPosition:"-36px",
+					objectFit:"cover",
+				},
+			}
+		},
 		{
 			callback:"dead",
 			slug:"Dead",
@@ -44,13 +95,8 @@ export default{
 			frames:10
 		},
 		{
-			callback:"fall",
-			slug:"Fall",
-			frames:8
-		},
-		{
-			callback:"dead",
-			slug:"Dead",
+			callback:"jump-attack",
+			slug:"JumpAttack",
 			frames:10
 		},
 		{
@@ -61,7 +107,8 @@ export default{
 		{
 			callback:"jump",
 			slug:"Jump",
-			frames:10
+			frames:10,
+
 		},
 		{
 			callback:"walk",

@@ -62,12 +62,12 @@ const computeBoundaries = ({
 			(newPosition.left + 1) + character.width > boundLeft);
 
 		if(insideRange && typeof __bound.insideRange == "function"){
-			bot.updateBoundaryByKey(__bound.key,__bound.insideRange(__bound,bot));
+			bot.updateBoundaryByKey(__bound.key,__bound.insideRange({...__bound,bot,was_in_range:true},bot));
 		}
 		if (isInRange && typeof __bound.inRange === "function") {
-			bot.updateBoundaryByKey(__bound.key,__bound.inRange(__bound,bot));
-		}else if(isNotInRange && typeof __bound.outRange == "function"){
-			bot.updateBoundaryByKey(__bound.key,__bound.outRange(__bound,bot));
+			bot.updateBoundaryByKey(__bound.key,__bound.inRange({...__bound,was_in_range:true},bot));
+		}else if(isNotInRange && __bound.was_in_range && typeof __bound.outRange == "function"){
+			bot.updateBoundaryByKey(__bound.key,__bound.outRange({...__bound,was_in_range:false},bot));
 		}
 
 		if (__bound.inRangeBlocks) {
@@ -75,16 +75,29 @@ const computeBoundaries = ({
 				range,
 				action
 			} = __bound.inRangeBlocks(__bound);
-			if(checkRange(range))bot.updateBoundaryByKey(__bound.key,action(__bound,bot));
+			if(checkRange(range))bot.updateBoundaryByKey(__bound.key,action({...__bound,was_in_range:true},bot));
 		}
 		if(__bound.outRangeBlocks){
 			let {
 				range,
 				action
 			} = __bound.outRangeBlocks(__bound);
-			if(!checkRange(range))bot.updateBoundaryByKey(__bound.key,action(__bound,bot));
+			if(!checkRange(range))bot.updateBoundaryByKey(__bound.key,action({...__bound,was_in_range:true},bot));
 		}
+
 		if (__bound.passThrough) return;
+
+		const inbound = ()=>{
+			if(__bound.goo){
+				newVelocity.x *= __bound.goo_density;
+				newVelocity.y *= __bound.goo_density;
+				ok = true
+			}
+			if(__bound.slip){
+				newVelocity.x *= __bound.slip_amount;
+				newVelocity.y *= __bound.slip_amount;
+			}
+		}
 
 		switch (direction) {
 			case "vertical":
@@ -96,6 +109,7 @@ const computeBoundaries = ({
 					newPosition.left + character.width > boundLeft
 				) {
 					ok = false;
+					inbound();
 					adjustment.top = Math.min(
 						boundTop - (newPosition.top + character.height),
 						newVelocity.y
@@ -108,6 +122,7 @@ const computeBoundaries = ({
 					newPosition.left + character.width > boundLeft
 				) {
 					ok = false;
+					inbound();
 					adjustment.top = Math.max(
 						boundBottom - newPosition.top,
 						newVelocity.y
@@ -123,6 +138,7 @@ const computeBoundaries = ({
 					newPosition.top + character.height > boundTop
 				) {
 					ok = false;
+					inbound();
 					adjustment.left = Math.min(
 						boundLeft - (newPosition.left + character.width),
 						newVelocity.x
@@ -135,6 +151,7 @@ const computeBoundaries = ({
 					newPosition.top + character.height > boundTop
 				) {
 					ok = false;
+					inbound();
 					adjustment.left = Math.max(
 						boundRight - newPosition.left,
 						newVelocity.x

@@ -4,6 +4,7 @@ const computePlayerAction = ({
     isAttacking,
     isSliding,
     isJumping,
+    isJumpAttacking,
     isLeft,
     velocity,
     dead,
@@ -15,13 +16,34 @@ const computePlayerAction = ({
     if(dead){
         action  = "dead"+(isLeft ? "-left":"");
     }else{
-        if(keys.s){
-            if(velocity.x < -0.5)
-                isLeft = true;
-            if(velocity.x > 0.5)
-                isLeft = false;
-            isSliding = true;
-            action = "slide"+(isLeft ? "-left":"");
+        if(keys.e){
+            if(character.attributes.attack){
+                if(velocity.x < -0.5)
+                    isLeft = true;
+                if(velocity.x > 0.5)
+                    isLeft = false;
+                isAttacking = true;
+                action = "attack"+(isLeft ? "-left":"");
+                if(character.attributes.jumpAttack && isJumping){
+                    if(velocity.x < -0.5)
+                        isLeft = true;
+                    if(velocity.x > 0.5)
+                        isLeft = false;
+                    isJumpAttacking = true;
+                    action = "jump-attack"+(isLeft ? "-left":"");
+                }else{
+                    isJumpAttacking = false;
+                }
+            }
+        }else if(keys.s){
+            if(character.attributes.slide){
+                if(velocity.x < -0.5)
+                    isLeft = true;
+                if(velocity.x > 0.5)
+                    isLeft = false;
+                isSliding = true;
+                action = "slide"+(isLeft ? "-left":"");
+            }
         }else{
             if(isJumping){
                 isSliding = false;
@@ -63,6 +85,7 @@ const computePlayerAction = ({
         isSliding,
         isJumping,
         isLeft,
+        isJumpAttacking,
     }
 }
 

@@ -46,8 +46,8 @@ export default function Bot({id,actions,framerate,character,characters,updateBou
 	});
 
 	useEffect(()=>{
-		if(game.dead)return;
-		setGame(game=>computePhysics({...game,keys}));
+		if(game.dead && game.keys.s)return;
+		setGame(game=>computePhysics({...game,keys:game.dead ? {s:true}:keys}));
 	},[framerate]);
 
 	useEffect(()=>{

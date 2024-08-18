@@ -37,7 +37,7 @@ export default{
 			callback:"dead",
 			slug:"Dead",
 			frames:10,
-				override:{
+			override:{
 				container:{
 					width: 40,
 					height: 65,
@@ -69,7 +69,7 @@ export default{
 			callback:"jump",
 			slug:"Jump",
 			frames:10,
-				override:{
+			override:{
 				width: 40,
 				height: 65,
 				container:{
@@ -93,7 +93,7 @@ export default{
 			callback:"fall",
 			slug:"Fall",
 			frames:2,
-				override:{
+			override:{
 				width: 40,
 				height: 65,
 				container:{

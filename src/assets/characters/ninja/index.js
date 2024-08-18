@@ -17,6 +17,7 @@ export default{
         objectFit:"cover",
       },
       attributes:{
+        strength:10,
         speed:1,
         weight:2,
         maxVelocity:40,

@@ -151,6 +151,7 @@ export function createCoins(startTop, startLeft, count, slopeXOffset = 1) {
         boundary.hide=true;
         bot.setMessage(getRandomMessage());
         setTimeout(() => {
+          bot.setMessage(null);
           bot.updateBoundaryByKey(boundary.key, { ...boundary, destroy: false,hide:false });
         }, 3000);
         return boundary;
@@ -179,6 +180,7 @@ export function createLineOfCoins(startTop, startLeft, count, spacing = 3, direc
         console.log(message)
         bot.setMessage(message);
         setTimeout(() => {
+          bot.setMessage(null);
           bot.updateBoundaryByKey(boundary.key, { ...boundary, destroy: false,hide:false });
         }, 3000);
         return boundary;

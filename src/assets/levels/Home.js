@@ -7,6 +7,8 @@ const boundaries = [
 		width: 900,
 		height: 100,
 		texture: "Lava",
+		goo:true,
+		goo_density:0.1,
 		inRange(data,bot){
 			bot.setMessage("oh no");
 			bot.removeHp(1)
@@ -34,7 +36,7 @@ const boundaries = [
 			return boundary
 		}
 	}),
-	...createQuarterCircle(120, -40, 40, false, "horizontal", "Rock",{}),
+	...createQuarterCircle(120, -40, 40, false, "horizontal", "Rock",{slip:true,slip_amount:1.2}),
 	...createQuarterCircle(120, -40, 40, true, "vertical", "Rock",{
 		inRange(boundary,bot){
 			var message = null;

@@ -33,12 +33,10 @@ export default function Engine({
 }) {
 	
 	const updateBoundaryById = (id, rules) => {
-		return
 		if (!rules) return;
 		setGame((game) =>({...game,boundaries:boundaries.map((__bound) =>__bound?.id === id ? rules : __bound)}));
 	};
 	const updateBoundaryByKey = (id, rules) => {
-		return
 		if (!rules) return;
 		setGame((game) =>({...game,boundaries:boundaries.map((__bound) =>__bound?.key === id ? rules : __bound)}));
 	};
@@ -76,8 +74,8 @@ export default function Engine({
 	});
 
 	useEffect(()=>{
-		if(game.dead)return;
-		setGame(game=>computePhysics({...game,keys}));
+		if(game.dead && game.keys.s)return;
+		setGame(game=>computePhysics({...game,keys:game.dead ? {s:true}:keys}));
 	},[framerate]);
 
 	return (
