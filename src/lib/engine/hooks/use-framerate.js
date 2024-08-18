@@ -7,15 +7,12 @@ export default function useFramerate(fps, paused) {
 
   useEffect(() => {
     if (paused) return;
-
-    // Using a functional update to ensure state is updated correctly
     const intervalId = setInterval(() => {
       setState((prevState) => prevState + 1);
     }, 1000 / fps);
 
-    // Clear the interval on cleanup
     return () => clearInterval(intervalId);
-  }, [fps, paused]); // Adding fps as a dependency
+  }, [fps, paused]);
 
   return state;
 }

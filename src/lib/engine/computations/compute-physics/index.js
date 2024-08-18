@@ -9,6 +9,7 @@ export default function computePhysics(props){
         ...computePlayerAction({
             ...props,
             ...result,
-        })
-    }
+        }),
+        computed_bots:props.computed_bots.map(bot=>computePhysics(bot))
+    };
 }

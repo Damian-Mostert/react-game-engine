@@ -10,9 +10,12 @@ import Boundary from "./components/boundary";
 import Bot from "./components/bot";
 import useKeys from "./hooks/use-keys";
 import computePhysics from "./computations/compute-physics";
-import useCharacter from "./hooks/use-character";
+import useUniverse from "./hooks/use-universe";
 
-const { game:Framerate,sprites:FramerateSprites } = config_fr;
+const { 
+	game:Framerate,
+	sprites:FramerateSprites 
+} = config_fr;
 
 const { 
 	blockSize,
@@ -21,7 +24,7 @@ const {
 	initialVelocity,
 	checkDistance,
 	airDensity,
-	} = config_physics;
+} = config_physics;
 
 export default function Engine({
 	characters,
@@ -31,7 +34,7 @@ export default function Engine({
 	paused,
 	bots =[]
 }) {
-	
+
 	const updateBoundaryById = (id, rules) => {
 		if (!rules) return;
 		setGame((game) =>({...game,boundaries:boundaries.map((__bound) =>__bound?.id === id ? rules : __bound)}));
@@ -43,8 +46,10 @@ export default function Engine({
 
 	const framerate = useFramerate(Framerate, paused);
 	const framerateSprites = useFramerate(FramerateSprites, paused);
+
 	const [ storage, store ] = useStorage(["coins"]);
 	const { keys } = useKeys();
+	const [botsKeys,setBotsKeys] = useState(bots.map(bot=>bot.actions[0]));
 	
 	const {
 		message,
@@ -52,7 +57,7 @@ export default function Engine({
 		maxHealth,
 		game,
 		setGame,
-	} = useCharacter({
+	} = useUniverse({
 		gravityForce,
 		initialPosition,
 		initialVelocity,
@@ -65,19 +70,50 @@ export default function Engine({
 		updateBoundaryByKey,
 		boundaries,
 		blockSize,
+		bots,
+		bots_keys:bots.map(bot=>bot.actions[0]),
+		characters,
 		addCoins(amount = 1){
-			store("coins",storage.coins + amount)
+			store("coins",storage.coins ? (storage.coins + amount):amount)
 		},
 		removeCoins(amount = 1){
 			store("coins",(storage.coins - amount) >= 0 ? storage.coins : 0);
 		}
 	});
+	useEffect(() => {
+		if (game.dead && game.keys["died"]) return;
+		setGame((prevGame) => {
+			console.log(prevGame)
+			const updatedGame = computePhysics({
+				...prevGame,
+				keys: game.dead ? { "died": true } : keys,
+				computed_bots:game.computed_bots.map((bot,index)=>{
+					return {
+						...bot,
+						keys:botsKeys[index]
+					}
+				}),
+			});
+			return updatedGame;
+		});
+	}, [framerate]);
+	
 
-	useEffect(()=>{
-		if(game.dead && game.keys.s)return;
-		setGame(game=>computePhysics({...game,keys:game.dead ? {s:true}:keys}));
-	},[framerate]);
 
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			setBotsKeys((prevBotsKeys) => {
+				return prevBotsKeys.map((currentAction, index) => {
+					const botActions = bots[index].actions;
+					if (!botActions || botActions.length === 0) return currentAction;
+					const nextActionIndex = (botActions.indexOf(currentAction) + 1) % botActions.length;
+					return botActions[nextActionIndex];
+				});
+			});
+		}, 1000);
+		return () => clearInterval(intervalId);
+	}, [bots]);
+	
 	return (
 		<div className={styles.container}>
 			<div className={styles["container-sub"]}>
@@ -94,16 +130,12 @@ export default function Engine({
 						textures={textures}
 						key={index}
 					/>))}
-					{bots.map((bot,index)=>(<Bot 
+					{game.computed_bots.map((bot,index)=>(<Bot 
 						key={index}
-						id={index}
+						game={bot}
+						message={bot.message}
 						framerate={framerateSprites}
 						character={bot.character}
-						characters={characters}
-						paused={paused}
-						boundaries={boundaries}
-						updateBoundaryById={updateBoundaryById}
-						updateBoundaryByKey={updateBoundaryByKey}
 						actions={bot.actions}
 					/>))}
 				</div>
