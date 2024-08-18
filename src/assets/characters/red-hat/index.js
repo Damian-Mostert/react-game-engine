@@ -136,7 +136,7 @@ export default{
 					height:"80px",
 					left:"0px",
 					top:"-6px",
-          minWidth:50,
+          			minWidth:50,
 					objectPosition:"-25px",
 					objectFit:"cover",
 				},

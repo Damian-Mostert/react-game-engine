@@ -10,7 +10,6 @@ export default function computeVelocity({
     airDensity = 0,
     maxVelocity = 10,
     attributes = { weight: 0 },
-    updateBoundary,
     blockSize,
     boundaries,
     checkDistance,
@@ -31,15 +30,15 @@ export default function computeVelocity({
     };
 
     // Reset jumping state if on the ground
-    if (velocity.y === 0) {
+    if (velocity_result.y === 0) {
         isJumping = false;
         isFalling = false;
     }
 
     // Apply forces based on key inputs for horizontal movement
-    if (keys.w && isJumping != attributes.strength) {
-        if(isJumping == false)isJumping = 0;
-        isJumping ++;
+    if (keys.w && isJumping !== attributes.strength) {
+        if (!isJumping) isJumping = 0;
+        isJumping++;
         applyForce("y", -attributes.strength); // Variable jumping
         isFalling = false;
     } else if (isJumping && !isFalling) {
@@ -56,62 +55,60 @@ export default function computeVelocity({
         applyForce("x", airDensity * (keys.s ? -2 : -1)); // Moving left
     } else {
         // Apply air resistance when no key is pressed
-        if (velocity.x > 0) applyForce("x", airDensity * -1);
-        if (velocity.x < 0) applyForce("x", airDensity);
+        if (velocity_result.x > 0) applyForce("x", airDensity * -1);
+        if (velocity_result.x < 0) applyForce("x", airDensity);
     }
 
     let newPosition = { ...position_result };
 
-    // Update position based on velocity
+    // Check vertical collisions and update position based on velocity
     newPosition.top += velocity_result.y;
 
-    const verticalCheck = computeBoundaries(
+    const verticalCheck = computeBoundaries({        
         blockSize,
         boundaries,
         newPosition,
-        "vertical",
-        velocity_result,
-        updateBoundary,
+        direction: "vertical",
+        newVelocity: velocity_result,
         checkDistance,
         character,
-        position_result,
+        position: position_result,
         bot
-    );
+    });
 
     if (!verticalCheck.ok) {
         newPosition.top += verticalCheck.adjustment.top;
         velocity_result.y = 0;
-        if (velocity_result.y >= 0) {
-            isJumping = false;
-            isFalling = false;
-        }
+        isJumping = false;
+        isFalling = false;
     }
 
+    // Check horizontal collisions and update position based on velocity
     newPosition.left += velocity_result.x;
 
-    const horizontalCheck = computeBoundaries(
+    const horizontalCheck = computeBoundaries({
         blockSize,
         boundaries,
         newPosition,
-        "horizontal",
-        velocity_result,
-        updateBoundary,
+        direction: "horizontal",
+        newVelocity: velocity_result,
         checkDistance,
         character,
-        position_result,
+        position: position_result,
         bot
-    );
+    });
 
     if (!horizontalCheck.ok) {
         newPosition.left += horizontalCheck.adjustment.left;
         velocity_result.x = 0;
     }
 
-    // Apply gravity if not blocked
+    // Apply gravity if not blocked by any boundary
     if (verticalCheck.ok && horizontalCheck.ok) {
         applyForce("y", gravityForce + (attributes.weight || 0));
     }
 
+    // Only update position if it has changed
     if (
         newPosition.top !== position_result.top ||
         newPosition.left !== position_result.left

@@ -8,7 +8,8 @@ const boundaries = [
 		height: 100,
 		texture: "Lava",
 		inRange(data,bot){
-			if(bot)return bot.removeHp(1)
+			bot.setMessage("oh no");
+			bot.removeHp(1)
 			return data;
 		}
 	},
@@ -16,16 +17,41 @@ const boundaries = [
 	...createCoins(104, 30, 2),
 	...createSlope(80, 0, 40, 40, false, "vertical", "Rock",{
 		inRange(boundary,bot){
-			if(bot)return bot.id === "Santa Clause" ? bot.updateMessage("Ho Ho Ho, oh shit!"):bot.updateMessage("Cheers!");
+			var message = null;
+			switch(bot.id){
+				case "main":
+					message = "Main character";
+				break;
+				case 0:
+					message = "Character 1";
+				break;
+				case 1:
+					message = "Character 2";
+				break;
+
+			}
+			bot.setMessage(message);
+			return boundary
 		}
 	}),
-	...createQuarterCircle(120, -40, 40, false, "horizontal", "Rock",{
-		inRange(boundary,bot){
-		}
-	}),
+	...createQuarterCircle(120, -40, 40, false, "horizontal", "Rock",{}),
 	...createQuarterCircle(120, -40, 40, true, "vertical", "Rock",{
-		inRange(_,bot){
-			if(bot)return bot.id === 0 ? bot.updateMessage("Ho Ho Ho, oh shit!"):bot.updateMessage("Cheers!");
+		inRange(boundary,bot){
+			var message = null;
+			switch(bot.id){
+				case "main":
+					message = "Main character";
+				break;
+				case 0:
+					message = "Character 1";
+				break;
+				case 1:
+					message = "Character 2";
+				break;
+
+			}
+			bot.setMessage(message);
+			return boundary
 		}
 	}),
 	...createLineOfCoins(54, 30, 7, 3, 'vertical'),
@@ -88,6 +114,6 @@ const bots = [
 ];
 
 export default {
-	boundaries,
+	boundaries:boundaries.map((b,key)=>({...b,key})),
 	bots
 };

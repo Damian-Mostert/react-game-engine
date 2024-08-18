@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
+import computePhysics from "../computations/compute-physics";
 
 export default function useCharacter({
     character,
     keys,
-    id,
+    id = "main",
     updateBoundary,
+    gravityForce,
+    initialPosition,
+    initialVelocity,
+    checkDistance,
+    airDensity,
+    blockSize,
+    boundaries,
     addCoins = ()=>{},
     removeCoins = ()=>{},
     ...actions
@@ -13,7 +21,41 @@ export default function useCharacter({
 	const [health, setHp] = useState(character?.attributes?.health);
 	const [maxHealth, setMaxHp] = useState(character?.attributes?.health);
 
-
+    const [game,setGame] = useState(computePhysics({
+		action:"idle",
+		blockSize,
+		gravityForce,
+		initialPosition,
+		initialVelocity,
+		checkDistance,
+		airDensity,
+		boundaries, 
+		character:character,
+		updateBoundary, 
+		attributes:character.attributes,
+		dead:false,
+		bot:{
+            id,
+			updateBoundary,
+			setHp,
+			health,
+            addCoins,
+            removeCoins,
+            setMessage(m){setMessage(m)},
+			addHp(amount = 1) {setHp((health) => Math.min(health + amount, maxHealth));},
+			removeHp(amount = 1) {setHp((health) => ((health - amount) >= 0) ? (health - amount) : 0);},
+            ...actions
+		},
+		position:{
+			top:0,
+			left:0
+		},
+		velocity:{
+			x:0,
+			y:0
+		},
+		keys:{},
+	}))
 	useEffect(() => {
 		if (character) {
 			setHp(character?.attributes?.health);
@@ -21,41 +63,20 @@ export default function useCharacter({
 		}
 	}, [character]);
 
-	useEffect(() => {
-		const t = setTimeout(() => {
-			if (message) setMessage(null);
-		}, 3000);
-		return () => clearTimeout(t);
-	}, [message]);
-
 
 	useEffect(() => {
-        if(!window.setGame)window.setGame = () => {};
-		if (health === 0) (window.setGame[id] ? window.setGame[id] : window.setGame)(game=>({...game,keys:keys?keys:game.keys,dead:true}));
+		if (health === 0) setGame(game=>({...game,keys:keys?keys:game.keys,dead:true}));
 	}, [health]);
 
+
+    
     return {
+        game,
+        setGame,
 		message,
 		setMessage,
 		health,
 		maxHealth,
 		setHp,
-        bot:{
-			updateBoundary,
-			setHp,
-			health,
-            addCoins,
-            removeCoins,
-			updateMessage(message) {
-				setMessage(message);
-			},
-			addHp(amount = 1) {
-				setHp((health) => Math.min(health + amount, maxHealth));
-			},
-			removeHp(amount = 1) {
-				setHp((health) => Math.min(health - amount, 0));
-			},
-            ...actions
-		}
     }
 }

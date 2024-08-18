@@ -19,51 +19,35 @@ const {
 
  var speed = 1000;
  
-export default function Bot({id,actions,framerate,character,characters,updateBoundary,boundaries}){
+export default function Bot({id,actions,framerate,character,characters,updateBoundaryById,updateBoundaryByKey,boundaries}){
 	
 	const [keys,setKeys] = useState({});
 	const [index,setIndex] = useState(0);
 
 	const {
-		bot,
 		message,
+		game,
+		setGame,
 	} = useCharacter({
-		character: characters[character],
-		keys,
-		id,
-		updateBoundary
-	});
-
-	
-	const [game,setGame] = useState(computePhysics({
-		action:"idle",
-		blockSize,
 		gravityForce,
 		initialPosition,
 		initialVelocity,
 		checkDistance,
 		airDensity,
+		character: characters[character],
+		keys,
+		updateBoundaryById,
+		updateBoundaryByKey,
 		boundaries,
-		character:characters[character],
-		updateBoundary, 
-		attributes:characters[character].attributes,
-		dead:false,
-		bot,
-		position:{
-			top:0,
-			left:0
-		},
-		velocity:{
-			x:0,
-			y:0
-		},
-		keys:{},
-	}));
+		blockSize,
+		id,
+		addCoins(amount = 1){},
+		removeCoins(amount = 1){}
+	});
 
 	useEffect(()=>{
-		if(!window.setGame)window.setGame = () =>{};
-		window.setGame[id] = setGame;
-		setGame(game=>computePhysics({...game,keys,bot:game?.actions}));
+		if(game.dead)return;
+		setGame(game=>computePhysics({...game,keys}));
 	},[framerate]);
 
 	useEffect(()=>{
@@ -82,7 +66,7 @@ export default function Bot({id,actions,framerate,character,characters,updateBou
 		return ()=>{
 			clearTimeout(t);
 		}
-	},[keys]);	
+	},[keys,actions,game.dead]);	
 
 	return <div
 		style={{

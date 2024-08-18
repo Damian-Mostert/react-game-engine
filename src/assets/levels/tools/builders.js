@@ -145,18 +145,13 @@ export function createCoins(startTop, startLeft, count, slopeXOffset = 1) {
       width: 1,
       height: 1,
       texture: "Coin",
-      id: `VulgarCoin${i + 1}`,
       passThrough: true,
       inRange: (boundary,bot) => {
         boundary.destroy = true;
         boundary.hide=true;
-        if(bot){
-          //bot.playSound("coin.mp3");
-          bot.updateMessage(getRandomMessage());
-          bot.addCoins(100);
-        }
+        bot.setMessage(getRandomMessage());
         setTimeout(() => {
-          bot&&bot.updateBoundary(`VulgarCoin${i + 1}`, { ...boundary, destroy: false });
+          bot.updateBoundaryByKey(boundary.key, { ...boundary, destroy: false,hide:false });
         }, 3000);
         return boundary;
       },
@@ -176,18 +171,15 @@ export function createLineOfCoins(startTop, startLeft, count, spacing = 3, direc
       width: 1,
       height: 1,
       texture: "Coin",
-      id: `VulgarCoin${direction === 'vertical' ? `Vertical${i + 1}` : `Horizontal${i + 1}`}`,
       passThrough: true,
       inRange: (boundary,bot) => {
         boundary.destroy = true;
         boundary.hide=true;
-        if(bot){
-          //bot.playSound("coin.mp3");
-          bot.updateMessage(getRandomMessage());
-          bot.addCoins(100);
-        }
+        const message = getRandomMessage();
+        console.log(message)
+        bot.setMessage(message);
         setTimeout(() => {
-          bot&&bot.updateBoundary(`VulgarCoin${direction === 'vertical' ? `Vertical${i + 1}` : `Horizontal${i + 1}`}`, { ...boundary, destroy: false });
+          bot.updateBoundaryByKey(boundary.key, { ...boundary, destroy: false,hide:false });
         }, 3000);
         return boundary;
       },

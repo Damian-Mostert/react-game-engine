@@ -13,7 +13,7 @@ const computePlayerAction = ({
 }) =>{
 
     if(dead){
-        return action  = "dead"+(isLeft ? "-left":"");
+        action  = "dead"+(isLeft ? "-left":"");
     }else{
         if(keys.s){
             if(velocity.x < -0.5)

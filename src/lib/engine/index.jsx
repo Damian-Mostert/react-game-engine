@@ -32,13 +32,15 @@ export default function Engine({
 	bots =[]
 }) {
 	
-	const updateBoundary = (id, rules) => {
+	const updateBoundaryById = (id, rules) => {
+		return
 		if (!rules) return;
-		setGame((game) =>(
-			{...game,boundaries:boundaries.map((__bound) =>
-				__bound?.id === id ? rules : __bound
-			)})
-		);
+		setGame((game) =>({...game,boundaries:boundaries.map((__bound) =>__bound?.id === id ? rules : __bound)}));
+	};
+	const updateBoundaryByKey = (id, rules) => {
+		return
+		if (!rules) return;
+		setGame((game) =>({...game,boundaries:boundaries.map((__bound) =>__bound?.key === id ? rules : __bound)}));
 	};
 
 	const framerate = useFramerate(Framerate, paused);
@@ -50,12 +52,21 @@ export default function Engine({
 		message,
 		health,
 		maxHealth,
-		bot,
+		game,
+		setGame,
 	} = useCharacter({
+		gravityForce,
+		initialPosition,
+		initialVelocity,
+		checkDistance,
+		airDensity,
 		store,
 		character: characters[character],
 		keys,
-		updateBoundary,
+		updateBoundaryById,
+		updateBoundaryByKey,
+		boundaries,
+		blockSize,
 		addCoins(amount = 1){
 			store("coins",storage.coins + amount)
 		},
@@ -64,33 +75,8 @@ export default function Engine({
 		}
 	});
 
-
-	const [game,setGame] = useState(computePhysics({
-		action:"idle",
-		blockSize,
-		gravityForce,
-		initialPosition,
-		initialVelocity,
-		checkDistance,
-		airDensity,
-		boundaries, 
-		character:characters[character],
-		updateBoundary, 
-		attributes:characters[character].attributes,
-		dead:false,
-		bot,
-		position:{
-			top:0,
-			left:0
-		},
-		velocity:{
-			x:0,
-			y:0
-		},
-		keys:{},
-	}));
-
 	useEffect(()=>{
+		if(game.dead)return;
 		setGame(game=>computePhysics({...game,keys}));
 	},[framerate]);
 
@@ -118,7 +104,8 @@ export default function Engine({
 						characters={characters}
 						paused={paused}
 						boundaries={boundaries}
-						updateBoundary={updateBoundary}
+						updateBoundaryById={updateBoundaryById}
+						updateBoundaryByKey={updateBoundaryByKey}
 						actions={bot.actions}
 					/>))}
 				</div>

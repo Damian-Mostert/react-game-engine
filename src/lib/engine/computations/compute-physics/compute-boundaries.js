@@ -1,4 +1,15 @@
-const computeBoundaries = (blockSize,boundaries,newPosition, direction, newVelocity,updateBoundary,checkDistance,character,position,bot) => {
+const computeBoundaries = ({
+	blockSize,
+	boundaries,
+	newPosition, 
+	direction, 
+	newVelocity,
+	checkDistance,
+	character,
+	position,
+	bot,
+}) => {
+
 	let adjustment = { top: 0, left: 0 };
 	let ok = true;
 
@@ -44,36 +55,36 @@ const computeBoundaries = (blockSize,boundaries,newPosition, direction, newVeloc
 			(newPosition.left - 10) < boundRight &&
 			(newPosition.left + 10) + character.width > boundLeft);
 
-			const insideRange = !(
-				(newPosition.top -1) < boundBottom &&
-				(newPosition.top + 1) + character.height > boundTop &&
-				(newPosition.left - 1) < boundRight &&
-				(newPosition.left + 1) + character.width > boundLeft);
+		const insideRange = !(
+			(newPosition.top -1) < boundBottom &&
+			(newPosition.top + 1) + character.height > boundTop &&
+			(newPosition.left - 1) < boundRight &&
+			(newPosition.left + 1) + character.width > boundLeft);
 
-	if(insideRange && typeof __bound.insideRange == "function"){
-		updateBoundary(__bound.id,__bound.insideRange(__bound,bot));
-	}
-	if (isInRange && typeof __bound.inRange === "function") {
-		updateBoundary(__bound.id,__bound.inRange(__bound,bot));
-	}else if(isNotInRange && typeof __bound.outRange == "function"){
-		updateBoundary(__bound.id,__bound.outRange(__bound,bot));
-	}
+		if(insideRange && typeof __bound.insideRange == "function"){
+			bot.updateBoundaryByKey(__bound.key,__bound.insideRange(__bound,bot));
+		}
+		if (isInRange && typeof __bound.inRange === "function") {
+			bot.updateBoundaryByKey(__bound.key,__bound.inRange(__bound,bot));
+		}else if(isNotInRange && typeof __bound.outRange == "function"){
+			bot.updateBoundaryByKey(__bound.key,__bound.outRange(__bound,bot));
+		}
 
-	if (__bound.inRangeBlocks) {
-		let {
-			range,
-			action
-		} = __bound.inRangeBlocks(__bound);
-		if(checkRange(range))updateBoundary(__bound.id,action(__bound,bot));
-	}
-	if(__bound.outRangeBlocks){
-		let {
-			range,
-			action
-		} = __bound.outRangeBlocks(__bound);
-			if(!checkRange(range))updateBoundary(__bound.id,action(__bound,bot));
-	}
-	if (__bound.passThrough) return;
+		if (__bound.inRangeBlocks) {
+			let {
+				range,
+				action
+			} = __bound.inRangeBlocks(__bound);
+			if(checkRange(range))bot.updateBoundaryByKey(__bound.key,action(__bound,bot));
+		}
+		if(__bound.outRangeBlocks){
+			let {
+				range,
+				action
+			} = __bound.outRangeBlocks(__bound);
+			if(!checkRange(range))bot.updateBoundaryByKey(__bound.key,action(__bound,bot));
+		}
+		if (__bound.passThrough) return;
 
 		switch (direction) {
 			case "vertical":

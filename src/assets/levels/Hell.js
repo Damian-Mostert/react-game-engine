@@ -7,11 +7,12 @@ const boundaries = [
 		width: 900,
 		height: 1,
 		texture: "Dirt",
-		//passThrough:true,
 		inRange(){
 			console.log("Hit the floor")
 		}
 	},
 ];
 
-export default boundaries;
+export default {
+	boundaries:boundaries.map((b,key)=>({...b,key}))
+};

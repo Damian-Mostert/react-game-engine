@@ -13,6 +13,7 @@ import Start from "./menus/start";
 import useMusic from "./lib/engine/hooks/use-music";
 
 export default function Game() {
+	
 	const [character, setCharacter] = useState(null);
 	const [level,setLevel] = useState(null);
 	const [paused,setPaused] = useState(false);
