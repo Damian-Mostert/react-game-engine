@@ -29,16 +29,32 @@ export default function computeVelocity({
             maxVelocity
         );
     };
+
+    // Reset jumping state if on the ground
+    if (velocity.y === 0) {
+        isJumping = false;
+        isFalling = false;
+    }
+
     // Apply forces based on key inputs for horizontal movement
-    if (keys.d) {
-        applyForce("x", airDensity * keys.s? 2 : 1); // Moving right
-    } else if (keys.a) {
-        applyForce("x", airDensity * keys.s? -2 : -1); // Moving left
-    } else {
-        if (keys.w) {
-            applyForce("y", -attributes.strength); // Jumping
-            isJumping = true
+    if (keys.w && isJumping != attributes.strength) {
+        if(isJumping == false)isJumping = 0;
+        isJumping ++;
+        applyForce("y", -attributes.strength); // Variable jumping
+        isFalling = false;
+    } else if (isJumping && !isFalling) {
+        // Gradually decrease jump velocity until it reaches 0, then switch to falling
+        applyForce("y", gravityForce * 0.1);
+        if (velocity_result.y >= 0) {
+            isFalling = true;
         }
+    }
+
+    if (keys.d) {
+        applyForce("x", airDensity * (keys.s ? 2 : 1)); // Moving right
+    } else if (keys.a) {
+        applyForce("x", airDensity * (keys.s ? -2 : -1)); // Moving left
+    } else {
         // Apply air resistance when no key is pressed
         if (velocity.x > 0) applyForce("x", airDensity * -1);
         if (velocity.x < 0) applyForce("x", airDensity);
@@ -67,6 +83,7 @@ export default function computeVelocity({
         velocity_result.y = 0;
         if (velocity_result.y >= 0) {
             isJumping = false;
+            isFalling = false;
         }
     }
 
@@ -106,6 +123,7 @@ export default function computeVelocity({
         velocity: velocity_result,
         position: position_result,
         isJumping,
+        isFalling,
         direction
     };
 }

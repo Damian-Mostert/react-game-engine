@@ -2,7 +2,6 @@ import styles from "./styles/engine.module.css";
 
 import { useEffect, useState } from "react";
 import useStorage from "./hooks/use-storage";
-import useMusic from "./hooks/use-music";
 import useFramerate from "./hooks/use-framerate";
 import config_fr from "../../assets/config/framerates";
 import config_physics from "../../assets/config/physics";
@@ -11,8 +10,10 @@ import Boundary from "./components/boundary";
 import Bot from "./components/bot";
 import useKeys from "./hooks/use-keys";
 import computePhysics from "./computations/compute-physics";
+import useCharacter from "./hooks/use-character";
 
-const { game:Framerate } = config_fr;
+const { game:Framerate,sprites:FramerateSprites } = config_fr;
+
 const { 
 	blockSize,
 	gravityForce,
@@ -20,7 +21,7 @@ const {
 	initialVelocity,
 	checkDistance,
 	airDensity,
- } = config_physics;
+	} = config_physics;
 
 export default function Engine({
 	characters,
@@ -30,75 +31,39 @@ export default function Engine({
 	paused,
 	bots =[]
 }) {
-
-	const { controls: musicControls } = useMusic([]);
-
-	const [dead, setDead] = useState(false);
-	const [health, setHp] = useState(characters[character]?.attributes?.health);
-	const [maxHealth, setMaxHp] = useState(characters[character]?.attributes?.health);
-
-	const [storage, store] = useStorage(["coins"]);
-	const [message, setMessage] = useState(null);
-
+	
 	const updateBoundary = (id, rules) => {
 		if (!rules) return;
-		/* setBounds((boundaries) =>
-			boundaries.map((__bound) =>
+		setGame((game) =>(
+			{...game,boundaries:boundaries.map((__bound) =>
 				__bound?.id === id ? rules : __bound
-			)
-		); */
+			)})
+		);
 	};
 
-
-	useEffect(() => {
-		if (characters[character]) {
-			setHp(characters[character]?.attributes?.health);
-			setMaxHp(characters[character]?.attributes?.health);
-		}
-	}, [character]);
-
-	useEffect(() => {
-		if (health === 0) setDead(true);
-	}, [health]);
-
-
-	useEffect(() => {
-		window.gameDom = {
-			...window.gameDom,
-			updateMessage(message) {
-				setMessage(message);
-			},
-			addCoins(amount = 1) {
-				store("coins", storage.coins ? storage.coins + amount : amount);
-			},
-			addHp(amount = 1) {
-				setHp((health) => Math.min(health + amount, maxHealth));
-			},
-			removeHp(amount = 1) {
-				setHp((health) => Math.max(health - amount, 0));
-			},
-			playSound(audioFile) {
-				musicControls.playTrack(`/sounds/${audioFile}`);
-			},
-			setDead,
-			setMessage,
-			setHp,
-			updateBoundary,
-		};
-	}, [storage]);
-
-	useEffect(() => {
-		const t = setTimeout(() => {
-			if (message) setMessage(null);
-		}, 3000);
-		return () => clearTimeout(t);
-	}, [message]);
-
-	//MAIN ENGINE
+	const framerate = useFramerate(Framerate, paused);
+	const framerateSprites = useFramerate(FramerateSprites, paused);
+	const [ storage, store ] = useStorage(["coins"]);
+	const { keys } = useKeys();
 	
-	useKeys();
+	const {
+		message,
+		health,
+		maxHealth,
+		bot,
+	} = useCharacter({
+		store,
+		character: characters[character],
+		keys,
+		updateBoundary,
+		addCoins(amount = 1){
+			store("coins",storage.coins + amount)
+		},
+		removeCoins(amount = 1){
+			store("coins",(storage.coins - amount) >= 0 ? storage.coins : 0);
+		}
+	});
 
-	const framerate = useFramerate(Framerate, paused ? paused : dead);
 
 	const [game,setGame] = useState(computePhysics({
 		action:"idle",
@@ -112,7 +77,8 @@ export default function Engine({
 		character:characters[character],
 		updateBoundary, 
 		attributes:characters[character].attributes,
-		dead,
+		dead:false,
+		bot,
 		position:{
 			top:0,
 			left:0
@@ -125,7 +91,7 @@ export default function Engine({
 	}));
 
 	useEffect(()=>{
-		setGame(game=>computePhysics({...game,keys:window.keys,dead}));
+		setGame(game=>computePhysics({...game,keys}));
 	},[framerate]);
 
 	return (
@@ -147,7 +113,7 @@ export default function Engine({
 					{bots.map((bot,index)=>(<Bot 
 						key={index}
 						id={index}
-						framerate={framerate}
+						framerate={framerateSprites}
 						character={bot.character}
 						characters={characters}
 						paused={paused}

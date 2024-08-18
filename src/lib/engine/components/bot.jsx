@@ -6,6 +6,7 @@ import Sprite from "./sprite";
 
 import config_physics from "../../../assets/config/physics";
 import computePhysics from "../computations/compute-physics";
+import useCharacter from "../hooks/use-character";
 
 const { 
 	blockSize,
@@ -16,15 +17,24 @@ const {
 	airDensity,
  } = config_physics;
 
+ var speed = 1000;
+ 
 export default function Bot({id,actions,framerate,character,characters,updateBoundary,boundaries}){
+	
+	const [keys,setKeys] = useState({});
+	const [index,setIndex] = useState(0);
 
-	const [message, setMessage] = useState("Fuck yeah");
-	const [dead, setDead] = useState(false);
-	const [health, setHp] = useState(characters[character]?.attributes?.health);
-	const [maxHealth, setMaxHp] = useState(characters[character]?.attributes?.health);
-	const [keys, setKeys] = useState({});
-	const [speed,setSpeed] = useState(1000);
+	const {
+		bot,
+		message,
+	} = useCharacter({
+		character: characters[character],
+		keys,
+		id,
+		updateBoundary
+	});
 
+	
 	const [game,setGame] = useState(computePhysics({
 		action:"idle",
 		blockSize,
@@ -37,27 +47,8 @@ export default function Bot({id,actions,framerate,character,characters,updateBou
 		character:characters[character],
 		updateBoundary, 
 		attributes:characters[character].attributes,
-		dead,
-		actions:{
-			updateBoundary,
-			setDead,
-			setHp,
-			health,
-			setSpeed,
-			speed,
-			setMessage,
-			updateMessage(message) {
-				setMessage(message);
-			},
-			addHp(amount = 1) {
-				console.info(`bot ${id} +hp${amount}`)
-				setHp((health) => Math.min(health + amount, maxHealth));
-			},
-			removeHp(amount = 1) {
-				console.info(`bot ${id} -hp${amount}`)
-				setHp((health) => Math.min(health - amount, 0));
-			},
-		},
+		dead:false,
+		bot,
 		position:{
 			top:0,
 			left:0
@@ -70,33 +61,13 @@ export default function Bot({id,actions,framerate,character,characters,updateBou
 	}));
 
 	useEffect(()=>{
-		setGame(game=>computePhysics({...game,keys,dead,bot:game?.actions}));
+		if(!window.setGame)window.setGame = () =>{};
+		window.setGame[id] = setGame;
+		setGame(game=>computePhysics({...game,keys,bot:game?.actions}));
 	},[framerate]);
 
-
-	useEffect(() => {
-		if (characters[character]) {
-			setHp(characters[character]?.attributes?.health);
-			setMaxHp(characters[character]?.attributes?.health);
-		}
-	}, [character]);
-
-	useEffect(() => {
-		const t = setTimeout(() => {
-			if (message) setMessage(null);
-		}, 3000);
-		return () => clearTimeout(t);
-	}, [message]);
-
-
-	useEffect(() => {
-		if (health === 0) setDead(true);
-	}, [health]);
-
-	const [_,setIndex] = useState(0);
-
 	useEffect(()=>{
-		if(dead)return setKeys({});
+		if(game.dead)return setKeys({});
 		var t = setTimeout(()=>{
 			setIndex(index=>{
 				if(actions[index+1]){
@@ -107,11 +78,11 @@ export default function Bot({id,actions,framerate,character,characters,updateBou
 					return 0;
 				}
 			})
-		},1000);
+		},speed);
 		return ()=>{
 			clearTimeout(t);
 		}
-	},[keys,speed,dead]);
+	},[keys]);	
 
 	return <div
 		style={{

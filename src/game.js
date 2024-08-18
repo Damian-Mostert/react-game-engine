@@ -4,12 +4,12 @@ import Engine from "./lib/engine";
 import characters from "./assets/characters";
 import textures from "./assets/textures";
 import levels from "./assets/levels/_load";
-import CharacterSelect from "./lib/menus/character-select";
-import LevelSelect from "./lib/menus/levels";
-import PauseMenu from "./lib/menus/puase";
+import CharacterSelect from "./menus/character-select";
+import LevelSelect from "./menus/levels";
+import PauseMenu from "./menus/puase";
 
 import musicTracks from "./assets/config/music";
-import Start from "./lib/menus/start";
+import Start from "./menus/start";
 import useMusic from "./lib/engine/hooks/use-music";
 
 export default function Game() {
@@ -25,10 +25,6 @@ export default function Game() {
 		playing:playingMusic,
 		controls:musicControls
 	} = useMusic(musicTracks);
-
-	useEffect(()=>{
-		console.log("Track: ",musicTrack);
-	},[musicTrack]);
 
 	useEffect(()=>{
 		if(endedMusic)musicControls.randomTrack();
