@@ -15,8 +15,10 @@ export default function computeVelocity({
     checkDistance,
     character,
     direction = "x",
-    bot
+    bot,
+    computed_bots = []
 }) {
+    //console.log(computed_bots)
     let velocity_result = { ...velocity };
     let position_result = { ...position };
 
@@ -28,6 +30,8 @@ export default function computeVelocity({
             maxVelocity
         );
     };
+
+    // Get other bots (excluding the main bot
 
     // Reset jumping state if on the ground
     if (velocity_result.y === 0) {
@@ -73,7 +77,8 @@ export default function computeVelocity({
         checkDistance,
         character,
         position: position_result,
-        bot
+        bot,
+        computed_bots
     });
 
     if (!verticalCheck.ok) {
@@ -95,13 +100,24 @@ export default function computeVelocity({
         checkDistance,
         character,
         position: position_result,
-        bot
+        bot,
+        computed_bots // Add computed_bots here
     });
 
     if (!horizontalCheck.ok) {
         newPosition.left += horizontalCheck.adjustment.left;
         velocity_result.x = 0;
     }
+
+    // Apply bot-related collision logic
+    const collisionResult = computeCollisions({
+        velocity: velocity_result,
+        position: position_result,
+        bot:character,
+        computed_bots // Pass otherBots here
+    });
+
+    velocity_result = collisionResult.velocity;
 
     // Apply gravity if not blocked by any boundary
     if (verticalCheck.ok && horizontalCheck.ok) {
@@ -124,3 +140,56 @@ export default function computeVelocity({
         direction
     };
 }
+
+export function computeCollisions({
+    velocity,
+    position,
+    bot,
+    computed_bots,
+}) {
+    let velocity_result = { ...velocity };
+
+    const botBounds = {
+        top: position.top,
+        left: position.left,
+        right: position.left + bot.width,  
+        bottom: position.top + bot.height,  
+    };
+
+    // Check collisions with other bots
+    computed_bots.forEach((otherBot) => {
+        const otherBotBounds = {
+            top: otherBot.position.top,
+            left: otherBot.position.left,
+            right: otherBot.position.left + otherBot.width,  
+            bottom: otherBot.position.top + otherBot.height,  
+        };
+
+        const isColliding =
+            botBounds.right > otherBotBounds.left &&
+            botBounds.left < otherBotBounds.right &&
+            botBounds.bottom > otherBotBounds.top &&
+            botBounds.top < otherBotBounds.bottom;
+
+        console.log("Collision with bot:", isColliding,bot.name,position,otherBot);
+
+        if (isColliding) {
+            // Apply counter velocity based on bot's strength
+            const strengthFactor = bot.attributes.strength || 1;
+
+            if (bot.isAttacking) {
+                velocity_result.y -= strengthFactor * 10;
+            }
+
+            if (bot.isSliding) {
+                velocity_result.x -= strengthFactor * 10;
+            }
+        }
+    });
+
+    return {
+        velocity: velocity_result,
+    };
+}
+
+

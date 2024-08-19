@@ -1,9 +1,9 @@
 import boundariesHome from "./Home";
-import boundariesHell from "./Hell";
+import boundariesPlain from "./plain";
 import boundariesVoid from "./Void";
 
 export default {
     "Home":boundariesHome,
-    "Hell":boundariesHell,
+    "Plain":boundariesPlain,
     "Void":boundariesVoid
 }

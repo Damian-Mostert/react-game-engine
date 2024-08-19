@@ -24,6 +24,7 @@ const {
 	initialVelocity,
 	checkDistance,
 	airDensity,
+	botsSpeed
 } = config_physics;
 
 export default function Engine({
@@ -50,13 +51,14 @@ export default function Engine({
 	const [ storage, store ] = useStorage(["coins"]);
 	const { keys } = useKeys();
 	const [botsKeys,setBotsKeys] = useState(bots.map(bot=>bot.actions[0]));
-	
+
 	const {
 		message,
 		health,
 		maxHealth,
 		game,
 		setGame,
+		bot,
 	} = useUniverse({
 		gravityForce,
 		initialPosition,
@@ -80,26 +82,25 @@ export default function Engine({
 			store("coins",(storage.coins - amount) >= 0 ? storage.coins : 0);
 		}
 	});
+
 	useEffect(() => {
 		if (game.dead && game.keys["died"]) return;
 		setGame((prevGame) => {
-			console.log(prevGame)
+			//console.log(prevGame)
 			const updatedGame = computePhysics({
 				...prevGame,
 				keys: game.dead ? { "died": true } : keys,
-				computed_bots:game.computed_bots.map((bot,index)=>{
+				computed_bots:[...game.computed_bots.map((bot,index)=>{
 					return {
 						...bot,
 						keys:botsKeys[index]
 					}
-				}),
+				})],
 			});
 			return updatedGame;
 		});
 	}, [framerate]);
 	
-
-
 	useEffect(() => {
 		const intervalId = setInterval(() => {
 			setBotsKeys((prevBotsKeys) => {
@@ -110,7 +111,7 @@ export default function Engine({
 					return botActions[nextActionIndex];
 				});
 			});
-		}, 1000);
+		}, botsSpeed);
 		return () => clearInterval(intervalId);
 	}, [bots]);
 	

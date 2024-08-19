@@ -8,6 +8,7 @@ const computeBoundaries = ({
 	character,
 	position,
 	bot,
+	bots,
 }) => {
 
 	let adjustment = { top: 0, left: 0 };

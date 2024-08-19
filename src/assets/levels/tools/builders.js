@@ -177,7 +177,7 @@ export function createLineOfCoins(startTop, startLeft, count, spacing = 3, direc
         boundary.destroy = true;
         boundary.hide=true;
         const message = getRandomMessage();
-        console.log(message)
+        //console.log(message)
         bot.setMessage(message);
         setTimeout(() => {
           bot.setMessage(null);

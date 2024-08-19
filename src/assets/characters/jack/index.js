@@ -19,7 +19,7 @@ export default{
       attributes:{
         strength:30,
         speed:2.5,
-        weight:2,
+        weight:100,
         health:10,
         ap:10,
         jump:true,
@@ -28,7 +28,7 @@ export default{
         slide:true,
         attack:false,
         jumpAttack:false,
-        maxVelocity:20,
+        maxVelocity:50,
       },
       actions:[
         {

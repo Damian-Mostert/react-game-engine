@@ -22,7 +22,7 @@ fs.readdir(process.cwd(), (err, files) => {
                 if (err) {
                     console.error('Error renaming file:', err);
                 } else {
-                    console.log(`Renamed: ${file} -> ${newFileName}`);
+                    //console.log(`Renamed: ${file} -> ${newFileName}`);
                 }
             });
         }

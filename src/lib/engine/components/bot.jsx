@@ -3,7 +3,6 @@ import styles from "../styles/engine.module.css";
 import Sprite from "./sprite";
  
 export default function Bot({framerate,character,game,message}){
-		console.log(game)
 		return <div
 			style={{
 				position: "absolute",
