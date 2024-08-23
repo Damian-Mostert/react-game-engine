@@ -16,7 +16,7 @@ export default function computeCollisions({
 
     // Check collisions with other bots
     if (window.computed_bots) {
-        window.computed_bots = window.computed_bots.map((otherBot, index) => {
+        window.computed_bots.forEach((otherBot) => {
             // Define the boundaries of the other bot
             const otherBotBounds = {
                 top: otherBot.position.top,
@@ -27,75 +27,68 @@ export default function computeCollisions({
 
             // Determine if the bots are colliding
             const isColliding =
-                botBounds.right >= otherBotBounds.left &&
-                botBounds.left <= otherBotBounds.right &&
-                botBounds.bottom >= otherBotBounds.top &&
-                botBounds.top <= otherBotBounds.bottom;
+                botBounds.right > otherBotBounds.left &&
+                botBounds.left < otherBotBounds.right &&
+                botBounds.bottom > otherBotBounds.top &&
+                botBounds.top < otherBotBounds.bottom;
 
             if (isColliding) {
                 console.log("Collided:", bot.name, otherBot.character.name);
-                const strengthFactor = bot.attributes.strength || 1;
-                const adjustedStrengthFactor = Math.min(strengthFactor, 5);
+                
+                // Allow bots to pass through unless one is attacking or sliding
+                if (!bot.isAttacking && !bot.isSliding && !otherBot.isAttacking && !otherBot.isSliding) {
+                    // Do not adjust positions or velocities, allowing bots to pass through each other
+                    return;
+                }
 
                 // Calculate overlap
                 const overlapX = Math.min(botBounds.right, otherBotBounds.right) - Math.max(botBounds.left, otherBotBounds.left);
                 const overlapY = Math.min(botBounds.bottom, otherBotBounds.bottom) - Math.max(botBounds.top, otherBotBounds.top);
 
-                // Determine the direction to push characters apart
-                const pushX = overlapX / 2;
-                const pushY = overlapY / 2;
+                // Separate bots based on overlap
+                if (overlapX < overlapY) {
+                    // Handle horizontal collision
+                    if (botBounds.left < otherBotBounds.left) {
+                        position.left -= overlapX; // Move left
+                    } else {
+                        position.left += overlapX; // Move right
+                    }
+                    velocity_result.x = 0; // Stop horizontal movement
+                } else {
+                    // Handle vertical collision
+                    if (botBounds.top < otherBotBounds.top) {
+                        position.top -= overlapY; // Move up
+                    } else {
+                        position.top += overlapY; // Move down
+                    }
+                    velocity_result.y = 0; // Stop vertical movement
+                }
 
+                // Apply force based on character actions
                 if (bot.isAttacking) {
-                    // Push the other bot away
-                    if (position.left < otherBot.position.left) {
-                        otherBot.velocity.x -= adjustedStrengthFactor * 10;
-                    } else if (position.left > otherBot.position.left) {
-                        otherBot.velocity.x += adjustedStrengthFactor * 10;
-                    }
-
-                    if (position.top < otherBot.position.top) {
-                        otherBot.velocity.y -= adjustedStrengthFactor * 10;
-                    } else if (position.top > otherBot.position.top) {
-                        otherBot.velocity.y += adjustedStrengthFactor * 10;
-                    }
+                    otherBot.velocity.y += (velocity_result.y > 0 ? -1 : 1) * 10;
                 }
 
                 if (bot.isSliding) {
-                    // Apply sliding force
-                    if (position.left < otherBot.position.left) {
-                        otherBot.velocity.x += adjustedStrengthFactor * 10;
-                    } else if (position.left > otherBot.position.left) {
-                        otherBot.velocity.x -= adjustedStrengthFactor * 10;
-                    }
-
-                    if (position.top < otherBot.position.top) {
-                        otherBot.velocity.y += adjustedStrengthFactor * 10;
-                    } else if (position.top > otherBot.position.top) {
-                        otherBot.velocity.y -= adjustedStrengthFactor * 10;
-                    }
-                }
-
-                // Apply a small separation force to prevent sticking
-                if (botBounds.right > otherBotBounds.left) {
-                    position.left -= pushX;
-                } else if (botBounds.left < otherBotBounds.right) {
-                    position.left += pushX;
-                }
-
-                if (botBounds.bottom > otherBotBounds.top) {
-                    position.top -= pushY;
-                } else if (botBounds.top < otherBotBounds.bottom) {
-                    position.top += pushY;
+                    otherBot.velocity.x += (velocity_result.x > 0 ? -1 : 1) * 10;
                 }
 
                 // Update the bot's position to avoid sticking
                 window.position = position;
             }
-
-            // Return the updated otherBot
-            return otherBot;
         });
     }
+
+    // Check if the updated position is within the map boundaries
+    const mapBounds = {
+        top: 0,
+        left: 0,
+        right: window.mapWidth || 1000, // Set appropriate map width
+        bottom: window.mapHeight || 1000, // Set appropriate map height
+    };
+
+    position.top = Math.max(mapBounds.top, Math.min(position.top, mapBounds.bottom - bot.height));
+    position.left = Math.max(mapBounds.left, Math.min(position.left, mapBounds.right - bot.width));
 
     return {
         velocity: velocity_result,

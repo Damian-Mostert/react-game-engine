@@ -190,3 +190,20 @@ export function createLineOfCoins(startTop, startLeft, count, spacing = 3, direc
 
   return coins;
 }
+
+/**
+ * Creates an array of a specific length determined by the framerate and time duration,
+ * with each element in the array set to the provided data.
+ *
+ * @param {number} framerate - The number of frames per second.
+ * @param {number} timeInSeconds - The total duration in seconds.
+ * @param {*} data - The data to fill each element of the array.
+ * @returns {Array} An array with the length of numFrames, each element containing the data.
+ */
+export function createArrayFromFPS(framerate, timeInSeconds, data) {
+  // Calculate the total number of frames
+  const numFrames = Math.round(framerate * timeInSeconds);
+
+  // Create an array with numFrames length, each element set to data
+  return Array.from({ length: numFrames }, () => data);
+}

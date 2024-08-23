@@ -1,4 +1,4 @@
-import { createSlope,createQuarterCircle } from "./tools/builders";
+import { createSlope,createQuarterCircle,createArrayFromFPS } from "./tools/builders";
 
 const boundaries = [
 	{
@@ -13,24 +13,25 @@ const boundaries = [
 	},
 ];
 
+
 export default {
 	boundaries:boundaries.map((b,key)=>({...b,key})),
 	bots : [
 		{
 			character:"Santa Clause",
 			actions:[
+				...createArrayFromFPS(30,1,{w:true}),
+				...createArrayFromFPS(30,1,{d:true,w:false}),
+				...createArrayFromFPS(30,1,{d:false,s:true,a:true}),
 
-				{
-					w:true
-				}
 			]
 		},
 		{
 			character:"Aether",
 			actions:[
-				{
-					e:true
-				}
+				...createArrayFromFPS(30,1,{e:true}),
+				...createArrayFromFPS(30,1,{d:true,w:false}),
+				...createArrayFromFPS(30,1,{d:false,s:true,a:true}),
 			]
 		},
 	]
