@@ -1,15 +1,15 @@
 import computeVelocity from "./compute-velocity"
 import computePlayerAction from "./compute-player-action";
 
-export default function computePhysics(props){
-    const result = computeVelocity(props);
+export default function computePhysics({position,...props}){
+    const result = computeVelocity({position,...props});
     return {
         ...props,
         ...result,
         ...computePlayerAction({
+            position:result.position,
             ...props,
             ...result,
         }),
-        computed_bots:props.computed_bots.map(bot=>computePhysics(bot))
     };
 }

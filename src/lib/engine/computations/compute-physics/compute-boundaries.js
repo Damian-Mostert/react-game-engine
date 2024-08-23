@@ -1,16 +1,15 @@
 const computeBoundaries = ({
 	blockSize,
-	boundaries,
-	newPosition, 
+	boundaries =[],
 	direction, 
-	newVelocity,
+	velocity,
 	checkDistance,
 	character,
 	position,
 	bot,
-	bots,
 }) => {
-
+	let newVelocity = { ...velocity };
+	let newPosition = { ...position };
 	let adjustment = { top: 0, left: 0 };
 	let ok = true;
 

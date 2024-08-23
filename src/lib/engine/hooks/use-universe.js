@@ -24,48 +24,46 @@ export default function useUniverse({
 	const [health, setHp] = useState(character?.attributes?.health);
 	const [maxHealth, setMaxHp] = useState(character?.attributes?.health);
 
-	const computed_bots = bots.map((bot,id)=>{
-		return{
-			computed_bots:[],
-			action:"idle",
-			blockSize,
-			gravityForce,
-			initialPosition,
-			initialVelocity,
-			checkDistance,
-			airDensity,
-			boundaries, 
-			character:characters[bot.character],
-			updateBoundary, 
-			attributes:characters[bot.character].attributes,
-			bots,
-			dead:false,
-			bot:{
-				id,
-				updateBoundary,
-				setHp,
-				health,
-				addCoins,
-				removeCoins,
-				setMessage(m){setMessage(m)},
-				addHp(amount = 1) {setHp((health) => Math.min(health + amount, maxHealth));},
-				removeHp(amount = 1) {setHp((health) => ((health - amount) >= 0) ? (health - amount) : 0);},
-				...actions
-			},
-			position:{
-				top:0,
-				left:0
-			},
-			velocity:{
-				x:0,
-				y:0
-			},
-			keys:bots_keys[id],
-		}
-	});
-
 	const [game,setGame] = useState(computePhysics({
-		computed_bots,
+		computed_bots:bots.map((bot,id)=>{
+			return{
+				computed_bots:[],
+				action:"idle",
+				blockSize,
+				gravityForce,
+				initialPosition,
+				initialVelocity,
+				checkDistance,
+				airDensity,
+				boundaries, 
+				character:characters[bot.character],
+				updateBoundary, 
+				attributes:characters[bot.character].attributes,
+				bots,
+				dead:false,
+				bot:{
+					id,
+					updateBoundary,
+					setHp,
+					health,
+					addCoins,
+					removeCoins,
+					setMessage(m){setMessage(m)},
+					addHp(amount = 1) {setHp((health) => Math.min(health + amount, maxHealth));},
+					removeHp(amount = 1) {setHp((health) => ((health - amount) >= 0) ? (health - amount) : 0);},
+					...actions
+				},
+				position:bot.position ? bot.position : {
+					top:0,
+					left:0
+				},
+				velocity:bot.velocity ? bot.velocity : {
+					x:0,
+					y:0
+				},
+				keys:bots_keys[id],
+			}
+		}),
 		action:"idle",
 		blockSize,
 		gravityForce,

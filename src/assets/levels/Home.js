@@ -15,8 +15,34 @@ const boundaries = [
 			return data;
 		}
 	},
+	{
+		top: -10,
+		left: -10,
+		width: 10,
+		height: 100,
+		texture: "Grass",
+	},
 	...createCoins(80, 40, 24),
 	...createCoins(104, 30, 2),
+	...createSlope(80, 0, 40, 40, false, "vertical", "Rock",{
+		inRange(boundary,bot){
+			var message = null;
+			switch(bot.id){
+				case "main":
+					message = "Main character";
+				break;
+				case 0:
+					message = "Character 1";
+				break;
+				case 1:
+					message = "Character 2";
+				break;
+
+			}
+			bot.setMessage(message);
+			return boundary
+		}
+	}),
 	...createSlope(80, 0, 40, 40, false, "vertical", "Rock",{
 		inRange(boundary,bot){
 			var message = null;
@@ -72,6 +98,32 @@ const bots = [
 			},
 			{
 				w:true,
+			},
+			{
+				a:true,
+			},
+			{
+				a:true,
+			},
+			{
+				d:true
+			},
+			{
+				d:true
+			}
+		]
+	},
+	{
+		character:"Santa Clause",
+		actions:[
+			{
+				a:true,
+			},
+			{
+				a:true,
+			},
+			{
+				a:true,
 			},
 			{
 				a:true,

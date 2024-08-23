@@ -1,4 +1,4 @@
 export default {
-    game:30,
+    game:5,
     sprites:15
 }

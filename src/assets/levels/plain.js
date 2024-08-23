@@ -20,44 +20,14 @@ export default {
 			character:"Santa Clause",
 			actions:[
 				{
-					a:true,
 				},
-				{
-					a:true,
-
-				},
-				{
-					d:true,
-
-				},
-				{
-					d:true,
-				}
 			]
 		},
 		{
 			character:"Aether",
 			actions:[
 				{
-					w:true,
-				},
-				{
-					w:true,
-				},
-				{
-					w:true,
-				},
-				{
-					a:true,
-				},
-				{
-					d:true,
-				},
-				{
-					d:true
-				},
-				{
-					d:true
+					
 				}
 			]
 		},
