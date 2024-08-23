@@ -71,6 +71,7 @@ export default function Engine({ characters, textures, character, boundaries, pa
         return computePhysics({
         ...prevGame,
         keys: game.dead ? { "died": true } : keys,
+        computed_bots:window.computed_bots
       })
     });
     },1000 / 40)

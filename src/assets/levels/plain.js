@@ -19,15 +19,17 @@ export default {
 		{
 			character:"Santa Clause",
 			actions:[
+
 				{
-				},
+					w:true
+				}
 			]
 		},
 		{
 			character:"Aether",
 			actions:[
 				{
-					
+					e:true
 				}
 			]
 		},
