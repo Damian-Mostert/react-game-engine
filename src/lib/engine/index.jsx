@@ -68,37 +68,47 @@ export default function Engine({ characters, textures, character, boundaries, pa
       // Update bot action indices and bot keys
       setBotActionIndex((prevIndex) => {
         // Compute the new bot keys based on the previous action index
-        const updatedBotKeys = prevIndex.map((index, i) => {
-          const botActions = bots[i].actions;
-          if (!botActions || botActions.length === 0) return index;
-          const nextActionIndex = (index + 1) % botActions.length;
-          return botActions[nextActionIndex];
-        });
-    
         // Update bots' keys
-        setBotsKeys(updatedBotKeys);
-    
-        // Update game state
-        setGame((prevGame) => {
-          const updatedBots = prevGame.computed_bots.map((bot, i) => {
-            // Update bot keys from the current botsKeys state
-            bot.keys = updatedBotKeys[i];
-            return bot;
+        setBotsKeys(()=>{
+          const updatedBotKeys = prevIndex.map((index, i) => {
+            const botActions = bots[i].actions;
+          
+            const nextActionIndex = (index + 1);
+            if(nextActionIndex == botActions.length - 2){
+              prevIndex[i] = 0;
+              return botActions[0];
+            }else{
+              prevIndex[i] = nextActionIndex;
+              return botActions[nextActionIndex];
+            }
+         
           });
-    
-          // Preserve previous position
-          window.position = prevGame.position;
-          window.computed_bots = updatedBots;
-    
-          // Compute new game state
-          return computePhysics({
-            ...prevGame,
-            keys: prevGame.dead ? { "died": true } : keys,
-            computed_bots: window.computed_bots
+      
+          // Update game state
+          setGame((prevGame) => {
+            const updatedBots = prevGame.computed_bots.map((bot, i) => {
+              // Update bot keys from the current botsKeys state
+              bot.keys = updatedBotKeys[i];
+              return bot;
+            });
+      
+            // Preserve previous position
+            window.position = prevGame.position;
+            window.computed_bots = updatedBots;
+      
+            // Compute new game state
+            return computePhysics({
+              ...prevGame,
+              keys: prevGame.dead ? { "died": true } : keys,
+              computed_bots: window.computed_bots
+            });
+
           });
+          return updatedBotKeys;
         });
     
-        return updatedBotKeys.map((key, i) => (updatedBotKeys[i] === bots[i].actions[0] ? 0 : prevIndex[i]));
+    
+        return prevIndex;
       });
     };
     
@@ -106,27 +116,20 @@ export default function Engine({ characters, textures, character, boundaries, pa
     // Update game state at 30 FPS
     const gameInterval = setInterval(updateGameState, 1000 / 30);
 
-    // Handle bot actions switching
-    const botActionsInterval = setInterval(() => {
-      setBotActionIndex((prevIndex) =>
-        prevIndex.map((index, i) => {
-          const botActions = bots[i].actions;
-          if (!botActions || botActions.length === 0) return index;
-          const nextIndex = (index + 1) % botActions.length;
-          return nextIndex;
-        })
-      );
-    }, botsSpeed);
-
     return () => {
       clearInterval(gameInterval);
-      clearInterval(botActionsInterval);
     };
   }, [keys, bots, botActionIndex, botsSpeed]);
 
   useEffect(() => {
     console.log(botsKeys);
   }, [botsKeys]);
+
+  useEffect(() => {
+    console.log(botActionIndex);
+  }, [botActionIndex]);
+
+
 
   return (
     <div className={styles.container}>
