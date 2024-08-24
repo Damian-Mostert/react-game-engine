@@ -7,15 +7,27 @@ export class Bot{
 		this.character = character;
 		this.actions = actions.flat();
 	}
+  isBot= true;
 	character:string = '';
 	actions:Array<keys> = [];
 };
 
 
 export class Map {
-    constructor(boundaries: Array<BoundaryPropsResult>, bots: Array<Bot>) {
+    constructor(items:Array<Bot|BoundaryPropsResult>) {
+      const boundaries: Array<BoundaryPropsResult> = [];
+      const bots: Array<Bot> = [];
+    
+      for(let item of items){
+        if(item?.isBot){
+          bots.push(item);
+        }else{
+          boundaries.push(item)
+        }
+      }
+
       const boundaries_result: any = [];
-  
+    
       for (let boundary of boundaries) {
         const boundaryArray = boundary.generateArray();
         boundaries_result.push(...boundaryArray);

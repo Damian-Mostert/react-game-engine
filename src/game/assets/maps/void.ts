@@ -24,8 +24,7 @@ export default new Map([
 			} */
 
 		}
-	})
-],[
+	}),
 	new Bot("Santa Clause",
 		For(1,{
 			w:true

@@ -18,6 +18,7 @@ export interface BotProps{
 export interface Bot{
     key:number,
     health:number,
+    isBot?:true,
     addHp:(number:number)=>{},
     removeHp:(number:number)=>{},
     setMessage:(message:string|null)=>{}

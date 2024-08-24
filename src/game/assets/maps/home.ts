@@ -24,17 +24,16 @@ export default new Map([
 			} */
 		}
 	}),
-		new Coins({
-			position:{
-				top:0,
-				left:0
-			},
-			orientation:{
-				vertical:true
-			},
-			amount:10
-		})
-],[
+	new Coins({
+		position:{
+			top:0,
+			left:0
+		},
+		orientation:{
+			vertical:true
+		},
+		amount:10
+	}),
 	new Bot("Santa Clause",
 		For(1,{
 			w:true
