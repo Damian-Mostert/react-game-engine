@@ -16,7 +16,7 @@ export interface BotProps{
 }
 
 export interface Bot{
-    id:number,
+    key:number,
     health:number,
     addHp:(number:number)=>{},
     removeHp:(number:number)=>{},
@@ -43,9 +43,7 @@ export interface BoundaryPropsResult{
     position:Position,
     actions:boundaryActions,
     type:string,
-}
-
-export interface ActionsProps{
+    generateArray:any
 }
 
 export interface CoinsProps{
@@ -65,8 +63,4 @@ export interface keys{
     d?:boolean,
     s?:boolean,
     e?:boolean
-}
-
-export interface Timer{
-    
 }

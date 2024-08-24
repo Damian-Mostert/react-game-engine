@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut,HealthBiggerThan } from "../../../lib/helpers/mab-builders/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut} from "../../../lib/helpers/mab-builders/classes.ts";
 
 export default new Map([
 	new Square({
@@ -8,11 +8,11 @@ export default new Map([
 			height:100
 		},
 		position:{
-			top:-5,
+			top:5,
 			left:-500
 		},
 		actions:{
-			inRange($this,bot){
+			/* inRange($this,bot){
 				bot.setMessage("Hi there");
 				$this.texture = "Dirt";
 				return $this;
@@ -21,65 +21,31 @@ export default new Map([
 				bot.setMessage(null);
 				$this.texture = "Grass";
 				return $this;
-			}
+			} */
 
 		}
-	}),
-		new Coins({
-			position:{
-				top:0,
-				left:0
-			},
-			orientation:{
-				vertical:true
-			},
-			amount:10
-		})
+	})
 ],[
-	new Bot("Santa Clause",[
-		HealthBiggerThan(75, [
-			For(20,{
-				w:true
-			}),
-			For(20,{
-				a:true
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			HealthBiggerThan(50, [
-			For(20,{
-				w:true 
-			}),
-			For(20,{
-				a:true 
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			HealthBiggerThan(25, [
-			For(20,{
-				w:true 
-			}),
-			For(20,{
-				a:true 
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			HealthBiggerThan(0, [
-			For(20,{
-				w:true 
-			}),
-			For(20,{
-				a:true 
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			])
+	new Bot("Santa Clause",
+		For(1,{
+			w:true
+		}),
+		For(2,{
+			a:true
+		}),
+		For(2,{
+			d:true,
+			s:true
+		}),
+	),
+	new Bot("Aether",
+		For(3,{
+			w:true,
+			e:true,
+			d:true,
+		}),
+		For(6,{
+			a:true
+		}),
+	),
 ]);

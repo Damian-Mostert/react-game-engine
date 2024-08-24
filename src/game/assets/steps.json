@@ -18,5 +18,10 @@
         "game":true,
         "menu":"pause",
         "paused":false
+    },
+    {
+        "game":false,
+        "menu":"music",
+        "paused":false
     }
 ]

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Engine from "../lib/engine";
-import useMusic from "../lib/engine/hooks/use-music";
+import useMusic from "../lib/hooks/use-music";
 
 import {
 	characters,
@@ -9,7 +9,7 @@ import {
 	maps,
 	config,
 	menus,
-	steps
+	steps,
 } from "./assets";
 
 export default function Game() {
@@ -57,7 +57,7 @@ export default function Game() {
 
 
 	const Menu = menus[steps[step].menu];
-
+	console.log(maps[map])
 	return (<main>
 		{steps[step].game && <Engine
 			config={config}

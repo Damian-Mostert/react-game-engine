@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut,HealthBiggerThan } from "../../../lib/helpers/mab-builders/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/helpers/mab-builders/classes.ts";
 
 export default new Map([
 	new Square({
@@ -37,49 +37,8 @@ export default new Map([
 		})
 ],[
 	new Bot("Santa Clause",[
-		HealthBiggerThan(75, [
-			For(20,{
-				w:true
-			}),
-			For(20,{
-				a:true
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			HealthBiggerThan(50, [
-			For(20,{
-				w:true 
-			}),
-			For(20,{
-				a:true 
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			HealthBiggerThan(25, [
-			For(20,{
-				w:true 
-			}),
-			For(20,{
-				a:true 
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			HealthBiggerThan(0, [
-			For(20,{
-				w:true 
-			}),
-			For(20,{
-				a:true 
-			}),
-			For(20,{
-				d:true 
-			}),
-		]),
-			])
+		...For(20,{
+			w:true
+		}),
+	])
 ]);

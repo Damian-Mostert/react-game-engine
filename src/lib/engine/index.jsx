@@ -15,21 +15,6 @@ const { game: Framerate, sprites: FramerateSprites } = config_fr;
 const { blockSize, gravityForce, initialPosition, initialVelocity, checkDistance, airDensity, botsSpeed } = config_physics;
 
 export default function Engine({ characters, textures, character, boundaries, paused, bots = [] }) {
-  const updateBoundaryById = (id, rules) => {
-    if (!rules) return;
-    setGame((game) => ({
-      ...game,
-      boundaries: boundaries.map((__bound) => (__bound?.id === id ? rules : __bound)),
-    }));
-  };
-
-  const updateBoundaryByKey = (id, rules) => {
-    if (!rules) return;
-    setGame((game) => ({
-      ...game,
-      boundaries: boundaries.map((__bound) => (__bound?.key === id ? rules : __bound)),
-    }));
-  };
 
   const framerateSprites = useFramerate(FramerateSprites, paused);
 
@@ -47,13 +32,31 @@ export default function Engine({ characters, textures, character, boundaries, pa
     store,
     character: characters[character],
     keys,
-    updateBoundaryById,
-    updateBoundaryByKey,
     boundaries,
     blockSize,
     bots,
     bots_keys: bots.map((bot) => bot.actions[0]),
     characters,
+    addBoundary: (rules) => {
+      setGame((game) => ({
+        ...game,
+        boundaries: [...game.boundaries,{...rules,key:game.boundaries.length}],
+      }));
+    },
+    updateBoundaryById : (id, rules) => {
+      if (!rules) return;
+      setGame((game) => ({
+        ...game,
+        boundaries: boundaries.map((__bound) => (__bound?.id === id ? rules : __bound)),
+      }));
+    },
+    updateBoundaryByKey : (id, rules,remove) => {
+      if (!rules) return;
+      setGame((game) => ({
+        ...game,
+        boundaries: boundaries.map((__bound) => (__bound?.key === id ? rules : __bound)),
+      }));
+    },
     addCoins(amount = 1) {
       store("coins", storage.coins ? storage.coins + amount : amount);
     },

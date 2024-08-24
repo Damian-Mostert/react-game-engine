@@ -1,3 +1,5 @@
+function getRandomMessage(){}
+
 export const createSlope = (
     top,
     left,

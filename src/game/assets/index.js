@@ -29,6 +29,7 @@ import Start from "./menus/start.jsx";
 
 import steps from "./steps.json";
 
+
 const characters = {
     "Tom":redHat,
     "Santa Clause":santa,
@@ -71,11 +72,19 @@ const menus = {
 
 
 //export assets
-export {
+console.info("assets",{
     characters,
     textures,
     maps,
     config,
     menus,
     steps
+})
+export {
+    characters,
+    textures,
+    maps,
+    config,
+    menus,
+    steps,
 }

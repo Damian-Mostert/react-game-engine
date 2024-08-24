@@ -1,134 +1,188 @@
-import { ActionsProps,BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, Timer, BoundaryPropsResult } from "./interfaces";
+import { createLineOfCoins,createSlope,createQuarterCircle,createArrayFromFPS } from "./tools/builders";
+import { BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, BoundaryPropsResult } from "./interfaces";
+
+
 
 export class Bot{
-	constructor(character:string,actions:ActionsProps){
+	constructor(character:string,...actions:Array<keys>){
 		this.character = character;
-		this.actions = actions
+		this.actions = actions.flat();
 	}
 	character:string = '';
-	actions:ActionsProps = [];
+	actions:Array<keys> = [];
 };
 
 
-export class Map{
-	constructor(boundaries:Array<BoundaryPropsResult>,bots:Array<Bot>){
-        const boundaries_result = [];
-        for(let boundary of boundaries){
-            switch(boundary.type){
-                case "coins":
-                    break;
-         
-                case "square":
-                    break;
-
-                case "slope-in":
-                    break;
-
-                case "slope-out":
-                    break;
-
-                case "curve-in":
-                    break;
-    
-                case "curve-out":
-                    break;
-    
-            }
-        }
-		this.boundaries = boundaries_result;
-		this.bots = bots.map((bot:Bot,index:number)=>({...bot,id:index+1}));
-	}
-	boundaries:Array<object> = [];
-	bots:Array<Bot> = [];
-};
-
-export class Square{
-	constructor({texture = "",size,position,actions={}}:BoundaryProps){
-        this.texture = texture;
-        this.size = {...this.size,...size};
-        this.position = {...this.position,...position};
-        this.actions = {...this.actions,...actions};        
-	}
-    texture:string = "";
-    size:Size = {width:0,height:0};
-    position:Position = {top:0,left:0};
-    actions:boundaryActions = {};
-    type="square";
-};
-
-export class Slope{
-	constructor({texture = "",size,position,actions={}}:BoundaryProps,orientation:orientation){
-        this.texture = texture;
-        this.size = {...this.size,...size};
-        this.position = {...this.position,...position};
-        this.actions = {...this.actions,...actions};        
-        this.orientation = orientation;
+export class Map {
+    constructor(boundaries: Array<BoundaryPropsResult>, bots: Array<Bot>) {
+      const boundaries_result: any = [];
+  
+      for (let boundary of boundaries) {
+        const boundaryArray = boundary.generateArray();
+        boundaries_result.push(...boundaryArray);
+      }
+  
+      this.boundaries = boundaries_result.map((b:any,key:number)=>({...b,key}));
+      this.bots = bots.map((bot: Bot, index: number) => ({ ...bot, id: index + 1 }));
     }
-    texture:string = "";
-    size:Size = {width:0,height:0};
-    position:Position = {top:0,left:0};
-    actions:boundaryActions = {}
-    orientation:orientation = {vertical:true};
-    type="slope";
-};
-
-export class CurveIn{
-	constructor({texture = "",size,position,actions={}}:BoundaryProps,orientation:orientation){
-        this.texture = texture;
-        this.size = {...this.size,...size};
-        this.position = {...this.position,...position};
-        this.actions = {...this.actions,...actions};        
-        this.orientation = orientation;
-	}
-    texture:string = "";
-    size:Size = {width:0,height:0};
-    position:Position = {top:0,left:0};
-    actions:boundaryActions = {}
-    orientation:orientation = {vertical:true};
-    type = "curve-in"
-};
-
-export class CurveOut{
-	constructor({texture = "",size,position,actions={}}:BoundaryProps,orientation:orientation){
-        this.texture = texture;
-        this.size = {...this.size,...size};
-        this.position = {...this.position,...position};
-        this.actions = {...this.actions,...actions};     
-        this.orientation = orientation;   
-	}
-    texture:string = "";
-    size:Size = {width:0,height:0};
-    position:Position = {top:0,left:0};
-    actions:boundaryActions = {}
-    orientation:orientation = {vertical:true};
-    type = "curve-out"
-};
-
-export class Coins{
-	constructor({position,orientation={vertical:true},amount = 1}:CoinsProps){
-        this.position = {...this.position,...position};
-        this.orientation = orientation;
-        this.amount = amount;
-        //handle coins
-	}
-    amount:number = 0
-    orientation:orientation = {vertical:true};
-    texture:string = "";
-    size:Size = {width:0,height:0};
-    position:Position = {top:0,left:0};
-    actions:boundaryActions = {};
-    type="coins";
-};
-
-export function HealthBiggerThan(health:number,actions:Timer){
-    const result:object = {
-        health,
-        actions
-    };
-    return result;
+  
+    boundaries: Array<object> = [];
+    bots: Array<Bot> = [];
 }
 
+  export class Square {
+    constructor({ texture = "", size, position, actions = {} }: BoundaryProps) {
+      this.texture = texture;
+      this.size = { ...this.size, ...size };
+      this.position = { ...this.position, ...position };
+      this.actions = { ...this.actions, ...actions };
+    }
+  
+    generateArray() {
+      const { width, height }:Size = this.size;
+      const squares:any = [];
+          squares.push({
+            ...this.position,
+            ...this.size,
+            texture: this.texture,
+            ...this.actions,
+            type: this.type,
+        });
+      return squares;
+    }
+  
+    texture: string = "";
+    size: Size = { width: 0, height: 0 };
+    position: Position = { top: 0, left: 0 };
+    actions: boundaryActions = {};
+    type = "square";
+  }
+  
+  export class Slope {
+    constructor(
+      { texture = "", size, position, actions = {} }: BoundaryProps,
+      orientation: orientation
+    ) {
+      this.texture = texture;
+      this.size = { ...this.size, ...size };
+      this.position = { ...this.position, ...position };
+      this.actions = { ...this.actions, ...actions };
+      this.orientation = orientation;
+    }
+  
+    generateArray() {
+      return createSlope(
+        this.position.top,
+        this.position.left,
+        this.size.width,
+        this.size.height,
+        false, // Adjust based on reverse flag if needed
+        this.orientation.horizontal ? "horizontal" : "vertical",
+        this.texture,
+        this.actions
+      );
+    }
+  
+    texture: string = "";
+    size: Size = { width: 0, height: 0 };
+    position: Position = { top: 0, left: 0 };
+    actions: boundaryActions = {};
+    orientation: orientation = { vertical: true };
+    type = "slope";
+  }
+  
+  export class CurveIn {
+    constructor(
+      { texture = "", size, position, actions = {} }: BoundaryProps,
+      orientation: orientation
+    ) {
+      this.texture = texture;
+      this.size = { ...this.size, ...size };
+      this.position = { ...this.position, ...position };
+      this.actions = { ...this.actions, ...actions };
+      this.orientation = orientation;
+    }
+  
+    generateArray() {
+      return createQuarterCircle(
+        this.position.top,
+        this.position.left,
+        this.size.width, // Assuming radius is width
+        false, // Adjust based on reverse flag if needed
+        this.orientation.horizontal ? "horizontal" : "vertical",
+        this.texture,
+        this.actions
+      );
+    }
+  
+    texture: string = "";
+    size: Size = { width: 0, height: 0 };
+    position: Position = { top: 0, left: 0 };
+    actions: boundaryActions = {};
+    orientation: orientation = { vertical: true };
+    type = "curve-in";
+  }
+  
+  export class CurveOut {
+    constructor(
+      { texture = "", size, position, actions = {} }: BoundaryProps,
+      orientation: orientation
+    ) {
+      this.texture = texture;
+      this.size = { ...this.size, ...size };
+      this.position = { ...this.position, ...position };
+      this.actions = { ...this.actions, ...actions };
+      this.orientation = orientation;
+    }
+  
+    generateArray() {
+      return createQuarterCircle(
+        this.position.top,
+        this.position.left,
+        this.size.width, // Assuming radius is width
+        true, // Adjust based on reverse flag if needed
+        this.orientation.horizontal ? "horizontal" : "vertical",
+        this.texture,
+        this.actions
+      );
+    }
+  
+    texture: string = "";
+    size: Size = { width: 0, height: 0 };
+    position: Position = { top: 0, left: 0 };
+    actions: boundaryActions = {};
+    orientation: orientation = { vertical: true };
+    type = "curve-out";
+  }
+  
+  export class Coins {
+    constructor({ position, orientation = { vertical: true }, amount = 1 }: CoinsProps) {
+      this.position = { ...this.position, ...position };
+      this.orientation = orientation;
+      this.amount = amount;
+    }
+  
+    generateArray() {
+      return createLineOfCoins(
+        this.position.top,
+        this.position.left,
+        this.amount,
+        3, // Spacing can be adjusted
+        this.orientation.vertical ? "vertical" : "horizontal"
+      );
+    }
+  
+    amount: number = 0;
+    orientation: orientation = { vertical: true };
+    texture: string = "";
+    size: Size = { width: 0, height: 0 };
+    position: Position = { top: 0, left: 0 };
+    actions: boundaryActions = {};
+    type = "coins";
+  }
+  
+  
 export function For(time:number,keys:keys){
-    const actions:Timer = {};
+    const actions:any = createArrayFromFPS(30,time,keys);
     return actions;
 }
