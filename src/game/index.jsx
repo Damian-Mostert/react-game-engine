@@ -3,14 +3,16 @@ import { useEffect, useState } from "react";
 import Engine from "../lib/engine";
 import useMusic from "../lib/hooks/use-music";
 
-import {
+import assets from "./assets";
+
+const {
 	characters,
 	textures,
 	maps,
 	config,
 	menus,
 	steps,
-} from "./assets";
+} = assets;
 
 export default function Game() {
 

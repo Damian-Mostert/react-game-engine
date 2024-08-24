@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/helpers/mab-builders/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/helpers/map/classes.ts";
 
 export default new Map([
 	new Square({
@@ -15,7 +15,7 @@ export default new Map([
 /* 			inRange($this,bot){
 				bot.setMessage("Hi there");
 				$this.texture = "Dirt";
-				return $this;
+				return $ddthis;
 			},
 			outRange($this,bot){
 				bot.setMessage(null);
