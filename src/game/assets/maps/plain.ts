@@ -26,17 +26,26 @@ export default new Map([
 		}
 	})
 ],[
-	new Bot("Santa Clause",[
-		...For(20,{
+	new Bot("Santa Clause",
+		For(1,{
 			w:true
 		}),
-	])
+		For(2,{
+			a:true
+		}),
+		For(2,{
+			d:true,
+			s:true
+		}),
+	),
+	new Bot("Aether",
+		For(3,{
+			w:true,
+			e:true,
+			d:true,
+		}),
+		For(6,{
+			a:true
+		}),
+	),
 ]);
-console.log(
-
-	new Bot("Santa Clause",[
-		...For(20,{
-			w:true
-		}),
-	])
-)
