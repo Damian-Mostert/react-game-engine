@@ -1,0 +1,22 @@
+[
+    {
+        "game":false,
+        "menu":"start",
+        "paused":true
+    },
+    {
+        "game":false,
+        "menu":"characters",
+        "paused":true
+    },
+    {
+        "game":false,
+        "menu":"maps",
+        "paused":true
+    },
+    {
+        "game":true,
+        "menu":"pause",
+        "paused":false
+    }
+]

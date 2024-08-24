@@ -1,4 +1,4 @@
-import { ActionsProps,BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, Timer } from "./interfaces";
+import { ActionsProps,BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, Timer, BoundaryPropsResult } from "./interfaces";
 
 export class Bot{
 	constructor(character:string,actions:ActionsProps){
@@ -7,16 +7,38 @@ export class Bot{
 	}
 	character:string = '';
 	actions:ActionsProps = [];
-
 };
 
 
 export class Map{
-	constructor(boundaries:Array<BoundaryProps|CoinsProps>,bots:Array<Bot>){
-		this.boundaries = boundaries;
+	constructor(boundaries:Array<BoundaryPropsResult>,bots:Array<Bot>){
+        const boundaries_result = [];
+        for(let boundary of boundaries){
+            switch(boundary.type){
+                case "coins":
+                    break;
+         
+                case "square":
+                    break;
+
+                case "slope-in":
+                    break;
+
+                case "slope-out":
+                    break;
+
+                case "curve-in":
+                    break;
+    
+                case "curve-out":
+                    break;
+    
+            }
+        }
+		this.boundaries = boundaries_result;
 		this.bots = bots.map((bot:Bot,index:number)=>({...bot,id:index+1}));
 	}
-	boundaries:Array<BoundaryProps|CoinsProps> = [];
+	boundaries:Array<object> = [];
 	bots:Array<Bot> = [];
 };
 
@@ -63,6 +85,7 @@ export class CurveIn{
     position:Position = {top:0,left:0};
     actions:boundaryActions = {}
     orientation:orientation = {vertical:true};
+    type = "curve-in"
 };
 
 export class CurveOut{
@@ -78,6 +101,7 @@ export class CurveOut{
     position:Position = {top:0,left:0};
     actions:boundaryActions = {}
     orientation:orientation = {vertical:true};
+    type = "curve-out"
 };
 
 export class Coins{
@@ -85,14 +109,22 @@ export class Coins{
         this.position = {...this.position,...position};
         this.orientation = orientation;
         this.amount = amount;
+        //handle coins
 	}
-    position:Position = {top:0,left:0};∂
+    amount:number = 0
     orientation:orientation = {vertical:true};
-    amount = 1;
+    texture:string = "";
+    size:Size = {width:0,height:0};
+    position:Position = {top:0,left:0};
+    actions:boundaryActions = {};
+    type="coins";
 };
 
 export function HealthBiggerThan(health:number,actions:Timer){
-    const result:object = {};
+    const result:object = {
+        health,
+        actions
+    };
     return result;
 }
 

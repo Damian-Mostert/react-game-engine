@@ -20,7 +20,7 @@ export interface Bot{
     health:number,
     addHp:(number:number)=>{},
     removeHp:(number:number)=>{},
-    setMessage:(message:string)=>{}
+    setMessage:(message:string|null)=>{}
 }    
 
 
@@ -34,7 +34,15 @@ export interface BoundaryProps{
     texture:string;
     size:Size,
     position:Position,
-    actions:boundaryActions
+    actions:boundaryActions,
+}
+
+export interface BoundaryPropsResult{
+    texture:string;
+    size:Size,
+    position:Position,
+    actions:boundaryActions,
+    type:string,
 }
 
 export interface ActionsProps{

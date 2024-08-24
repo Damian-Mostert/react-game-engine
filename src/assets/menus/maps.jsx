@@ -1,5 +1,5 @@
 
-export default function LevelSelect({levels,setLevel}){
+export default function Maps({levels,setLevel}){
     const data = levels;
     const setData = setLevel;
     return <div className="h-screen w-screen flex justify-center items-center">

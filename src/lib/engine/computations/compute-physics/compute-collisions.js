@@ -79,14 +79,6 @@ export default function computeCollisions({
         });
     }
 
-    // Check if the updated position is within the map boundaries
-    const mapBounds = {
-        top: 0,
-        left: 0,
-        right: window.mapWidth || 1000, // Set appropriate map width
-        bottom: window.mapHeight || 1000, // Set appropriate map height
-    };
-
     return {
         velocity: velocity_result,
     };
