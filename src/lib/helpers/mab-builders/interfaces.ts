@@ -1,11 +1,11 @@
 export interface Position{
-    top:number,
-    left:number
+    top?:number,
+    left?:number
 }
 
 export interface Size{
-    width:number;
-    height:number;
+    width?:number;
+    height?:number;
 }
 
 
@@ -16,6 +16,7 @@ export interface BotProps{
 }
 
 export interface Bot{
+    id:number,
     health:number,
     addHp:(number:number)=>{},
     removeHp:(number:number)=>{},
@@ -37,7 +38,6 @@ export interface BoundaryProps{
 }
 
 export interface ActionsProps{
-
 }
 
 export interface CoinsProps{
@@ -49,4 +49,16 @@ export interface CoinsProps{
 export interface orientation{
     vertical?:true,
     horizontal?:true
+}
+
+export interface keys{
+    w?:boolean,
+    a?:boolean,
+    d?:boolean,
+    s?:boolean,
+    e?:boolean
+}
+
+export interface Timer{
+    
 }
