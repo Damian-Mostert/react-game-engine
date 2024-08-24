@@ -19,7 +19,7 @@ export class Map {
       const bots:any = [];
     
       items.map((item:any)=>{
-        if(item?.isBot)
+        if(item.isBot)
           bots.push(item)
         else
           boundaries.push(item)

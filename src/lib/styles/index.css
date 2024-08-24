@@ -31,3 +31,13 @@ main{
 img{
   border: none;
 }
+
+
+@keyframes twinkle {
+  0% { opacity: 0.8; }
+  50% { opacity: 1; }
+  100% { opacity: 0.8; }
+}
+.star{
+  animation: twinkle 0.1s infinite;
+}

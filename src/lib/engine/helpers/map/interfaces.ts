@@ -55,7 +55,7 @@ export interface CoinsProps{
 
 export interface orientation{
     vertical?:true,
-    horizontal?:true
+    horizontal?:true,
 }
 
 export interface keys{

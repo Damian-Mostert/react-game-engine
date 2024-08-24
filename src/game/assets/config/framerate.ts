@@ -1,7 +1,7 @@
 import { Framerate } from "../../../lib/engine/helpers/config/interfaces";
 
 const framerate:Framerate = {
-    game:30,
+    game:40,
     sprites:10
 }
 

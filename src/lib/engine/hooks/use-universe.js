@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import computePhysics from "../computations/compute-physics";
 import useStorage from "./use-storage";
 import useKeys from "./use-keys";
+import framerate from "../../../game/assets/config/framerate.ts";
 
 function usePhysics({
     character,
@@ -255,7 +256,7 @@ export default function useUniverse({
 	  
   
 	  // Update game state at 30 FPS
-	  const gameInterval = setInterval(updateGameState, 1000 / 30);
+	  const gameInterval = setInterval(updateGameState, 1000 / framerate.game);
   
 	  return () => {
 		clearInterval(gameInterval);

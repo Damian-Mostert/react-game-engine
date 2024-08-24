@@ -67,7 +67,33 @@ export default new Map([
 		},
 		
 	},{
-		horizontal:true
+		horizontal:true,
+	}),
+	new Slope({
+		texture:"Grass",
+		size:{
+			width:16,
+			height:10
+		},
+		position:{
+			top:-15,
+			left:30
+		},
+		actions:{
+			inRange($this,bot){
+				bot.setMessage("Hi there");
+				$this.texture = "Dirt";
+				return $this;
+			},
+			outRange($this,bot){
+				bot.setMessage(null);
+				$this.texture = "Grass";
+				return $this;
+			},
+		},
+		
+	},{
+		horizontal:true,
 	}),
 	new CurveIn({
 		texture:"Dirt",

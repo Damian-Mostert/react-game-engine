@@ -11,6 +11,7 @@ import useKeys from "./hooks/use-keys";
 import computePhysics from "./computations/compute-physics";
 import useUniverse from "./hooks/use-universe";
 import Sky from "./components/sky.jsx";
+import computeShadows from "./computations/compute-physics/compute-shadows.js";
 
 const { game: Framerate, sprites: FramerateSprites } = config_fr;
 const { blockSize, gravityForce, initialPosition, initialVelocity, checkDistance, airDensity, botsSpeed } = config_physics;
@@ -57,6 +58,15 @@ export default function Engine({ characters, textures, character, boundaries, pa
           {game.boundaries.filter((b) => !b.hide).map((boundary, index) => (
             <Boundary {...boundary} blockSize={blockSize} textures={textures} key={index} />
           ))}
+          {computeShadows({
+            blocks:game.boundaries.filter((b) => !b.hide),
+            blockSize:30,
+            shadowDepth:2,
+            maxDarkness:1
+          }).map((boundary, index) => (
+            <Boundary {...boundary} blockSize={blockSize} textures={textures} key={index} />
+          ))}
+
         </div>
       </div>
       <div className={styles.coins}>
