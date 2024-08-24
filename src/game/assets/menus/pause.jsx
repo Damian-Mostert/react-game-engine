@@ -1,4 +1,4 @@
-export default function PauseMenu({setPaused,setCharacter,setLevel}){
+export default function PauseMenu({setPaused,setStep}){
     return <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center z-50" style={{backdropFilter:"blur(15px)"}}>
         <div className="w-full max-w-[1000px] flex">
             <div className="w-full p-4">
@@ -11,19 +11,15 @@ export default function PauseMenu({setPaused,setCharacter,setLevel}){
                 CONTINUE
             </button>
             <button  onClick={()=>{
-                setPaused(false);
-                setCharacter(null);
+                setStep(2);
             }}>
                 CHARACTER SELECT
             </button>
             <button  onClick={()=>{
-                setPaused(false);
-                setLevel(null);
-                setCharacter(null);
+                setStep(1);
             }}>
                 MAP SELECT
             </button>
-
             </div>
         </div>
 

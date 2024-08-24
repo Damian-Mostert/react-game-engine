@@ -1,9 +1,7 @@
-import useSprite,{CharacterLoop} from "../../lib/engine/components/sprite";
+import useSprite,{CharacterLoop} from "../../../lib/engine/components/sprite";
 
-export default function Characters({characters,setCharacter}){
+export default function Characters({characters,setCharacter,setStep}){
     const data = characters;
-    const setData = setCharacter;
-    const sprites = {};
 
     return <div className="h-screen w-screen flex justify-center items-center">
     <div className="h-min w-full max-w-[1000px] flex">
@@ -25,7 +23,10 @@ export default function Characters({characters,setCharacter}){
             const act = "idle";
             const images = fullImages[act];
         return (
-          <button className="relative text-red-600 w-32 h-32 m-8 flex align-center items-center justify-center cursor-pointer hover:bg-slate-800 transition-all hover:scale-150" key={key} onClick={() => setData(data_key)}>
+          <button className="relative text-red-600 w-32 h-32 m-8 flex align-center items-center justify-center cursor-pointer hover:bg-slate-800 transition-all hover:scale-150" key={key} onClick={() => {
+            setCharacter(data_key)
+            setStep(2)
+            }}>
             <div className="absolute bottom-full w-max text-white text-[0.8rem]">
             {data_key}
             </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import Engine from "./lib/engine";
-import useMusic from "./lib/engine/hooks/use-music";
+import Engine from "../lib/engine";
+import useMusic from "../lib/engine/hooks/use-music";
 
 import {
 	characters,
@@ -47,6 +47,15 @@ export default function Game() {
 		if(started && !startedMusic)musicControls.randomTrack();
 	}, [started,startedMusic]);
 
+	useEffect(()=>{
+		character&&console.info("Character selected:",character);
+	},[character])
+
+	useEffect(()=>{
+		map&&console.info("Map selected:",map);
+	},[map])
+
+
 	const Menu = menus[steps[step].menu];
 
 	return (<main>
@@ -54,7 +63,7 @@ export default function Game() {
 			config={config}
 			characters={characters}
 			textures={textures}
-			character={characters[character]}
+			character={character}
 			bots={maps[map].bots}
 			boundaries={maps[map].boundaries}
 			paused={paused}

@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut,HealthBiggerThan } from "../../lib/helpers/mab-builders/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut,HealthBiggerThan } from "../../../lib/helpers/mab-builders/classes.ts";
 
 export default new Map([
 	new Square({
