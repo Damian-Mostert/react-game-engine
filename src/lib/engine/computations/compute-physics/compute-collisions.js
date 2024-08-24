@@ -87,9 +87,6 @@ export default function computeCollisions({
         bottom: window.mapHeight || 1000, // Set appropriate map height
     };
 
-    position.top = Math.max(mapBounds.top, Math.min(position.top, mapBounds.bottom - bot.height));
-    position.left = Math.max(mapBounds.left, Math.min(position.left, mapBounds.right - bot.width));
-
     return {
         velocity: velocity_result,
     };
