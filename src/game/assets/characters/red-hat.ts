@@ -1,6 +1,6 @@
 "use client";
 
-import { Character } from "../../../lib/helpers/character/classes.ts";
+import { Character } from "../../../lib/engine/helpers/character/classes.ts";
 
 const redHat = new Character({
 	name:"red-hat",

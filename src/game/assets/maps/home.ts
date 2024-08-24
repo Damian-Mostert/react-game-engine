@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/helpers/map/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/engine/helpers/map/classes.ts";
 
 export default new Map([
 	new Square({
@@ -12,7 +12,11 @@ export default new Map([
 			left:-500
 		},
 		actions:{
-
+			inRange($this,bot){
+				bot.setMessage("Hi there");
+				$this.texture = "Dirt";
+				return $this;
+			},
 
 			/*			outRange($this,bot){
 				bot.setMessage(null);

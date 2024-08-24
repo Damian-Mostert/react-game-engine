@@ -1,6 +1,6 @@
-import { createLineOfCoins,createSlope,createQuarterCircle,createArrayFromFPS } from "./tools/builders";
-import { BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, BoundaryPropsResult } from "./interfaces";
-import framerate from "../../../game/assets/config/framerate.ts";
+import { createLineOfCoins,createSlope,createQuarterCircle,createArrayFromFPS } from "./tools/builders.js";
+import { BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, BoundaryPropsResult } from "./interfaces.ts";
+import framerate from "../../../../game/assets/config/framerate.ts";
 
 export class Bot{
 	constructor(character:string,...actions:Array<keys>){

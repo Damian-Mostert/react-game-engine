@@ -1,15 +1,15 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut} from "../../../lib/helpers/map/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/engine/helpers/map/classes.ts";
 
 export default new Map([
 	new Square({
 		texture:"Grass",
 		size:{
-			width:1000,
+			width:500,
 			height:100
 		},
 		position:{
 			top:20,
-			left:-500
+			left:-150
 		},
 		actions:{
 

@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut} from "../../../lib/helpers/map/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut} from "../../../lib/engine/helpers/map/classes.ts";
 
 export default new Map([
 	new Square({

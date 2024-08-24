@@ -1,4 +1,4 @@
-import { Physics } from "../../../lib/helpers/config/interfaces.ts";
+import { Physics } from "../../../lib/engine/helpers/config/interfaces.ts";
 
 const physics:Physics = {
 	blockSize : 30,

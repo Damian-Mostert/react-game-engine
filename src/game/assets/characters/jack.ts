@@ -1,4 +1,4 @@
-import { Character } from "../../../lib/helpers/character/classes.ts";
+import { Character } from "../../../lib/engine/helpers/character/classes.ts";
 
 const jack = new Character({
   name:"jack",

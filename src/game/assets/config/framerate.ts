@@ -1,4 +1,4 @@
-import { Framerate } from "../../../lib/helpers/config/interfaces";
+import { Framerate } from "../../../lib/engine/helpers/config/interfaces";
 
 const framerate:Framerate = {
     game:30,

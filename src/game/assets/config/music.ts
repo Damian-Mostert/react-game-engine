@@ -1,4 +1,4 @@
-import { Music } from "../../../lib/helpers/config/interfaces";
+import { Music } from "../../../lib/engine/helpers/config/interfaces";
 const music:Music = [
 
 ];
