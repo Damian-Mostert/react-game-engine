@@ -12,12 +12,9 @@ export default new Map([
 			left:-500
 		},
 		actions:{
-/* 			inRange($this,bot){
-				bot.setMessage("Hi there");
-				$this.texture = "Dirt";
-				return $ddthis;
-			},
-			outRange($this,bot){
+
+
+			/*			outRange($this,bot){
 				bot.setMessage(null);
 				$this.texture = "Grass";
 				return $this;
@@ -34,7 +31,7 @@ export default new Map([
 		},
 		amount:10
 	}),
-	new Bot("Santa Clause",
+	new Bot("SantaClause",
 		For(1,{
 			w:true
 		}),

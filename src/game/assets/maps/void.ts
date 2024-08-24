@@ -25,7 +25,7 @@ export default new Map([
 
 		}
 	}),
-	new Bot("Santa Clause",
+	new Bot("SantaClause",
 		For(1,{
 			w:true
 		}),

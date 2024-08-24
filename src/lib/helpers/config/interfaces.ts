@@ -13,7 +13,7 @@ export interface Physics{
 }
 
 
-export interface Framerates{
+export interface Framerate{
     game:number,
     sprites:number
 }

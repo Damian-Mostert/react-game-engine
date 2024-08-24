@@ -1,37 +1,37 @@
 //load characters:
-import jack from "./characters/jack.ts";
-import knight from "./characters/knight.ts";
-import ninja from "./characters/ninja.ts";
-import redHat from "./characters/red-hat.ts"
-import santa from "./characters/santa.ts";
-import zombieFemale from "./characters/zombie-female.ts";
-import zombieMale from "./characters/zombie-male.ts";
+import Tom from "./characters/red-hat.ts"
+import SantaClause from "./characters/santa.ts";
+import Ninja from "./characters/ninja.ts";
+import Nathan from "./characters/zombie-male.ts";
+import Addison from "./characters/zombie-female.ts";
+import PunkinMan from "./characters/jack.ts";
+import Aether from "./characters/knight.ts";
 ///load maps:
-import boundariesHome from "./maps/home.ts";
-import boundariesPlain from "./maps/plain.ts";
-import boundariesVoid from "./maps/void.ts";
+import Home from "./maps/home.ts";
+import Plain from "./maps/plain.ts";
+import Void from "./maps/void.ts";
 //load config:
-import framerate from "./config/framerates.ts"
+import framerate from "./config/framerate.ts"
 import music from "./config/music.ts";
 import physics from "./config/physics.ts";
 //load menus
-import Characters from "./menus/characters.jsx";
-import Maps from "./menus/maps.jsx";
-import Pause from "./menus/pause.jsx";
-import Start from "./menus/start.jsx";
+import characters from "./menus/characters.jsx";
+import maps from "./menus/maps.jsx";
+import pause from "./menus/pause.jsx";
+import start from "./menus/start.jsx";
 
 import steps from "./steps.json";
 
 export default {
     steps,
     characters : {
-        "Tom":redHat,
-        "Santa Clause":santa,
-        "Ninja":ninja,
-        "Nathan":zombieMale,
-        "Addison":zombieFemale,
-        "Punkin man":jack,
-        "Aether":knight
+        Tom,
+        SantaClause,
+        Ninja,
+        Nathan,
+        Addison,
+        PunkinMan,
+        Aether
     },
     textures : {
         Grass:"/textures/grass.png",
@@ -43,9 +43,9 @@ export default {
         Lava:"/textures/Lava.jpg"
     },
     maps : {
-        "Home":boundariesHome,
-        "Plain":boundariesPlain,
-        "Void":boundariesVoid
+        Home,
+        Plain,
+        Void
     },
     config : {
         framerate,
@@ -53,9 +53,9 @@ export default {
         physics
     },
     menus : {
-        "characters":Characters,
-        "maps":Maps,
-        "pause":Pause,
-        "start":Start
+        characters,
+        maps,
+        pause,
+        start
     }
 }

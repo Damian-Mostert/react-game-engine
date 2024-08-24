@@ -5,10 +5,10 @@ export interface ContainerAttributes {
   }
   
   export interface BoxAttributes {
-    width?: string;
-    height?: string;
-    left?: string;
-    top?: string;
+    width?: string|number;
+    height?: string|number;
+    left?: string|number;
+    top?: string|number;
     objectPosition?: string;
     objectFit?: string;
     [key: string]: any;
@@ -17,8 +17,8 @@ export interface ContainerAttributes {
   export interface CharacterAttributes {
     strength: number;
     speed: number;
-    weight: number;
-    health: number;
+    weight: number|string;
+    health: number|string;
     ap: number;
     jump: boolean;
     run: boolean;
@@ -41,8 +41,8 @@ export interface ContainerAttributes {
   
   export interface CharacterConfig {
     name: string;
-    width: number;
-    height: number;
+    width: number|string;
+    height: number|string;
     container: ContainerAttributes;
     box: BoxAttributes;
     attributes: CharacterAttributes;

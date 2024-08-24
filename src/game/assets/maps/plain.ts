@@ -50,11 +50,20 @@ export default new Map([
 			height:10
 		},
 		position:{
-			top:5,
-			left:-15
+			top:-5,
+			left:15
 		},
 		actions:{
-
+			inRange($this,bot){
+				bot.setMessage("Hi there");
+				$this.texture = "Dirt";
+				return $this;
+			},
+			outRange($this,bot){
+				bot.setMessage(null);
+				$this.texture = "Grass";
+				return $this;
+			},
 		},
 		
 	},{
@@ -156,7 +165,7 @@ export default new Map([
 	},{
 		horizontal:true
 	}),
-	new Bot("Santa Clause",
+	new Bot("SantaClause",
 		For(1,{
 			w:true
 		}),

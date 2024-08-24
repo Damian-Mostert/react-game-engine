@@ -1,6 +1,6 @@
 import { createLineOfCoins,createSlope,createQuarterCircle,createArrayFromFPS } from "./tools/builders";
 import { BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, BoundaryPropsResult } from "./interfaces";
-import framerate from "../../../game/assets/config/framerates.ts";
+import framerate from "../../../game/assets/config/framerate.ts";
 
 export class Bot{
 	constructor(character:string,...actions:Array<keys>){
@@ -15,16 +15,15 @@ export class Bot{
 
 export class Map {
     constructor(items:Array<Bot|BoundaryPropsResult>) {
-      const boundaries: Array<BoundaryPropsResult> = [];
-      const bots: Array<Bot> = [];
+      const boundaries:any = [];
+      const bots:any = [];
     
-      for(let item of items){
-        if(item?.isBot){
-          bots.push(item);
-        }else{
+      items.map((item:any)=>{
+        if(item?.isBot)
+          bots.push(item)
+        else
           boundaries.push(item)
-        }
-      }
+      })
 
       const boundaries_result: any = [];
     

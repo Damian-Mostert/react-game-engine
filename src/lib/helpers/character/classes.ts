@@ -2,8 +2,8 @@ import { CharacterConfig, Action, ContainerAttributes, BoxAttributes, CharacterA
 
 export class Character {
   name: string;
-  width: number;
-  height: number;
+  width:any = 0;
+  height:any = 0;
   container: ContainerAttributes;
   box: BoxAttributes;
   attributes: CharacterAttributes;
