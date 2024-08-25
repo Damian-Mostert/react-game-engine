@@ -59,7 +59,7 @@ export default function Game() {
 
 
 	const Menu = menus[steps[step].menu];
-	console.log(maps[map])
+
 	return (<main>
 		{steps[step].game && <Engine
 			config={config}

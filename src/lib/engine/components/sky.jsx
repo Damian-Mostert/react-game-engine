@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-const dayNightCycle = {
-  dawn: { start: 6, end: 8 },
-  day: { start: 8, end: 18 },
-  night: { start: 18, end: 6 }
-};
-
-// Constants for simulation
-const FULL_DAY_MINUTES = 10; // Full day duration in minutes
-const SECONDS_PER_DAY = FULL_DAY_MINUTES * 60; // Total seconds per day
 const NUM_STARS = 100; // Number of stars in the sky
 const CLOUD_SPEED = 20; // Speed at which clouds move across the screen in seconds
+const SUN_ANIMATION_DURATION = 10; // Duration of sun animation in seconds
+const MOON_ANIMATION_DURATION = 10; // Duration of moon animation in seconds
+
 function getRandomHexColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
 }
+
 const getRandomPosition = () => ({
   top: `${Math.random() * 100}vh`,
   left: `${Math.random() * 100}vw`,
@@ -25,11 +20,10 @@ const getRandomStarStyle = () => ({
   left: `${Math.random() * 100}vw`,
   width: `${Math.random() * 3 + 1}px`, // Random width between 1px and 4px
   height: `${Math.random() * 3 + 1}px`, // Random height between 1px and 4px
-  backgroundColor: getRandomHexColor(),
+  backgroundColor: 'white',
   borderRadius: '50%',
   position: 'absolute',
   opacity: Math.random() * 0.8 + 0.2, // Random opacity between 0.2 and 1
-
 });
 
 const generateClouds = (numClouds) => {
@@ -46,87 +40,78 @@ const generateStars = (numStars) => {
   }));
 };
 
-const calculatePosition = (time, duration) => {
-  const percentage = (time % duration) / duration;
-  return percentage * 100; // Position as a percentage
-};
-
-export default function Sky() {
-  const [simulatedTime, setSimulatedTime] = useState(0); // Simulated time in seconds
-  const [clouds, setClouds] = useState(generateClouds(10)); // Generate 5 clouds
+export default function Sky({ day, night, dawn }) {
+  const [clouds, setClouds] = useState(generateClouds(10)); // Generate 10 clouds
   const [stars, setStars] = useState(generateStars(NUM_STARS)); // Generate stars
-  const [startOfDay, setStartOfDay] = useState(true); // Track start of the day
 
   useEffect(() => {
-    const updateInterval = setInterval(() => {
-      setSimulatedTime((prevTime) => {
-        const newTime = (prevTime + 1) % SECONDS_PER_DAY;
-        if (newTime === 0) {
-          setStartOfDay(true); // Indicate the start of a new day
-          setClouds(generateClouds(10)); // Regenerate clouds
-          setStars(generateStars(NUM_STARS)); // Regenerate stars
-        } else {
-          setStartOfDay(false); // Not the start of the day
-        }
-        return newTime;
-      });
-    }, 1000); // Update every second
-
-    return () => clearInterval(updateInterval);
-  }, []);
-
-  const hours = Math.floor((simulatedTime / SECONDS_PER_DAY) * 24); // Convert simulated time to hours
+    // Regenerate clouds and stars at the start of the day
+    setClouds(generateClouds(10));
+    setStars(generateStars(NUM_STARS));
+  }, [day, night, dawn]);
 
   let backgroundColor = '#000';
   let cloudStyle = { opacity: 0.3 };
   let sunStyle = { display: 'none' }; // Default sun style
-  let moonStyle = { display: 'none' }; // Default moon style
-  let sunPosition = `${calculatePosition(simulatedTime, SECONDS_PER_DAY)}%`; // Sun moves across the full sky
-  let moonPosition = `${calculatePosition(simulatedTime, SECONDS_PER_DAY)}%`; // Moon moves across the full sky
+  let moonStyle = { display: 'none', opacity: 0.3 }; // Default moon style
 
-  if (hours >= dayNightCycle.dawn.start && hours < dayNightCycle.dawn.end) {
-    backgroundColor = 'linear-gradient(180deg, #8c6623,#6A0D91)'; // Purple gradient for dawn
-    cloudStyle = { opacity: 0.5 };
+  if (dawn) {
+    backgroundColor = '#6A0D91';
     sunStyle = {
       position: 'absolute',
       top: '10%',
-      left: sunPosition,
+      left: '10%',
       width: '100px',
       height: '100px',
       backgroundColor: '#FFD700',
       borderRadius: '50%',
       boxShadow: '0 0 10px rgba(255, 215, 0, 0.7)',
       transform: 'translate(-50%, -50%)',
+      animation: `moveSun ${SUN_ANIMATION_DURATION}s linear infinite`,
       display: 'block',
     };
-  } else if (hours >= dayNightCycle.day.start && hours < dayNightCycle.day.end) {
-    backgroundColor = 'linear-gradient(180deg, black, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB, #87CEEB)'; // Day colors
-    cloudStyle = { opacity: 0.5 };
+  } else if (day) {
+    backgroundColor = '#87CEEB'; // Day colors
     sunStyle = {
       position: 'absolute',
       top: '10%',
-      left: sunPosition,
+      left: '10%',
       width: '100px',
       height: '100px',
       backgroundColor: '#FFD700',
       borderRadius: '50%',
       boxShadow: '0 0 10px rgba(255, 215, 0, 0.7)',
       transform: 'translate(-50%, -50%)',
+      animation: `moveSun ${SUN_ANIMATION_DURATION}s linear infinite`,
       display: 'block',
     };
-  } else if (hours >= dayNightCycle.night.start || hours < dayNightCycle.night.end) {
-    backgroundColor = 'black'; // Night colors
-    cloudStyle = { opacity: 0.8 };
     moonStyle = {
       position: 'absolute',
       top: '10%',
-      left: moonPosition,
+      left: '10%',
       width: '80px',
       height: '80px',
       backgroundColor: '#FFF',
       borderRadius: '50%',
       boxShadow: '0 0 10px rgba(255, 255, 255, 0.7)',
       transform: 'translate(-50%, -50%)',
+      animation: `moveMoon ${MOON_ANIMATION_DURATION}s linear infinite`,
+      display: 'block',
+      opacity: 0.3, // Darker moon during the day
+    };
+  } else if (night) {
+    backgroundColor = 'black';
+    moonStyle = {
+      position: 'absolute',
+      top: '10%',
+      left: '10%',
+      width: '80px',
+      height: '80px',
+      backgroundColor: '#FFF',
+      borderRadius: '50%',
+      boxShadow: '0 0 10px rgba(255, 255, 255, 0.7)',
+      transform: 'translate(-50%, -50%)',
+      animation: `moveMoon ${MOON_ANIMATION_DURATION}s linear infinite`,
       display: 'block',
     };
   }
@@ -137,22 +122,24 @@ export default function Sky() {
       width: '100vw',
       height: '100vh',
       background: backgroundColor,
-      transition: "all 60s",
+      transition: "all 1s",
       overflow: 'hidden',
       zIndex: 0
     }}>
 
-      {hours >= dayNightCycle.night.start || hours < dayNightCycle.night.end ? (
-        stars.map(star => (
-          <div
-            key={star.id}
-            style={{
-              ...star.style,
-              opacity: 0.8, // Stars should always be visible at night
-              animation: 'twinkle 0.5s infinite', // Add twinkling effect
-            }}
-          />
-        ))
+      {dawn || night ? (
+        <div style={{opacity: dawn ? 0.5 : 1}}>
+          {stars.map(star => (
+            <div
+              key={star.id}
+              style={{
+                ...star.style,
+                opacity: dawn ? 0.2 : 0.5, // Stars should always be visible at night
+                animation: 'twinkle 0.5s infinite', // Add twinkling effect
+              }}
+            />
+          ))}
+        </div>
       ) : null}
       <div style={sunStyle} />
       <div style={moonStyle} />
@@ -160,13 +147,13 @@ export default function Sky() {
         <div
           key={cloud.id}
           style={{
+            animation: `moveClouds ${CLOUD_SPEED}s linear infinite`, // Cloud animation
             position: 'absolute',
-            width: '100px',
-            height: '60px',
-            backgroundColor: 'rgba(255, 255, 255, 0.8)',
+            width: '300px',
+            height: '40px',
+            backgroundColor: '#fff',
             ...cloud.style,
             opacity: cloudStyle.opacity,
-            animation: `moveClouds ${CLOUD_SPEED}s linear infinite`, // Cloud animation
           }}
         >
           {/* Additional cloud shapes */}
@@ -198,6 +185,16 @@ export default function Sky() {
         @keyframes moveClouds {
           0% { left: -100px; }
           100% { left: 100vw; }
+        }
+        @keyframes moveSun {
+          0% { top: 10%; left: 10%; }
+          50% { top: 10%; left: 50%; }
+          100% { top: 10%; left: 90%; }
+        }
+        @keyframes moveMoon {
+          0% { top: 20%; left: 10%; }
+          50% { top: 10%; left: 50%; }
+          100% { top: 20%; left: 90%; }
         }
       `}</style>
     </div>

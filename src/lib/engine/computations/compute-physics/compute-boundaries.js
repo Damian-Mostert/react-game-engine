@@ -1,3 +1,4 @@
+
 const computeBoundaries = ({
 	blockSize,
 	boundaries =[],
@@ -13,22 +14,46 @@ const computeBoundaries = ({
 	let adjustment = { top: 0, left: 0 };
 	let ok = true;
 
-	boundaries.filter((__bound) => {
-		if(!__bound)return false;
-		const boundTop = __bound.top * blockSize;
-		const boundLeft = __bound.left * blockSize;
-		const boundBottom = boundTop + __bound.height * blockSize;
-		const boundRight = boundLeft + __bound.width * blockSize;
+	const filterBoundaries = (boundaries) => {
+		// Screen dimensions and center based on character's position
+		const { top: viewTop, left: viewLeft } = position;
+		const { width: viewWidth, height: viewHeight } = {
+			width:150,
+			height:150
+		};
+	  
+		// Adjust for screen offset
+		const screenOffsetTop = 80; // Screen is offset 80px from the top
+		const screenOffsetLeft = -40; // Screen is offset -40px from the left
+	  
+		// Calculate screen edges relative to character in the center
+		const screenTop = viewTop - viewHeight / 2 - screenOffsetTop;
+		const screenLeft = viewLeft - viewWidth / 2 - screenOffsetLeft;
+		const screenBottom = screenTop + viewHeight + screenOffsetTop;
+		const screenRight = screenLeft + viewWidth + Math.abs(screenOffsetLeft);
+	  
+		return boundaries.filter((boundary) => {
+		  if (!boundary) return false;
+	  
+		  // Calculate boundary positions
+		  const boundTop = boundary.top * blockSize;
+		  const boundLeft = boundary.left * blockSize;
+		  const boundBottom = boundTop + boundary.height * blockSize;
+		  const boundRight = boundLeft + boundary.width * blockSize;
+	  
+		  // Check if the boundary intersects with the screen
+		  const intersectsHorizontally =
+			boundLeft < screenRight && boundRight > screenLeft;
+		  const intersectsVertically =
+			boundTop < screenBottom && boundBottom > screenTop;
+	  
+		  // Check if the boundary is within the visible screen area
+		  return intersectsHorizontally && intersectsVertically;
+		});
+	  };
+	  
 
-		const withinHorizontalDistance =
-			Math.abs(boundLeft - position.left) <= checkDistance * blockSize ||
-			Math.abs(boundRight - position.left) <= checkDistance * blockSize;
-		const withinVerticalDistance =
-			Math.abs(boundTop - position.top) <= checkDistance * blockSize ||
-			Math.abs(boundBottom - position.top) <= checkDistance * blockSize;
-
-		return withinHorizontalDistance || withinVerticalDistance;
-	}).forEach((__bound) => {
+	filterBoundaries(boundaries).forEach((__bound) => {
 		if(!__bound)return;
 		if(__bound.destroy)return;
 		const boundTop = __bound.top * blockSize;

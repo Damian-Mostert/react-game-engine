@@ -4,8 +4,6 @@ export default function useKeys() {
     const [keys, setKeys] = useState({});
     const [lastKeys, setLastKeys] = useState({});
 
-    const swipe = useSwipe();
-
     const keyPressDownListener = (ev) => {
         setKeys(prevKeys => ({
             ...prevKeys,
@@ -22,6 +20,7 @@ export default function useKeys() {
         });
     };
 
+    // Handle swipe direction to set key events
 
     useEffect(() => {
         window.addEventListener("keydown", keyPressDownListener);

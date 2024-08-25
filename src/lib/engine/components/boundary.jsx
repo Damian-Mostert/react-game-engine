@@ -8,7 +8,8 @@ export default function Boundary({
 	textures,
 	blockSize,
 	message,
-	darkness = 0
+	darkness = 0,
+	builder
 }) {
 	return (
 		<div
@@ -23,8 +24,8 @@ export default function Boundary({
 				backgroundSize: `${blockSize}px ${blockSize}px`,
 				backgroundRepeat: "repeat",
 			}}
-		>	<div style={{position:"absolute",top:"0px",left:"0px",width:"100%",height:"100%",background:"#00000050",opacity:darkness}}>
-
+		>	<div style={{position:"absolute",top:"0px",left:"0px",width:"100%",height:"100%",background:"#000000",opacity:darkness}}>
+			{builder && <div style={{position:"absolute",top:"0px",left:"0px",width:"100%",height:"100%",background:"#ffffff50"}}/>}
 		</div>
 			{message && (
 				<div className="absolute bottom-full text-orange-2a00">

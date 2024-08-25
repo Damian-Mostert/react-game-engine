@@ -1,31 +1,21 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut} from "../../../lib/engine/helpers/map/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins} from "../../../lib/engine/helpers/map/classes.ts";
 
 export default new Map([
 	new Square({
 		texture:"Grass",
 		size:{
-			width:1000,
-			height:100
+			width:100,
+			height:30
 		},
 		position:{
 			top:5,
-			left:-500
+			left:-50
 		},
 		actions:{
-			/* inRange($this,bot){
-				bot.setMessage("Hi there");
-				$this.texture = "Dirt";
-				return $this;
-			},
-			outRange($this,bot){
-				bot.setMessage(null);
-				$this.texture = "Grass";
-				return $this;
-			} */
 
 		}
 	}),
-	new Bot("SantaClause",
+	/* new Bot("SantaClause",
 		For(1,{
 			w:true
 		}),
@@ -46,5 +36,5 @@ export default new Map([
 		For(6,{
 			a:true
 		}),
-	),
+	), */
 ]);

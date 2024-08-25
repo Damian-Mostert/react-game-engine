@@ -1,4 +1,4 @@
-import { Map,Bot,Slope,Square,For,Coins,CurveIn,CurveOut } from "../../../lib/engine/helpers/map/classes.ts";
+import { Map,Bot,Slope,Square,For,Coins } from "../../../lib/engine/helpers/map/classes.ts";
 
 export default new Map([
 	new Square({
@@ -22,64 +22,41 @@ export default new Map([
 			height:10
 		},
 		position:{
-			top:0,
-			left:-5
-		},
-		actions:{
-
-		}
-	}),
-	new Square({
-		texture:"Dirt",
-		size:{
-			width:16,
-			height:10
-		},
-		position:{
-			top:-10,
-			left:-10
-		},
-		actions:{
-
-		}
-	}),
-	new Slope({
-		texture:"Grass",
-		size:{
-			width:16,
-			height:10
-		},
-		position:{
-			top:-5,
-			left:15
-		},
-		actions:{
-			inRange($this,bot){
-				bot.setMessage("Hi there");
-				$this.texture = "Dirt";
-				return $this;
-			},
-			outRange($this,bot){
-				bot.setMessage(null);
-				$this.texture = "Grass";
-				return $this;
-			},
-		},
-		
-	},{
-		horizontal:true,
-	}),
-	new Slope({
-		texture:"Grass",
-		size:{
-			width:16,
-			height:10
-		},
-		position:{
-			top:-15,
+			top:10,
 			left:30
 		},
 		actions:{
+
+		}
+	}),
+	new Slope({
+		texture:"Dirt",
+		size:{
+			width:10,
+			height:10
+		},
+		position:{
+			top:19,
+			left:30
+		},
+		actions:{
+
+		},
+		
+	},{
+		horizontal:true,
+	}),
+	new Slope({
+		texture:"Grass",
+		size:{
+			width:10,
+			height:10
+		},
+		position:{
+			top:9,
+			left:40
+		},
+		actions:{
 			inRange($this,bot){
 				bot.setMessage("Hi there");
 				$this.texture = "Dirt";
@@ -93,105 +70,26 @@ export default new Map([
 		},
 		
 	},{
-		horizontal:true,
+		bottomleft:true,
 	}),
-	new CurveIn({
+	new Slope({
 		texture:"Dirt",
 		size:{
 			width:10,
 			height:10
 		},
 		position:{
-			top:10,
-			left:10
+			top:9,
+			left:40
 		},
 		actions:{
 
-		}
+		},
+		
 	},{
-		horizontal:true
+		left:true
 	}),
-	new CurveIn({
-		texture:"Dirt",
-		size:{
-			width:10,
-			height:10
-		},
-		position:{
-			top:15,
-			left:15
-		},
-		actions:{
-
-		}
-	},{
-		horizontal:true
-	}),
-	new CurveIn({
-		texture:"Dirt",
-		size:{
-			width:10,
-			height:10
-		},
-		position:{
-			top:20,
-			left:20
-		},
-		actions:{
-
-		}
-	},{
-		horizontal:true
-	}),
-	new CurveIn({
-		texture:"Dirt",
-		size:{
-			width:10,
-			height:10
-		},
-		position:{
-			top:-10,
-			left:-10
-		},
-		actions:{
-
-		}
-	},{
-		horizontal:true
-	}),
-	new CurveIn({
-		texture:"Dirt",
-		size:{
-			width:10,
-			height:10
-		},
-		position:{
-			top:-15,
-			left:-15
-		},
-		actions:{
-
-		}
-	},{
-		horizontal:true
-	}),
-	new CurveIn({
-		texture:"Dirt",
-		size:{
-			width:10,
-			height:10
-		},
-		position:{
-			top:-20,
-			left:-20
-		},
-		actions:{
-
-		}
-	},{
-		horizontal:true
-	}),
-	new Bot("SantaClause",
+/* 	new Bot("SantaClause",
 		For(1,{
 			w:true
 		}),
@@ -212,5 +110,5 @@ export default new Map([
 		For(6,{
 			a:true
 		}),
-	),
+	), */
 ]);

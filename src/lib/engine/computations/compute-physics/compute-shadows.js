@@ -1,105 +1,94 @@
 /**
- * Computes ambient and drop shadows for a set of blocks within the screen's view.
+ * Computes ambient and drop shadows for a set of blocks.
+ * Ambient shadows darken a block based on the number of blocks directly above it,
+ * while drop shadows darken blocks below based on the number of blocks above.
+ * Generates additional blocks that are drop shadows from the top.
+ * Increases darkness if there's a neighboring block to the left or right.
  *
  * @param {Object} params - The parameters object.
  * @param {Array} params.blocks - Array of blocks with properties: top, left, width, height.
  * @param {number} params.blockSize - The size of each uniform block unit.
- * @param {number} params.shadowDepth - The radius (in blocks) to consider for ambient shadows.
- * @param {number} params.shadowLength - The length (in blocks) of the drop shadow.
- * @param {Object} params.lightDirection - The direction from which light originates.
  * @param {number} params.maxDarkness - The maximum darkness value.
- * @param {number} params.screenWidth - The width of the screen in pixels.
- * @param {number} params.screenHeight - The height of the screen in pixels.
- * @returns {Array} - Array of computed blocks with darkness levels.
+ * @param {Object} params.screen - The screen dimensions (width and height).
+ * @returns {Array} - Array of computed blocks with darkness levels and additional drop shadows.
  */
 const computeShadows = ({
     blocks = [],
-    blockSize = 10,
-    shadowDepth = 6,
-    shadowLength = 6,
-    lightDirection = { x: -1, y: -1 },
     maxDarkness = 1.0,
-    screenWidth,
-    screenHeight,
-  }) => {
-    const smallBlocks = [];
-  
-    // Step 1: Break blocks into smaller units and filter by screen boundaries
-    blocks.forEach((block) => {
-      const rows = Math.ceil(block.height / blockSize);
-      const cols = Math.ceil(block.width / blockSize);
-  
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          const top = block.top + row * blockSize;
-          const left = block.left + col * blockSize;
-
-          // Filter out blocks that are outside the screen boundaries
-          if (top >= screenHeight || top + blockSize < 0 || left >= screenWidth || left + blockSize < 0) {
-            continue;
-          }
-
-          smallBlocks.push({
-            top,
-            left,
-            width: blockSize,
-            height: blockSize,
-            darkness: 0,
-            isSolid: true, // Indicates this block is solid and can cast shadows
-          });
-        }
-      }
-    });
-  
-    // Create a spatial index for efficient lookup
+    blockSize = 30, // default blockSize
+    screen = { width: 800, height: 600 } // default screen dimensions
+}) => {
+    // Create a map for quick block lookup
     const blockMap = new Map();
-    smallBlocks.forEach((block) => {
-      const key = `${block.left}_${block.top}`;
-      blockMap.set(key, block);
+
+    blocks.forEach((block) => {
+        blockMap.set(`${block.left}_${block.top}`, {
+            ...block,
+        });
     });
-  
-    // Step 2: Compute Ambient Shadows
-    smallBlocks.forEach((block) => {
-      let ambientDarkness = 0;
-      for (let dx = -shadowDepth; dx <= shadowDepth; dx++) {
-        for (let dy = -shadowDepth; dy <= shadowDepth; dy++) {
-          if (dx === 0 && dy === 0) continue;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance > shadowDepth) continue;
-  
-          const neighborKey = `${block.left + dx * blockSize}_${block.top + dy * blockSize}`;
-          if (blockMap.has(neighborKey)) {
-            ambientDarkness += (1 - distance / shadowDepth) * 0.1;
-          }
+
+    const getKey = (left, top) => `${left}_${top}`;
+
+    // Calculate ambient and drop shadows for inner blocks
+    let output = blocks.map(block => {
+        let ambientDarkness = 0;
+        let dropDarkness = 0;
+        let sideDarkness = 0;
+
+        // Calculate ambient darkness (upwards shadow)
+        for (let y = 1; y <= 5; y++) {
+            if (blockMap.has(getKey(block.left, block.top - y))) {
+                ambientDarkness += maxDarkness / 10; // Smaller increment to avoid too much darkness
+            }
         }
-      }
-      block.darkness += ambientDarkness;
+
+        // Calculate drop shadows (downwards shadow)
+        for (let y = 1; y <= 3; y++) {
+            if (blockMap.has(getKey(block.left, block.top + y))) {
+                dropDarkness += maxDarkness / 15; // Smaller increment to avoid too much darkness
+            }
+        }
+
+        // Calculate side darkness (left and right shadows)
+        if (blockMap.has(getKey(block.left - blockSize, block.top))) {
+            sideDarkness += 0.2; // Darkness increase if a block exists to the left
+        }
+        if (blockMap.has(getKey(block.left + blockSize, block.top))) {
+            sideDarkness += 0.2; // Darkness increase if a block exists to the right
+        }
+
+        // Combine ambient, drop, and side darkness, but ensure it doesn't exceed maxDarkness
+        block.darkness = Math.min(ambientDarkness + dropDarkness + sideDarkness, maxDarkness);
+        return block;
     });
-  
-    // Step 3: Compute Drop Shadows
-    smallBlocks.forEach((block) => {
-      if (!block.isSolid) return;
-  
-      for (let i = 1; i <= shadowLength; i++) {
-        const shadowX = block.left + i * lightDirection.x * blockSize;
-        const shadowY = block.top + i * lightDirection.y * blockSize;
-        const shadowKey = `${shadowX}_${shadowY}`;
-  
-        if (!blockMap.has(shadowKey)) continue;
-  
-        const shadowBlock = blockMap.get(shadowKey);
-        // Decrease darkness intensity over distance for gradient effect
-        const intensity = (shadowLength - i + 1) / shadowLength * 0.2;
-        shadowBlock.darkness += intensity;
-      }
+
+    // Generate additional blocks that are drop shadows from the top
+    output.forEach(block => {
+        let additionalDarkness = maxDarkness / 20; // Smaller increment for additional drop shadows
+
+        // Continue casting shadows downward until blocked
+        for (let y = 1; y <= 6; y++) {
+            const keyBelow = getKey(block.left, block.top + y);
+            if (!blockMap.has(keyBelow)) {
+                // If there's no block, create a shadow block
+                const shadowBlock = {
+                    left: block.left,
+                    top: block.top + y,
+                    width: block.width,
+                    height: block.height,
+                    darkness: additionalDarkness
+                };
+                blockMap.set(keyBelow, shadowBlock);
+                output.push(shadowBlock);
+            } else {
+                // If a block exists below, darken it slightly and stop casting shadows
+                blockMap.get(keyBelow).darkness = Math.min(blockMap.get(keyBelow).darkness + additionalDarkness, maxDarkness);
+                break;
+            }
+        }
     });
-  
-    // Step 4: Clamp Darkness and Return Results
-    smallBlocks.forEach((block) => {
-      block.darkness = Math.min(block.darkness, maxDarkness);
-    });
-  
-    return smallBlocks;
-  };
-  
+
+    return output;
+};
+
 export default computeShadows;

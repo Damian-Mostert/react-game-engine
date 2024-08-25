@@ -1,102 +1,77 @@
 function getRandomMessage(){}
 
 export const createSlope = (
-    top,
-    left,
-    length,
-    height,
-    reverse,
-    orientation,
-    texture,
-    data = {}
-  ) => {
-    if (orientation === "horizontal") {
-      if (reverse) {
-        return Array.from({ length: length }).map((_, i) => {
-          return {
-            top: top,
-            left: left - i,
+  top,
+  left,
+  length,
+  height,
+  orientation,
+  texture,
+  data = {}
+) => {
+  const blocks = [];
+  if (orientation === "right") {
+    for (let i = 0; i < height; i++) {
+      const currentLength = length - i; // Adjust length based on the slope
+      
+      for (let j = 0; j < currentLength; j++) {
+          blocks.push({
+            top: top - i,
+            left: left - j,
             width: 1,
-            height: height - i,
-            texture,
-            ...data
-          };
-        });
-      }
-      return Array.from({ length: length }).map((_, i) => {
-        return {
-          top: top,
-          left: left + i,
-          width: 1,
-          height: height - i,
-          texture,
-          ...data
-        };
-      });
-    } else if (orientation === "vertical") {
-      if (reverse) {
-        return Array.from({ length: height }).map((_, i) => {
-          return {
-            top: top + i,
-            left: left,
-            width: length - i,
             height: 1,
             texture,
             ...data
-          };
-        });
+          });
+        }
       }
-      return Array.from({ length: height }).map((_, i) => {
-        return {
-          top: top - i,
-          left: left,
-          width: length - i,
-          height: 1,
-          texture,
-          ...data
-        };
-      });
-    }
-};
-export const createQuarterCircle = (
-    top,
-    left,
-    radius,
-    reverse,
-    orientation,
-    texture,
-    data = {}
-  ) => {
-    const segments = [];
-    const step = 1; // Step size for iteration
-  
-    if (orientation === "horizontal") {
-      for (let i = 0; i <= radius; i += step) {
-        const height = Math.sqrt(radius * radius - i * i);
-        segments.push({
-          top: reverse ? top + Math.floor(height) : top - Math.floor(height),
-          left: left + i,
-          width: 1,
-          height: Math.floor(height),
-          texture,
-          ...data
-        });
+  }else if (orientation === "left") {
+    for (let i = 0; i < height; i++) {
+      const currentLength = length - i; // Adjust length based on the slope
+      
+      for (let j = 0; j < currentLength; j++) {
+          blocks.push({
+            top: top - i,
+            left: left - j,
+            width: 1,
+            height: 1,
+            texture,
+            ...data
+          });
+        }
       }
-    } else if (orientation === "vertical") {
-      for (let i = 0; i <= radius; i += step) {
-        const width = Math.sqrt(radius * radius - i * i);
-        segments.push({
-          top: top + i,
-          left: reverse ? left + Math.floor(width) : left - Math.floor(width),
-          width: Math.floor(width),
-          height: 1,
-          texture,
-          ...data
-        });
+  }else if (orientation === "bottom-left") {
+    for (let i = 0; i < height; i++) {
+      const currentLength = length - i; // Adjust length based on the slope
+      
+      for (let j = 1; j < currentLength+1; j++) {
+          blocks.push({
+            top: (top - height * 2) + i + 1,
+            left: left + j,
+            width: 1,
+            height: 1,
+            texture,
+            ...data
+          });
+        }
       }
-    }
-  
-    return segments;
+  }else if (orientation === "bottom-right") {
+    for (let i = 0; i < height; i++) {
+      const currentLength = length - i; // Adjust length based on the slope
+      
+      for (let j = 0; j < currentLength; j--) {
+          blocks.push({
+            top: (top - height * 2) + i + 1,
+            left: left + j,
+            width: 1,
+            height: 1,
+            texture,
+            ...data
+          });
+        }
+      }
+  }
+  return blocks;
 };
 
 export function createCoins(startTop, startLeft, count, slopeXOffset = 1) {

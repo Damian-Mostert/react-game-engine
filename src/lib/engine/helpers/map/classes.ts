@@ -1,6 +1,7 @@
-import { createLineOfCoins,createSlope,createQuarterCircle,createArrayFromFPS } from "./tools/builders.js";
-import { BoundaryProps,CoinsProps,Position, Size, boundaryActions, orientation, keys, BoundaryPropsResult } from "./interfaces.ts";
+import { createLineOfCoins,createSlope,createArrayFromFPS } from "./tools/builders.js";
+import { BoundaryProps,CoinsProps,Position, Size, boundaryActions, Orientation, keys, BoundaryPropsResult } from "./interfaces.ts";
 import framerate from "../../../../game/assets/config/framerate.ts";
+import physics from "../../../../game/assets/config/physics.ts";
 
 export class Bot{
 	constructor(character:string,...actions:Array<keys>){
@@ -40,24 +41,32 @@ export class Map {
     bots: Array<Bot> = [];
 }
 
-  export class Square {
-    constructor({ texture = "", size, position, actions = {} }: BoundaryProps) {
-      this.texture = texture;
-      this.size = { ...this.size, ...size };
-      this.position = { ...this.position, ...position };
-      this.actions = { ...this.actions, ...actions };
-    }
+export class Square {
+  constructor({ texture = "", size, position, actions = {} }: BoundaryProps) {
+    this.texture = texture;
+    this.size = { ...this.size, ...size };
+    this.position = { ...this.position, ...position };
+    this.actions = { ...this.actions, ...actions };
+  }
   
-    generateArray() {
-      const { width, height }:Size = this.size;
-      const squares:any = [];
-          squares.push({
-            ...this.position,
-            ...this.size,
-            texture: this.texture,
-            ...this.actions,
-            type: this.type,
+  generateArray() {
+    const { width, height }:Size = this.size;
+    const squares:any = [];
+    for(let x = 0;x<width;x++){
+      for(let y = 0;y<height;y++){      
+        var top = y + this.position.top;
+        var left = x + this.position.left;
+        squares.push({
+          top,
+          left,
+          width:1,
+          height:1,
+          texture: this.texture,
+          ...this.actions,
+          type: this.type,
         });
+      }
+    }
       return squares;
     }
   
@@ -71,7 +80,7 @@ export class Map {
   export class Slope {
     constructor(
       { texture = "", size, position, actions = {} }: BoundaryProps,
-      orientation: orientation
+      orientation: Orientation
     ) {
       this.texture = texture;
       this.size = { ...this.size, ...size };
@@ -86,84 +95,25 @@ export class Map {
         this.position.left,
         this.size.width,
         this.size.height,
-        false, // Adjust based on reverse flag if needed
-        this.orientation.horizontal ? "horizontal" : "vertical",
+        this.orientation.right ? "right" :
+        this.orientation.left ? "left" :
+        this.orientation.bottomRight ? "bottom-right" :
+        this.orientation.bottomLeft ? "bottom-left" :
+        "right",  // Default direction if none of the orientation conditions are true
         this.texture,
         this.actions
       );
+      
     }
   
     texture: string = "";
     size: Size = { width: 0, height: 0 };
     position: Position = { top: 0, left: 0 };
     actions: boundaryActions = {};
-    orientation: orientation = { vertical: true };
+    orientation: Orientation = { vertical: true };
     type = "slope";
   }
   
-  export class CurveIn {
-    constructor(
-      { texture = "", size, position, actions = {} }: BoundaryProps,
-      orientation: orientation
-    ) {
-      this.texture = texture;
-      this.size = { ...this.size, ...size };
-      this.position = { ...this.position, ...position };
-      this.actions = { ...this.actions, ...actions };
-      this.orientation = orientation;
-    }
-  
-    generateArray() {
-      return createQuarterCircle(
-        this.position.top,
-        this.position.left,
-        this.size.width, // Assuming radius is width
-        false, // Adjust based on reverse flag if needed
-        this.orientation.horizontal ? "horizontal" : "vertical",
-        this.texture,
-        this.actions
-      );
-    }
-  
-    texture: string = "";
-    size: Size = { width: 0, height: 0 };
-    position: Position = { top: 0, left: 0 };
-    actions: boundaryActions = {};
-    orientation: orientation = { vertical: true };
-    type = "curve-in";
-  }
-  
-  export class CurveOut {
-    constructor(
-      { texture = "", size, position, actions = {} }: BoundaryProps,
-      orientation: orientation
-    ) {
-      this.texture = texture;
-      this.size = { ...this.size, ...size };
-      this.position = { ...this.position, ...position };
-      this.actions = { ...this.actions, ...actions };
-      this.orientation = orientation;
-    }
-  
-    generateArray() {
-      return createQuarterCircle(
-        this.position.top,
-        this.position.left,
-        this.size.width, // Assuming radius is width
-        true, // Adjust based on reverse flag if needed
-        this.orientation.horizontal ? "horizontal" : "vertical",
-        this.texture,
-        this.actions
-      );
-    }
-  
-    texture: string = "";
-    size: Size = { width: 0, height: 0 };
-    position: Position = { top: 0, left: 0 };
-    actions: boundaryActions = {};
-    orientation: orientation = { vertical: true };
-    type = "curve-out";
-  }
   
   export class Coins {
     constructor({ position, orientation = { vertical: true }, amount = 1 }: CoinsProps) {

@@ -49,13 +49,17 @@ export interface BoundaryPropsResult{
 
 export interface CoinsProps{
     position:Position,
-    orientation:orientation,
+    orientation:Orientation,
     amount:number
 }
 
-export interface orientation{
-    vertical?:true,
-    horizontal?:true,
+export interface Orientation {
+    vertical?: boolean;       // Indicates a vertical slope
+    horizontal?: boolean;     // Indicates a horizontal slope
+    left?: boolean;           // Indicates a slope going to the left
+    right?: boolean;          // Indicates a slope going to the right
+    bottomLeft?: boolean;     // Indicates a slope going from top-right to bottom-left
+    bottomRight?: boolean;    // Indicates a slope going from top-left to bottom-right
 }
 
 export interface keys{

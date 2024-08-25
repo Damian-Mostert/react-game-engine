@@ -159,6 +159,7 @@ export default function useUniverse({
 	const { message, health, maxHealth, game, setGame } = usePhysics({
 	  gravityForce,
 	  initialPosition,
+	  position:initialPosition,
 	  initialVelocity,
 	  checkDistance,
 	  airDensity,
@@ -262,14 +263,6 @@ export default function useUniverse({
 		clearInterval(gameInterval);
 	  };
 	}, [keys, bots, botActionIndex, botsSpeed]);
-  
-	useEffect(() => {
-	  console.log(botsKeys);
-	}, [botsKeys]);
-  
-	useEffect(() => {
-	  console.log(botActionIndex);
-	}, [botActionIndex]);
 
 	return {
 		message,
