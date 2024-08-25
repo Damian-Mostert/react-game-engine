@@ -23,7 +23,7 @@ export default function Boundary({
 				backgroundSize: `${blockSize}px ${blockSize}px`,
 				backgroundRepeat: "repeat",
 			}}
-		>	<div style={{position:"absolute",top:"0px",left:"0px",width:"100%",height:"100%",background:"#00000009",opacity:darkness}}>
+		>	<div style={{position:"absolute",top:"0px",left:"0px",width:"100%",height:"100%",background:"#00000050",opacity:darkness}}>
 
 		</div>
 			{message && (
